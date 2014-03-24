@@ -10,16 +10,16 @@
 (depends-on "ag")
 (depends-on "auto-complete")
 (depends-on "coffee-mode")
-(depends-on "eldoc") ;; ???
-(depends-on "ert") ;; ???
+(depends-on "cyberpunk-theme")
+(depends-on "eldoc") ;; enable elisp docs on the modeline
 (depends-on "flx-ido")
 (depends-on "flycheck")
 (depends-on "haml-mode")
 (depends-on "ido-vertical-mode")
 (depends-on "ido-at-point")
 (depends-on "ido-ubiquitous")
-(depends-on "macrostep") ;; ???
-(depends-on "magit") ;; Git in Emacs.
+(depends-on "macrostep") ;; expansion of macros in Emacs Lisp source code
+(depends-on "magit") ;; git in Emacs.
 (depends-on "markdown-mode")
 (depends-on "molokai-theme")
 (depends-on "monokai-theme")
