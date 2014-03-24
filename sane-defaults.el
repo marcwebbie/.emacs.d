@@ -39,6 +39,7 @@
 (prefer-coding-system 'utf-8) ; with sugar on top
 ;; (require 'iso-transl)
 (define-key key-translation-map [dead-tilde] "~")
+(global-set-key [S-dead-grave] "`")
 
 ;; Show active region
 (transient-mark-mode 1)
