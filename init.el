@@ -128,7 +128,9 @@
 (use-package smartparens-ruby) 
 
 (use-package inf-ruby
-  :config
+  :config (progn
+            (autoload 'inf-ruby-minor-mode "inf-ruby" "Run an inferior Ruby process" t)
+            (add-hook 'ruby-mode-hook 'inf-ruby-minor-mode))
   :bind ("C-c C-z" . run-ruby))
 
 (use-package ruby-mode
