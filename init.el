@@ -19,6 +19,8 @@
 
 (setq default-directory (f-full (getenv "HOME")))
 
+(setq backup-directory-alist `(("." . "~/.saves")))
+
 (defun load-local (file)
   (load (f-expand file user-emacs-directory)))
 
