@@ -7,7 +7,7 @@ branch.
 
 ## Installation
 
-First of all make sure you have installed Emacs version 23 or higher.
+First of all make sure you have installed Emacs version 24.1 or higher.
 
 Fetch the emacs source files:
 
