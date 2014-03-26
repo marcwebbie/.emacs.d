@@ -132,7 +132,8 @@
 (use-package inf-ruby
   :config (progn
             (autoload 'inf-ruby-minor-mode "inf-ruby" "Run an inferior Ruby process" t)
-            (add-hook 'ruby-mode-hook 'inf-ruby-minor-mode))
+            (add-hook 'ruby-mode-hook 'inf-ruby-minor-mode)
+            (add-hook 'after-init-hook 'inf-ruby-switch-setup))
   :bind ("C-c C-z" . run-ruby))
 
 (use-package ruby-mode
@@ -148,6 +149,28 @@
          ("Thorfile" . ruby-mode)
          ("Capfile$" . ruby-mode)
          ("Guardfile$" . ruby-mode)))
+
+(use-package robe
+  :init(progn
+         (add-hook 'ruby-mode-hook 'robe-mode)
+         (add-hook 'robe-mode-hook 'robe-ac-setup))
+  :bind("M-." . robe-jump))
+
+(use-package projectile-rails
+  :init(progn
+         (add-hook 'projectile-mode-hook 'projectile-rails-on)))
+
+
+;; (use-package ruby-test-mode
+;;   :disabled t
+;;   :config (add-hook 'ruby-mode-hook 'ruby-test-mode))
+
+;; ===========================================
+;; Setup python
+;; ===========================================
+(use-package elpy
+  :init (elpy-enable)
+  :mode (("\\.wsgi\\'" . python-mode)))
 
 
 ;; ===========================================
