@@ -177,6 +177,7 @@
 ;; Setup expand-region
 ;; ===========================================
 (use-package expand-region
+  :init (require 'expand-region)
   :bind ("C-=" . er/expand-region))
 
 
