@@ -67,7 +67,6 @@
     (setq cmd (format "bundle exec -- ruby %s -n /%s/" file_path test_name))
     (message (format "running: `%s`" cmd))
     (eshell-command cmd)))
-(global-set-key (kbd "C-*") 'my-mark-block-name)
 
 (provide 'defuns)
 ;;; defuns.el ends here

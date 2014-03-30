@@ -36,5 +36,18 @@
 (global-set-key (kbd "M-#") 'mark-current-word)
 (global-set-key (kbd "M-*") 'select-text-in-quote)
 
+;; Should be able to eval-and-replace anywhere.
+(global-set-key (kbd "C-c C-e") 'eval-and-replace)
+
+;; Sorting
+(global-set-key (kbd "C-<dead-tilde>") 'sort-lines)
+
 (bind-key "M-+" 'shrink-window)
 (bind-key "M-_" 'enlarge-window)
+
+(bind-key "C-c t" 'my-mark-test-name)
+
+;; Robe jump
+(global-set-key (kbd "M-.") 'robe-jump) 
+
+;;; end
