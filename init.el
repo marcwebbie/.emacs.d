@@ -130,11 +130,18 @@
 (use-package smartparens-ruby) 
 
 (use-package inf-ruby
-  :config (progn
-            (autoload 'inf-ruby-minor-mode "inf-ruby" "Run an inferior Ruby process" t)
-            (add-hook 'ruby-mode-hook 'inf-ruby-minor-mode)
-            (add-hook 'after-init-hook 'inf-ruby-switch-setup))
+  :config
+  (progn
+    (autoload 'inf-ruby-minor-mode "inf-ruby" "Run an inferior Ruby process" t)
+    (add-hook 'ruby-mode-hook 'inf-ruby-minor-mode)
+    (add-hook 'after-init-hook 'inf-ruby-switch-setup))
   :bind ("C-c C-z" . run-ruby))
+
+(use-package robe
+  :config
+  (progn
+    (add-hook 'ruby-mode-hook 'robe-mode)
+    (add-hook 'robe-mode-hook 'robe-ac-setup)))
 
 (use-package ruby-mode
   :config (setq ruby-deep-indent-paren nil)
@@ -147,14 +154,7 @@
          ("Rakefile$" . ruby-mode)
          ("Gemfile$" . ruby-mode)
          ("Thorfile" . ruby-mode)
-         ("Capfile$" . ruby-mode)
-         ("Guardfile$" . ruby-mode)))
-
-(use-package robe
-  :init(progn
-         (add-hook 'ruby-mode-hook 'robe-mode)
-         (add-hook 'robe-mode-hook 'robe-ac-setup))
-  :bind("M-." . robe-jump))
+         ("Capfile$" . ruby-mode)))
 
 (use-package projectile-rails
   :init(progn
@@ -171,6 +171,13 @@
 (use-package elpy
   :init (elpy-enable)
   :mode (("\\.wsgi\\'" . python-mode)))
+
+
+;; ===========================================
+;; Setup expand-region
+;; ===========================================
+(use-package expand-region
+  :bind ("C-=" . er/expand-region))
 
 
 ;; ===========================================
@@ -263,7 +270,8 @@
 (use-package multiple-cursors
   :bind (("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
-         ("C-c C-<" . mc/mark-all-like-this)))
+         ("C-c C-<" . mc/mark-all-like-this)
+         ("C-~" . mc/sort-regions)))
 
 
 ;; ===========================================
