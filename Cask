@@ -12,6 +12,7 @@
 (depends-on "coffee-mode")
 (depends-on "cyberpunk-theme")
 (depends-on "eldoc") ;; enable elisp docs on the modeline
+(depends-on "expand-region")
 (depends-on "elpy")
 (depends-on "flx-ido")
 (depends-on "flycheck")
