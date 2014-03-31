@@ -160,6 +160,7 @@
   :init(progn
          (add-hook 'projectile-mode-hook 'projectile-rails-on)))
 
+(use-package ruby-tools)
 
 ;; (use-package ruby-test-mode
 ;;   :disabled t
