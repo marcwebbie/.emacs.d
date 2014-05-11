@@ -14,9 +14,12 @@
 (depends-on "eldoc") ;; enable elisp docs on the modeline
 (depends-on "elpy")
 (depends-on "expand-region")
+(depends-on "flx")
 (depends-on "flx-ido")
 (depends-on "flycheck")
+(depends-on "flycheck-cask")
 (depends-on "haml-mode")
+(depends-on "grizzl")
 (depends-on "ido-at-point")
 (depends-on "ido-ubiquitous")
 (depends-on "ido-vertical-mode")
