@@ -1,4 +1,4 @@
-# marcwebbie emacs configuration
+# marcwebbie emacs
 
 This is my emacs configuration files. If you want to use them, the
 best thing is probably to fork the project at Github
@@ -7,7 +7,7 @@ branch.
 
 ## Installation
 
-First of all make sure you have installed Emacs version 24.1 or higher.
+First of all make sure you have installed Emacs version 23 or higher.
 
 Fetch the emacs source files:
 

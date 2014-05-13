@@ -1,39 +1,52 @@
+;;; init.el - Edited -*- lexical-binding: t; -*-
+
+(mapc
+ (lambda (mode)
+   (when (fboundp mode)
+     (funcall mode -1)))
+ '(menu-bar-mode tool-bar-mode scroll-bar-mode))
+
+(global-linum-mode t)
+
 (require 'cask "~/.cask/cask.el")
 (cask-initialize)
-(require 'palette)
+(require 'pallet)
+
+(require 's)
+(require 'f)
+(require 'ht)
+(require 'git)
+(require 'ert)
 (require 'use-package)
 
-
-;; ===========================================
-;; custom
-;; ===========================================
-(setq debug-on-error t)
-
-;; Turn off mouse interface early in startup to avoid momentary display
-(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-
-;; No splash screen please
-(setq inhibit-startup-message t)
-
 (setq default-directory (f-full (getenv "HOME")))
-
-(setq backup-directory-alist `(("." . "~/.saves")))
 
 (defun load-local (file)
   (load (f-expand file user-emacs-directory)))
 
-(load-local "sane-defaults")
 (load-local "defuns")
-(load-local "appearance")
-(load-local "hippie")
-(load-local "keybindings")
+(load-local "misc")
+(when (eq system-type 'darwin)
+  (load-local "osx"))
 
+(load-theme 'molokai :no-confirm)
 
-;; ===========================================
-;; Setup ido
-;; ===========================================
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (when (string= (buffer-name) "*scratch*")
+              (animate-string ";; Yo moma is a dirty skank!" (/ (frame-height) 2)))))
+
+
+;;;; Packages
+
+(use-package hl-line
+  :config (set-face-background 'hl-line "#073642"))
+
+(use-package dash
+  :config (dash-enable-font-lock))
+
+(use-package dired-x)
+
 (use-package ido
   :init (ido-mode 1)
   :config
@@ -47,49 +60,124 @@
     (setq ido-file-extensions-order '(".rb" ".el" ".coffee" ".js"))
     (add-to-list 'ido-ignore-files "\\.DS_Store")))
 
-(use-package flx-ido
-  :init (flx-ido-mode 1)
-  :config (setq ido-use-face nil))
+(use-package nyan-mode
+  :init (nyan-mode 1))
 
-(use-package ido-vertical-mode
-  :init (ido-vertical-mode 1))    
-
-
-;; ===========================================
-;; Setup smex
-;; ===========================================
 (use-package smex
-  :init (smex-initialize))
+  :init (smex-initialize)
+  :bind ("M-x" . smex))
 
+(use-package multiple-cursors
+  :bind (("C->" . mc/mark-next-like-this)
+         ("C-<" . mc/mark-previous-like-this)))
 
-;; ===========================================
-;; Setup flycheck
-;; ===========================================
-(use-package flycheck
+(use-package popwin
+  :config (setq display-buffer-function 'popwin:display-buffer))
+
+(use-package projectile
+  :init (projectile-global-mode 1)
   :config
   (progn
-    (make-variable-buffer-local 'flycheck-idle-change-delay)
-    (add-hook 'after-init-hook 'global-flycheck-mode)))
+    (setq projectile-enable-caching t)
+    (setq projectile-require-project-root nil)
+    (setq projectile-completion-system 'ido)
+    (add-to-list 'projectile-globally-ignored-files ".DS_Store")))
 
+(use-package drag-stuff
+  :init (drag-stuff-global-mode 1)
+  :bind (("M-N" . drag-stuff-down)
+         ("M-P" . drag-stuff-up)))
 
-;; ===========================================
-;; Setup autocomplete
-;; ===========================================
-(use-package auto-complete
-  :init (global-auto-complete-mode t))
+(use-package misc
+  :bind ("M-z" . zap-up-to-char))
 
+(use-package magit
+  :init
+  (progn
+    (use-package magit-blame)
+    (bind-key "C-c C-a" 'magit-just-amend magit-mode-map))
+  :config
+  (progn
+    (setq magit-default-tracking-name-function 'magit-default-tracking-name-branch-only)
+    (setq magit-set-upstream-on-push t)
+    (setq magit-completing-read-function 'magit-ido-completing-read)
+    (setq magit-stage-all-confirm nil)
+    (setq magit-unstage-all-confirm nil)
+    (setq magit-restore-window-configuration t)
+    (add-hook 'magit-mode-hook 'rinari-launch))
+  :bind ("C-x g" . magit-status))
 
-;; ===========================================
-;; Setup yasnippet
-;; ===========================================
-(use-package popup)
-(use-package yasnippet
-  :init (yas-global-mode t))
+(use-package ace-jump-mode
+  :bind ("C-c SPC" . ace-jump-mode))
 
+(use-package expand-region
+  :bind ("C-=" . er/expand-region))
 
-;; ===========================================
-;; Setup smartparens
-;; ===========================================
+(use-package cua-base
+  :init (cua-mode 1)
+  :config
+  (progn
+    (setq cua-enable-cua-keys nil)
+    (setq cua-toggle-set-mark nil)))
+
+(use-package uniquify
+  :config (setq uniquify-buffer-name-style 'forward))
+
+(use-package saveplace
+  :config (setq-default save-place t))
+
+(use-package diff-hl
+  :init (global-diff-hl-mode)
+  :config (add-hook 'vc-checkin-hook 'diff-hl-update))
+
+(use-package windmove
+  :config (windmove-default-keybindings 'shift))
+
+(use-package ruby-mode
+  :init
+  (progn
+    (use-package rvm
+      :init (rvm-use-default)
+      :config (setq rvm-verbose nil))
+    (use-package ruby-tools)
+    (use-package rhtml-mode
+      :mode (("\\.rhtml$" . rhtml-mode)
+             ("\\.html\\.erb$" . rhtml-mode)))
+    (use-package rinari
+      :init (global-rinari-mode 1)
+      :config (setq ruby-insert-encoding-magic-comment nil))
+    (use-package rspec-mode
+      :config
+      (progn
+        (setq rspec-use-rvm t)
+        (setq rspec-use-rake-flag nil)
+        (defadvice rspec-compile (around rspec-compile-around activate)
+          "Use BASH shell for running the specs because of ZSH issues."
+          (let ((shell-file-name "/bin/bash"))
+            ad-do-it)))))
+  :config
+  (progn
+    (add-hook 'ruby-mode-hook 'rvm-activate-corresponding-ruby)
+    (setq ruby-deep-indent-paren nil))
+  :bind (("C-M-h" . backward-kill-word)
+         ("C-M-n" . scroll-up-five)
+         ("C-M-p" . scroll-down-five))
+  :mode (("\\.rake$" . ruby-mode)
+         ("\\.gemspec$" . ruby-mode)
+         ("\\.ru$" . ruby-mode)
+         ("Rakefile$" . ruby-mode)
+         ("Gemfile$" . ruby-mode)
+         ("Capfile$" . ruby-mode)
+         ("Guardfile$" . ruby-mode)))
+
+(use-package markdown-mode
+  :config
+  (progn
+    (bind-key "M-n" 'open-line-below markdown-mode-map)
+    (bind-key "M-p" 'open-line-above markdown-mode-map))
+  :mode (("\\.markdown$" . markdown-mode)
+         ("\\.md$" . markdown-mode)))
+
 (use-package smartparens
   :init
   (progn
@@ -123,127 +211,76 @@
    ("M-J" . sp-join-sexp)
    ("C-M-t" . sp-transpose-sexp)))
 
-;; ===========================================
-;; Setup ruby
-;; ===========================================
-(use-package smartparens-ruby) 
-
-(use-package inf-ruby
+(use-package flycheck
   :config
   (progn
-    (autoload 'inf-ruby-minor-mode "inf-ruby" "Run an inferior Ruby process" t)
-    (add-hook 'ruby-mode-hook 'inf-ruby-minor-mode)
-    (add-hook 'after-init-hook 'inf-ruby-switch-setup))
-  :bind ("C-c C-z" . run-ruby))
+    (setq flycheck-display-errors-function nil)
+    (add-hook 'after-init-hook 'global-flycheck-mode)))
 
-(use-package robe
+(use-package flycheck-cask
+  :init (add-hook 'flycheck-mode-hook 'flycheck-cask-setup))
+
+(use-package yasnippet
+  :init
+  (progn
+    (use-package yasnippets)
+    (yas-global-mode 1)
+    (setq-default yas/prompt-functions '(yas/ido-prompt))))
+
+(use-package yaml-mode
+  :mode ("\\.yml$" . yaml-mode))
+
+(use-package feature-mode
+  :mode ("\\.feature$" . feature-mode)
+  :config
+  (add-hook 'feature-mode-hook
+            (lambda ()
+              (electric-indent-mode -1))))
+
+(use-package cc-mode
   :config
   (progn
-    (add-hook 'ruby-mode-hook 'robe-mode)
-    (add-hook 'robe-mode-hook 'robe-ac-setup)))
+    (add-hook 'c-mode-hook (lambda () (c-set-style "bsd")))
+    (add-hook 'java-mode-hook (lambda () (c-set-style "bsd")))
+    (setq tab-width 2)
+    (setq c-basic-offset 2)))
 
-(use-package ruby-mode
-  :config (setq ruby-deep-indent-paren nil)
-  :bind (("C-M-h" . backward-kill-word)
-         ("C-M-n" . scroll-up-five)
-         ("C-M-p" . scroll-down-five))
-  :mode (("\\.rake$" . ruby-mode)
-         ("\\.gemspec$" . ruby-mode)
-         ("\\.ru$" . ruby-mode)
-         ("Rakefile$" . ruby-mode)
-         ("Gemfile$" . ruby-mode)
-         ("Thorfile" . ruby-mode)
-         ("Capfile$" . ruby-mode)))
+(use-package css-mode
+  :config (setq css-indent-offset 2))
 
-(use-package projectile-rails
-  :init(progn
-         (add-hook 'projectile-mode-hook 'projectile-rails-on)))
+(use-package js-mode
+  :mode ("\\.json$" . js-mode)
+  :init
+  (progn
+    (add-hook 'js-mode-hook (lambda () (setq js-indent-level 2)))))
 
-(use-package ruby-tools)
-
-;; (use-package ruby-test-mode
-;;   :disabled t
-;;   :config (add-hook 'ruby-mode-hook 'ruby-test-mode))
-
-;; ===========================================
-;; Setup python
-;; ===========================================
-(use-package elpy
-  :init (elpy-enable)
-  :mode (("\\.wsgi\\'" . python-mode)))
-
-
-;; ===========================================
-;; Setup expand-region
-;; ===========================================
-(use-package expand-region
-  :init (require 'expand-region)
-  :bind ("C-=" . er/expand-region))
-
-
-;; ===========================================
-;; Setup projectile
-;; ===========================================
-(use-package projectile
-  :init (projectile-global-mode 1)
+(use-package js2-mode
+  :mode (("\\.js$" . js2-mode)
+         ("Jakefile$" . js2-mode))
+  :interpreter ("node" . js2-mode)
+  :bind (("C-a" . back-to-indentation-or-beginning-of-line)
+         ("C-M-h" . backward-kill-word))
   :config
   (progn
-    (setq projectile-completion-system 'grizzl)
-    (setq projectile-enable-caching t)
-    (setq projectile-require-project-root nil)
-    (setq projectile-completion-system 'flx-ido)
-    (add-to-list 'projectile-globally-ignored-files ".DS_Store")))
+    (add-hook 'js2-mode-hook (lambda () (setq js2-basic-offset 2)))
+    (add-hook 'js2-mode-hook (lambda ()
+                               (bind-key "M-j" 'join-line-or-lines-in-region js2-mode-map)))))
 
-;; ===========================================
-;; Setup quickrun
-;; ===========================================
-(use-package quickrun)
-
-
-;; ===========================================
-;; Setup search
-;; ===========================================
-(use-package visual-regexp
-  :init (use-package visual-regexp-steroids)
-  :bind (("C-c r" . vr/replace)
-         ("C-c q" . vr/query-replace)
-         ("C-c m" . vr/mc-mark)
-         ("C-r" . vr/isearch-backward)
-         ("C-s" . vr/isearch-forward)))
-
-
-;; ===========================================
-;; Setup diminish
-;; ===========================================
-(use-package diminish
-  :config (progn ()))
-
-
-;; ===========================================
-;; Setup rainbow-delimiters
-;; ===========================================
-(use-package rainbow-delimiters
-  init: (global-rainbow-delimiters-mode))
-
-
-;; ===========================================
-;; Setup magit
-;; ===========================================
-(use-package magit
+(use-package coffee-mode
   :config
   (progn
-    (setq magit-default-tracking-name-function 'magit-default-tracking-name-branch-only)
-    (setq magit-set-upstream-on-push t)
-    (setq magit-completing-read-function 'magit-ido-completing-read)
-    (setq magit-stage-all-confirm nil)
-    (setq magit-unstage-all-confirm nil)
-    (setq magit-restore-window-configuration t))
-  :bind ("C-x g" . magit-status))
+    (add-hook 'coffee-mode-hook
+              (lambda ()
+                (bind-key "C-j" 'coffee-newline-and-indent coffee-mode-map)
+                (bind-key "C-M-h" 'backward-kill-word coffee-mode-map)
+                (setq coffee-tab-width 2)
+                (setq coffee-cleanup-whitespace nil)))))
 
+(use-package nvm)
 
-;; ===========================================
-;; Setup emacs-lisp-mode
-;; ===========================================
+(use-package sh-script
+  :config (setq sh-basic-offset 2))
+
 (use-package emacs-lisp-mode
   :init
   (progn
@@ -258,27 +295,136 @@
   :interpreter (("emacs" . emacs-lisp-mode))
   :mode ("Cask" . emacs-lisp-mode))
 
+(use-package html-script-src)
 
-;; ===========================================
-;; Setup rainbow-delimiter-mode
-;; ===========================================
-(use-package rainbow-delimiters
-  :init (global-rainbow-delimiters-mode))
+(use-package haml-mode)
+(use-package sass-mode)
 
+(use-package eshell
+  :bind ("M-e" . eshell)
+  :init
+  (add-hook 'eshell-first-time-mode-hook
+            (lambda ()
+              (add-to-list 'eshell-visual-commands "htop")))
+  :config
+  (progn
+    (setq eshell-history-size 5000)
+    (setq eshell-save-history-on-exit t)))
 
-;; ===========================================
-;; Setup multiple-cursors
-;; ===========================================
-(use-package multiple-cursors
-  :bind (("C->" . mc/mark-next-like-this)
-         ("C-<" . mc/mark-previous-like-this)
-         ("C-c C-<" . mc/mark-all-like-this)
-         ("C-~" . mc/sort-regions)))
+(use-package flx-ido
+  :init (flx-ido-mode 1)
+  :config (setq ido-use-face nil))
 
+(use-package ido-vertical-mode
+  :init (ido-vertical-mode 1))
 
-;; ===========================================
-;; Setup 
-;; ===========================================
+(use-package web-mode
+  :init (progn
+          (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+          (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
+  :config (progn
+            (add-hook 'web-mode-hook
+                      (lambda ()
+                        (setq web-mode-style-padding 2)
+                        (setq web-mode-script-padding 2)))))
 
+(use-package prodigy
+  :init (progn
+          (add-hook 'prodigy-mode-hook
+                    (lambda ()
+                      (setq-local show-trailing-whitespace nil))))
+  :demand t
+  :bind ("C-x p" . prodigy))
 
-(provide 'init)
+(use-package discover
+  :init (global-discover-mode 1))
+
+(use-package ert-async
+  :config (add-to-list 'emacs-lisp-mode-hook 'ert-async-activate-font-lock-keywords))
+
+(use-package ibuffer
+  :config (setq ibuffer-expert t)
+  :bind ("C-x C-b" . ibuffer))
+
+(use-package cl-lib-highlight
+  :init (cl-lib-highlight-initialize))
+
+(use-package idomenu
+  :bind ("M-i" . idomenu))
+
+(use-package httprepl)
+
+(use-package ack-and-a-half)
+
+(use-package swoop
+  :bind ("C-o" . swoop))
+
+(use-package ag)
+
+(use-package git-gutter
+  :init (global-git-gutter-mode +1))
+
+(use-package visual-regexp
+  :init (use-package visual-regexp-steroids)
+  :bind (("C-c r" . vr/replace)
+         ("C-c q" . vr/query-replace)
+         ("C-c m" . vr/mc-mark)
+         ("C-r" . vr/isearch-backward)
+         ("C-s" . vr/isearch-forward)))
+
+
+;;;; Bindings
+
+(bind-key "C-a" 'back-to-indentation-or-beginning-of-line)
+(bind-key "C-7" 'comment-or-uncomment-current-line-or-region)
+(bind-key "C-6" 'linum-mode)
+(bind-key "C-v" 'scroll-up-five)
+(bind-key "C-j" 'newline-and-indent)
+
+(bind-key "M-g" 'goto-line)
+(bind-key "M-n" 'open-line-below)
+(bind-key "M-p" 'open-line-above)
+(bind-key "M-+" 'text-scale-increase)
+(bind-key "M-_" 'text-scale-decrease)
+(bind-key "M-j" 'join-line-or-lines-in-region)
+(bind-key "M-v" 'scroll-down-five)
+(bind-key "M-k" 'kill-this-buffer)
+(bind-key "M-o" 'other-window)
+(bind-key "M-1" 'delete-other-windows)
+(bind-key "M-2" 'split-window-below)
+(bind-key "M-3" 'split-window-right)
+(bind-key "M-0" 'delete-window)
+(bind-key "M-}" 'next-buffer)
+(bind-key "M-{" 'previous-buffer)
+(bind-key "M-`" 'other-frame)
+(bind-key "M-w" 'kill-region-or-thing-at-point)
+
+(bind-key "C-c g" 'google)
+(bind-key "C-c d" 'duplicate-current-line-or-region)
+(bind-key "C-c n" 'clean-up-buffer-or-region)
+(bind-key "C-c s" 'swap-windows)
+(bind-key "C-c r" 'rename-this-buffer-and-file)
+(bind-key "C-c k" 'delete-this-buffer-and-file)
+
+(bind-key "C-M-h" 'backward-kill-word)
+(bind-key "C-c C-n" 'todo)
+
+(bind-key
+ "C-x C-c"
+ (lambda ()
+   (interactive)
+   (if (y-or-n-p "Quit Emacs? ")
+       (save-buffers-kill-emacs))))
+
+(bind-key
+ "C-8"
+ (lambda ()
+   (interactive)
+   (find-file (f-expand "init.el" user-emacs-directory))))
+
+
+;;;; Sandbox
+
+(let ((sandbox-path (f-expand "sandbox" user-emacs-directory)))
+  (when (f-dir? sandbox-path)
+    (-each (f--files sandbox-path (f-ext? it "el")) 'load)))
