@@ -6,8 +6,6 @@
      (funcall mode -1)))
  '(menu-bar-mode tool-bar-mode scroll-bar-mode))
 
-(global-linum-mode t)
-
 (require 'cask "~/.cask/cask.el")
 (cask-initialize)
 (require 'pallet)
@@ -29,7 +27,7 @@
 (when (eq system-type 'darwin)
   (load-local "osx"))
 
-(load-theme 'molokai :no-confirm)
+(load-theme 'zenburn :no-confirm)
 
 (add-hook 'emacs-startup-hook
           (lambda ()
@@ -351,6 +349,9 @@
 
 (use-package idomenu
   :bind ("M-i" . idomenu))
+
+(use-package auto-complete
+  :init (global-auto-complete-mode t))
 
 (use-package httprepl)
 
