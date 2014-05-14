@@ -81,6 +81,9 @@
     (setq projectile-completion-system 'ido)
     (add-to-list 'projectile-globally-ignored-files ".DS_Store")))
 
+(use-package projectile-rails
+  :init (add-hook 'projectile-mode-hook 'projectile-rails-on))
+
 (use-package drag-stuff
   :init (drag-stuff-global-mode 1)
   :bind (("M-N" . drag-stuff-down)

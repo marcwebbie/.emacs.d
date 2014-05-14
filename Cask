@@ -52,6 +52,7 @@
 (depends-on "pretty-mode")
 (depends-on "prodigy")
 (depends-on "projectile")
+(depends-on "projectile-rails")
 (depends-on "rhtml-mode")
 (depends-on "rinari")
 (depends-on "rspec-mode")
