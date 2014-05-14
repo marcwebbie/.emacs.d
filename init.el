@@ -34,6 +34,8 @@
             (when (string= (buffer-name) "*scratch*")
               (animate-string ";; Yo moma is a dirty skank!" (/ (frame-height) 2)))))
 
+(global-auto-revert-mode t) ;; refresh all modified files on the fly
+
 
 ;;;; Packages
 
