@@ -27,6 +27,8 @@
 (when (eq system-type 'darwin)
   (load-local "osx"))
 
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
 (load-theme 'zenburn :no-confirm)
 
 (add-hook 'emacs-startup-hook
@@ -148,7 +150,10 @@
              ("\\.html\\.erb$" . rhtml-mode)))
     (use-package rinari
       :init (global-rinari-mode 1)
-      :config (setq ruby-insert-encoding-magic-comment nil))
+      :config
+      (progn
+        (setq ruby-insert-encoding-magic-comment nil)
+        (setq rinari-tags-file-name "TAGS")))
     (use-package rspec-mode
       :config
       (progn
