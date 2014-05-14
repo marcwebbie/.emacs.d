@@ -171,6 +171,9 @@
          ("Capfile$" . ruby-mode)
          ("Guardfile$" . ruby-mode)))
 
+(use-package ruby-test-mode
+  :bind ("C-c C-t" . ruby-test-run-at-point))
+
 (use-package markdown-mode
   :config
   (progn
