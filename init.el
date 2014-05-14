@@ -426,6 +426,11 @@
    (interactive)
    (find-file (f-expand "init.el" user-emacs-directory))))
 
+(bind-key "M-j"
+          (lambda ()
+            (interactive)
+            (join-line -1)))
+
 
 ;;;; Sandbox
 
