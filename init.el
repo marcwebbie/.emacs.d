@@ -29,6 +29,8 @@
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on) ;; handle shell colours
+
 (load-theme 'zenburn :no-confirm)
 
 (add-hook 'emacs-startup-hook
