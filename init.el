@@ -444,6 +444,8 @@
             (interactive)
             (join-line -1)))
 
+(bind-key "C-." 'find-tag)
+
 
 ;;;; Sandbox
 
