@@ -1,5 +1,6 @@
 /auto-save-list
 *.elc
+*.eld
 *~
 /elpa
 /.cask
