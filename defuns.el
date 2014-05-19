@@ -298,3 +298,17 @@ them. These include the path relative to the project root."
           (progn
             (forward-char -2)
             (insert "(done) ")))))))
+
+(defun get-current-test-name ()
+  "Return the test name based on point"
+  (interactive)
+  (save-excursion
+    (ruby-end-of-block)
+    (let* ((name-regex "\\(\\(:[a-z0-9_]+\\)\\|\\([\"']\\([a-z0-9_ ]+\\)[\"']\\)\\)")
+           (name-match (lambda () (or (match-string-no-properties 2) (match-string-no-properties 4))))
+           (should (when (search-backward-regexp (concat "[ \t]*should +" name-regex "[ \t]+do") nil t)
+                     (funcall name-match)))
+           (context (when (search-backward-regexp (concat "[ \t]*context +" name-regex "[ \t]+do") nil t)
+                      (funcall name-match))))
+      (when (and should context)
+        (print (concat "bundle exec -- ruby " (buffer-file-name) " -n /'" context " should " should "'/"))))))
