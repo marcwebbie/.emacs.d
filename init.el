@@ -31,7 +31,7 @@
 
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on) ;; handle shell colours
 
-(load-theme 'zenburn :no-confirm)
+(load-theme 'molokai :no-confirm)
 (set-default-font "Ubuntu Mono-12")
 
 (add-hook 'emacs-startup-hook
