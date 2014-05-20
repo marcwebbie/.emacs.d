@@ -332,6 +332,8 @@
 (use-package ido-vertical-mode
   :init (ido-vertical-mode 1))
 
+(use-package puppet-mode)
+
 (use-package web-mode
   :init (progn
           (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))

@@ -53,6 +53,7 @@
 (depends-on "prodigy")
 (depends-on "projectile")
 (depends-on "projectile-rails")
+(depends-on "puppet-mode")
 (depends-on "rhtml-mode")
 (depends-on "rinari")
 (depends-on "rspec-mode")
