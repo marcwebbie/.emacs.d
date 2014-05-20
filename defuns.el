@@ -299,7 +299,7 @@ them. These include the path relative to the project root."
             (forward-char -2)
             (insert "(done) ")))))))
 
-(defun get-current-test-name ()
+(defun should:print_test_command ()
   "Return the test name based on point"
   (interactive)
   (save-excursion
