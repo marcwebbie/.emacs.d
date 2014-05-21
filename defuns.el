@@ -299,7 +299,7 @@ them. These include the path relative to the project root."
             (forward-char -2)
             (insert "(done) ")))))))
 
-(defun should:print_test_command ()
+(defun shoulda:run-test-at-point ()
   "Return the test name based on point"
   (interactive)
   (save-excursion
@@ -311,4 +311,6 @@ them. These include the path relative to the project root."
            (context (when (search-backward-regexp (concat "[ \t]*context +" name-regex "[ \t]+do") nil t)
                       (funcall name-match))))
       (when (and should context)
-        (print (concat "bundle exec -- ruby " (buffer-file-name) " -n /'" context " should " should "'/"))))))
+        (projectile-run-async-shell-command-in-root (concat "bundle exec -- ruby " (buffer-file-name) " -n /'" context " should " should "'/"))))))
+
+;;;
