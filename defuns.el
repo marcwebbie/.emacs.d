@@ -311,6 +311,6 @@ them. These include the path relative to the project root."
            (context (when (search-backward-regexp (concat "[ \t]*context +" name-regex "[ \t]+do") nil t)
                       (funcall name-match))))
       (when (and should context)
-        (projectile-run-async-shell-command-in-root (concat "bundle exec -- ruby " (buffer-file-name) " -n /'" context " should " should "'/"))))))
+        (async-shell-command (concat "cd " (projectile-project-root) " && bundle exec -- ruby " (buffer-file-name) " -n /'" context " should " should "'/"))))))
 
 ;;;
