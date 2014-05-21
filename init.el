@@ -36,7 +36,7 @@
 (add-hook 'emacs-startup-hook
           (lambda ()
             (when (string= (buffer-name) "*scratch*")
-              (animate-string ";; Yo moma is a dirty skank!" (/ (frame-height) 2)))))
+              (animate-string ";; I would love to change the world, but they won't give me the source code" (/ (frame-height) 2)))))
 
 (global-auto-revert-mode t) ;; refresh all modified files on the fly
 
