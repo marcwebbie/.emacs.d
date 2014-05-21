@@ -447,6 +447,8 @@
 
 (bind-key "C-." 'find-tag)
 
+(bind-key "C-c t s" 'shoulda:run-test-at-point)
+
 
 ;;;; Sandbox
 
