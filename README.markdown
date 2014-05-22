@@ -13,8 +13,7 @@ Fetch the emacs source files:
 
     git clone git://github.com/marcwebbie/emacs.git ~/.emacs.d
 
-Install all ELPA packages (make sure you have
-[Cask](https://github.com/cask/cask) installed):
+Install all ELPA packages (make sure you have [Cask](https://github.com/cask/cask) installed):
 
     cd ~/.emacs.d
     cask
@@ -23,6 +22,13 @@ Install all ELPA packages (make sure you have
 
     cp ~/.emacs.d/.Xdefaults ~/.Xdefaults
     xrdb -merge ~/.Xdefaults
+
+## Setting emacs to run in daemon mode
+
+    # OSX
+    alias es='/Applications/Emacs.app/Contents/MacOS/Emacs --daemon'
+    alias emacs='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -c -n $*'
+    export EDITOR='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -c'
 
 ## License
 
