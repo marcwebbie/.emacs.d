@@ -16,7 +16,12 @@
 (setq delete-by-moving-to-trash t)
 
 ;; Set font
-(set-default-font "-apple-Source_Code_Pro-medium-normal-normal-*-*-*-*-*-m-0-iso10646-1")
+;; (set-default-font "-apple-Source_Code_Pro-medium-normal-normal-*-*-*-*-*-m-0-iso10646-1")
+(require 'cl)
+  (defun font-candidate (&rest fonts)
+     "Return existing font which first match."
+     (find-if (lambda (f) (find-font (font-spec :name f))) fonts))
+(set-face-attribute 'default nil :font (font-candidate '"Monaco-12:weight=normal" "DejaVu Sans Mono-10:weight=normal"))
 
 (defun finder ()
   "Opens file directory in Finder."

@@ -19,9 +19,10 @@ Install all ELPA packages (make sure you have
     cd ~/.emacs.d
     cask
 
-## Using Xdefaults fonts
+## Using Xdefaults for setting fonts in linux
 
     cp ~/.emacs.d/.Xdefaults ~/.Xdefaults
+    xrdb -merge ~/.Xdefaults
 
 ## License
 
