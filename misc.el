@@ -17,7 +17,7 @@
 
 ;; Set default browser
 (setq browse-url-browser-function 'browse-url-generic)
-(setq browse-url-generic-program "google-chrome")
+(setq browse-url-generic-program "firefox")
 
 ;; Initial major mode is Emacs Lisp mode
 (setq initial-major-mode 'emacs-lisp-mode)
@@ -48,9 +48,6 @@
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 
-;; Set font size
-(set-face-attribute 'default nil :height 140)
-
 ;; Do not ask for confirmation
 (setq confirm-nonexistent-file-or-buffer nil)
 
@@ -65,16 +62,16 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; Auto refresh buffers
-(global-auto-revert-mode 1)
+(global-auto-revert-mode t)
 
 ;; Auto refresh dired, but be quiet about it
 (setq global-auto-revert-non-file-buffers t)
 (setq auto-revert-verbose nil)
 
 ;; Show trailing whitespace
-(setq-default show-trailing-whitespace t)
+(setq-default show-trailing-whitespace 0)
 
-;; Do not show annying menu-bar tips
+;; Do not show annoying menu-bar tips
 (setq suggest-key-bindings nil)
 
 ;; Make default mode Emacs lisp mode

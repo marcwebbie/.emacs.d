@@ -31,14 +31,12 @@
 
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on) ;; handle shell colours
 
-(load-theme 'molokai :no-confirm)
+(load-theme 'monokai :no-confirm)
 
 (add-hook 'emacs-startup-hook
           (lambda ()
             (when (string= (buffer-name) "*scratch*")
               (animate-string ";; I would love to change the world, but they won't give me the source code" (/ (frame-height) 2)))))
-
-(global-auto-revert-mode t) ;; refresh all modified files on the fly
 
 
 ;;;; Packages
@@ -461,3 +459,16 @@
 (let ((sandbox-path (f-expand "sandbox" user-emacs-directory)))
   (when (f-dir? sandbox-path)
     (-each (f--files sandbox-path (f-ext? it "el")) 'load)))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes (quote ("e80a0a5e1b304eb92c58d0398464cd30ccbc3622425b6ff01eea80e44ea5130e" default)))
+ '(magit-use-overlays nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
