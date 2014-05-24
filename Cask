@@ -66,6 +66,7 @@
 (depends-on "smartparens")
 (depends-on "smex")
 (depends-on "solarized-theme")
+(depends-on "sublimity")
 (depends-on "swoop")
 (depends-on "use-package")
 (depends-on "visual-regexp")
