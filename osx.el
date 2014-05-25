@@ -9,6 +9,9 @@
 ;; Menu bar is not annoying in OSX
 (menu-bar-mode 1)
 
+;; Set font size
+(set-face-attribute 'default nil :height 140)
+
 ;; Make the browser the OS X default
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
 
