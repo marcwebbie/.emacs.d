@@ -138,6 +138,8 @@
 (use-package windmove
   :config (windmove-default-keybindings 'shift))
 
+(use-package sos)
+
 (use-package ruby-mode
   :init
   (progn
@@ -384,7 +386,8 @@
 (use-package ag)
 
 (use-package git-gutter
-  :init (global-git-gutter-mode +1))
+  :init (global-git-gutter-mode +1)
+  :config (use-package git-gutter-fringe))
 
 (use-package visual-regexp
   :init (use-package visual-regexp-steroids)
