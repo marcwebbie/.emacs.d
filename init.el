@@ -385,9 +385,7 @@
 
 (use-package ag)
 
-(use-package git-gutter
-  :init (global-git-gutter-mode +1)
-  :config (use-package git-gutter-fringe))
+(use-package git-gutter-fringe+)
 
 (use-package visual-regexp
   :init (use-package visual-regexp-steroids)
