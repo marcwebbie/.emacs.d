@@ -299,6 +299,17 @@ them. These include the path relative to the project root."
             (forward-char -2)
             (insert "(done) ")))))))
 
+(defun set-font-anonymous-pro ()
+  "Set default font to be Anonymous Pro 14"
+  (interactive)
+  (set-default-font "Anonymous Pro-14"))
+
+(defun set-font-monaco ()
+  "Set default font to be Monaco 14"
+  (interactive)
+  (set-default-font "Monaco-14"))
+
+
 (defun shoulda:run-test-at-point ()
   "Return the test name based on point"
   (interactive)
