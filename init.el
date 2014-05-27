@@ -450,9 +450,11 @@
             (interactive)
             (join-line -1)))
 
+;; Test keybindings
 (bind-key "C-." 'find-tag)
-
 (bind-key "C-c t s" 'shoulda:run-test-at-point)
+(bind-key "M-\"" 'stringfy-double)
+(bind-key "M-'" 'stringfy-single)
 
 
 ;;;; Sandbox
