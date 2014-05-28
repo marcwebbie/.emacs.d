@@ -183,6 +183,8 @@
 (use-package ruby-test-mode
   :bind ("C-c C-t" . ruby-test-run-at-point))
 
+(use-package robe)
+
 (use-package sublimity
   :config
   (progn
@@ -455,6 +457,8 @@
 (bind-key "C-c t s" 'shoulda:run-test-at-point)
 (bind-key "M-\"" 'stringfy-double)
 (bind-key "M-'" 'stringfy-single)
+
+(define-key 'help-command "R" 'yari)
 
 
 ;;;; Sandbox
