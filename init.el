@@ -140,6 +140,9 @@
 
 (use-package sos)
 
+(use-package ctags-update
+  :config (add-hook 'projectile-rails-mode-hook  'turn-on-ctags-auto-update-mode))
+
 (use-package ruby-mode
   :init
   (progn

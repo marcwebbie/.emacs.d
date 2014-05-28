@@ -11,6 +11,7 @@
 (depends-on "coffee-mode")
 (depends-on "color-theme")
 (depends-on "commander")
+(depends-on "ctags-update")
 (depends-on "cyberpunk-theme")
 (depends-on "dash")
 (depends-on "diff-hl")
