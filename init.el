@@ -414,6 +414,9 @@
 (bind-key "M-`" 'other-frame)
 (bind-key "M-w" 'kill-region-or-thing-at-point)
 
+(bind-key "M-+" 'text-scale-increase)
+(bind-key "M-_" 'text-scale-decrease)
+
 (bind-key "C-c g" 'google)
 (bind-key "C-c d" 'duplicate-current-line-or-region)
 (bind-key "C-c n" 'clean-up-buffer-or-region)
