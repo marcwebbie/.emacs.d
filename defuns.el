@@ -249,21 +249,6 @@ them. These include the path relative to the project root."
           (kill-line)
         (sp-kill-sexp)))))
 
-(defun todo (arg)
-  "TODO stuff..."
-  (interactive "P")
-  (let* ((project-root
-          (when (and (buffer-file-name) (not arg))
-            (find-project-root (buffer-file-name))))
-         (project-name
-          (when project-root (f-no-ext (f-filename (f-canonical project-root)))))
-         (todo-file
-          (f-expand (concat (or project-name "global") ".org")
-                    (f-join "~" "Dropbox" "todo"))))
-    (unless (f-file? todo-file)
-      (f-touch todo-file))
-    (find-file todo-file)))
-
 (defun eval-and-replace ()
   "Replace the preceding sexp with its value."
   (interactive)

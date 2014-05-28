@@ -322,7 +322,6 @@
 (use-package sass-mode)
 
 (use-package eshell
-  :bind ("M-e" . eshell)
   :init
   (add-hook 'eshell-first-time-mode-hook
             (lambda ()
@@ -350,14 +349,6 @@
                       (lambda ()
                         (setq web-mode-style-padding 2)
                         (setq web-mode-script-padding 2)))))
-
-(use-package prodigy
-  :init (progn
-          (add-hook 'prodigy-mode-hook
-                    (lambda ()
-                      (setq-local show-trailing-whitespace nil))))
-  :demand t
-  :bind ("C-x p" . prodigy))
 
 (use-package discover
   :init (global-discover-mode 1))
@@ -387,7 +378,8 @@
 
 (use-package ag)
 
-(use-package git-gutter-fringe+)
+(use-package git-gutter+
+  :init (global-git-gutter+-mode t))
 
 (use-package visual-regexp
   :init (use-package visual-regexp-steroids)
@@ -409,8 +401,6 @@
 (bind-key "M-g" 'goto-line)
 (bind-key "M-n" 'open-line-below)
 (bind-key "M-p" 'open-line-above)
-(bind-key "M-+" 'text-scale-increase)
-(bind-key "M-_" 'text-scale-decrease)
 (bind-key "M-j" 'join-line-or-lines-in-region)
 (bind-key "M-v" 'scroll-down-five)
 (bind-key "M-k" 'kill-this-buffer)
@@ -428,11 +418,10 @@
 (bind-key "C-c d" 'duplicate-current-line-or-region)
 (bind-key "C-c n" 'clean-up-buffer-or-region)
 (bind-key "C-c s" 'swap-windows)
-(bind-key "C-c r" 'rename-this-buffer-and-file)
-(bind-key "C-c k" 'delete-this-buffer-and-file)
+(bind-key "C-c C-r" 'rename-this-buffer-and-file)
+(bind-key "C-c C-k" 'delete-this-buffer-and-file)
 
 (bind-key "C-M-h" 'backward-kill-word)
-(bind-key "C-c C-n" 'todo)
 
 (bind-key
  "C-x C-c"
@@ -455,9 +444,6 @@
 ;; Test keybindings
 (bind-key "C-." 'find-tag)
 (bind-key "C-c t s" 'shoulda:run-test-at-point)
-(bind-key "M-\"" 'stringfy-double)
-(bind-key "M-'" 'stringfy-single)
-
 (define-key 'help-command "R" 'yari)
 
 
@@ -466,16 +452,3 @@
 (let ((sandbox-path (f-expand "sandbox" user-emacs-directory)))
   (when (f-dir? sandbox-path)
     (-each (f--files sandbox-path (f-ext? it "el")) 'load)))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes (quote ("e80a0a5e1b304eb92c58d0398464cd30ccbc3622425b6ff01eea80e44ea5130e" default)))
- '(magit-use-overlays nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
