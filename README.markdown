@@ -30,6 +30,10 @@ Install all ELPA packages (make sure you have [Cask](https://github.com/cask/cas
     alias emacs='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -c -n $*'
     export EDITOR='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -c'
 
+## Compile emacs 24 on Red Hat 6
+
+    curl -fsSkL https://raw.githubusercontent.com/marcwebbie/emacs/master/compile_emacs24_rh6.sh | sh
+
 ## License
 
 This is free and unencumbered software released into the public domain.
