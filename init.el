@@ -392,7 +392,10 @@
          ("C-r" . vr/isearch-backward)
          ("C-s" . vr/isearch-forward)))
 
-
+;;;; Custom packages
+
+(load-local "shoulda")
+
 ;;;; Bindings
 
 (bind-key "C-a" 'back-to-indentation-or-beginning-of-line)
@@ -447,9 +450,11 @@
             (interactive)
             (join-line -1)))
 
-;; Test keybindings
+;; Other keybindings
 (bind-key "C-." 'find-tag)
-(bind-key "C-c t s" 'shoulda:run-test-at-point)
+(bind-key "C-c t s" 'shoulda:run-should-at-point)
+(bind-key "C-c t c" 'shoulda:run-context-at-point)
+(bind-key "C-c t b" 'ruby-test-run)
 (define-key 'help-command "R" 'yari)
 
 

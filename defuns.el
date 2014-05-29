@@ -294,22 +294,6 @@ them. These include the path relative to the project root."
   (interactive)
   (set-default-font "Monaco-14"))
 
-
-(defun shoulda:run-test-at-point ()
-  "Return the test name based on point"
-  (interactive)
-  (save-excursion
-    (ruby-end-of-block)
-    (let* ((name-regex "\\(\\(:[a-z0-9_]+\\)\\|\\([\"']\\([a-z0-9_ ]+\\)[\"']\\)\\)")
-           (name-match (lambda () (or (match-string-no-properties 2) (match-string-no-properties 4))))
-           (should (when (search-backward-regexp (concat "[ \t]*should +" name-regex "[ \t]+do") nil t)
-                     (funcall name-match)))
-           (context (when (search-backward-regexp (concat "[ \t]*context +" name-regex "[ \t]+do") nil t)
-                      (funcall name-match))))
-      (when (and should context)
-        (print (concat "cd " (projectile-project-root) " && bundle exec -- ruby " (buffer-file-name) " -n /'" should "'/"))
-        (async-shell-command (concat "cd " (projectile-project-root) " && bundle exec -- ruby " (buffer-file-name) " -n /'"  should "'/"))))))
-
 (defun stringfy-single ()
   (interactive)
   (let ((my-substring (buffer-substring (region-beginning) (region-end))))
