@@ -130,10 +130,6 @@
 (use-package saveplace
   :config (setq-default save-place t))
 
-(use-package diff-hl
-  :init (global-diff-hl-mode)
-  :config (add-hook 'vc-checkin-hook 'diff-hl-update))
-
 (use-package windmove
   :config (windmove-default-keybindings 'shift))
 

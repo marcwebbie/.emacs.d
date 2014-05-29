@@ -14,7 +14,6 @@
 (depends-on "ctags-update")
 (depends-on "cyberpunk-theme")
 (depends-on "dash")
-(depends-on "diff-hl")
 (depends-on "discover")
 (depends-on "drag-stuff")
 (depends-on "epl")
