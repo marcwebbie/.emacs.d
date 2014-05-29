@@ -38,7 +38,6 @@
             (when (string= (buffer-name) "*scratch*")
               (animate-string ";; I would love to change the world, but they won't give me the source code" (/ (frame-height) 2)))))
 
-
 ;;;; Packages
 
 (use-package hl-line
@@ -457,7 +456,6 @@
 (bind-key "C-c t b" 'ruby-test-run)
 (define-key 'help-command "R" 'yari)
 
-
 ;;;; Sandbox
 
 (let ((sandbox-path (f-expand "sandbox" user-emacs-directory)))

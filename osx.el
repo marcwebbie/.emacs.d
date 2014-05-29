@@ -18,7 +18,6 @@
 ;; In dired, move deletions to trash
 (setq delete-by-moving-to-trash t)
 
-
 (defun finder ()
   "Opens file directory in Finder."
   (interactive)
