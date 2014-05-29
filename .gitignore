@@ -11,3 +11,5 @@
 /.mc-lists.el
 /sandbox
 /Makefile
+/eshell/history
+/eshell/lastdir
