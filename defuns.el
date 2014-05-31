@@ -312,4 +312,17 @@ them. These include the path relative to the project root."
   (interactive)
   (kill-region (save-excursion (beginning-of-line) (point))
                (point)))
+
+(defmacro rename-modeline (package-name mode new-name)
+  `(eval-after-load ,package-name
+     '(defadvice ,mode (after rename-modeline activate)
+        (setq mode-name ,new-name))))
+
+
+;; shorthand for interactive lambdas
+(defmacro λ (&rest body)
+  `(lambda ()
+     (interactive)
+     ,@body))
+
 ;;;
