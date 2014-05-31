@@ -467,10 +467,10 @@
 (define-key 'help-command "R" 'yari)
 
 (global-unset-key (kbd "C-x +")) ;; used to be balance-windows
-(bind-key "C-x + -" (lambda ()(interactive) (replace-region-by 's-dashed-words)))
-(bind-key "C-x + _" (lambda ()(interactive) (replace-region-by 's-snake-case)))
-(bind-key "C-x + c" (lambda ()(interactive) (replace-region-by 's-lower-camel-case)))
-(bind-key "C-x + C" (lambda ()(interactive) (replace-region-by 's-upper-camel-case)))
+(bind-key "C-x + -" (λ (replace-region-by 's-dashed-words)))
+(bind-key "C-x + _" (λ (replace-region-by 's-snake-case)))
+(bind-key "C-x + c" (λ (replace-region-by 's-lower-camel-case)))
+(bind-key "C-x + C" (λ (replace-region-by 's-upper-camel-case)))
 
 ;;;; Sandbox
 
