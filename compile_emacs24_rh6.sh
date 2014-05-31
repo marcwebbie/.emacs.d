@@ -15,7 +15,9 @@ cd emacs-emacs-24.3.91
 ./autogen.sh && ./configure --with-jpeg=no && make bootstrap && sudo make install
 cd ..
 
-# install cask for emacs config management
+# Setup config
+
+## Install cask
 #curl -fsSkL https://raw.github.com/cask/cask/master/go | Python
 git clone https://github.com/cask/cask.git ~/.cask
 
