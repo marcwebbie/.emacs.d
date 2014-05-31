@@ -13,3 +13,5 @@
 /Makefile
 /eshell/history
 /eshell/lastdir
+/.places
+/history
