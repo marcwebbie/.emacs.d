@@ -8,6 +8,9 @@
 (setq browse-url-browser-function 'browse-url-generic)
 (setq browse-url-generic-program "firefox")
 
+;; Highlight current line
+(global-hl-line-mode 1)
+
 ;; Highlight symbol at point
 ;(add-hook 'find-file-hook 'idle-highlight-mode)
 

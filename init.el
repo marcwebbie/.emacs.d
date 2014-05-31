@@ -34,7 +34,7 @@
 
 ;;;; Appearance:
 
-(load-theme 'molokai :no-confirm)
+(load-theme 'cyberpunk :no-confirm)
 
 (setq visible-bell t
       font-lock-maximum-decoration t
