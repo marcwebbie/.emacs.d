@@ -8,10 +8,6 @@
 (setq browse-url-browser-function 'browse-url-generic)
 (setq browse-url-generic-program "firefox")
 
-;; Set default browser
-(setq browse-url-browser-function 'browse-url-generic)
-(setq browse-url-generic-program "firefox")
-
 ;; Highlight symbol at point
 ;(add-hook 'find-file-hook 'idle-highlight-mode)
 
