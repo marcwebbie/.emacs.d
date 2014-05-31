@@ -67,7 +67,6 @@
 (depends-on "smartparens")
 (depends-on "smex")
 (depends-on "solarized-theme")
-(depends-on "sos")
 (depends-on "sublimity")
 (depends-on "swoop")
 (depends-on "use-package")
