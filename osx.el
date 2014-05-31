@@ -1,16 +1,16 @@
 ;;; osx.el --- OSX related configuration -*- lexical-binding: t; -*-
 
+;;; Code:
+
 ;; Switch the Cmd and Meta keys
-(setq mac-option-key-is-meta nil)
-(setq mac-command-key-is-meta t)
+(setq mac-option-modifier 'super)
 (setq mac-command-modifier 'meta)
-(setq mac-option-modifier nil)
+(setq ns-function-modifier 'hyper)
 
-;; Menu bar is not annoying in OSX
-(menu-bar-mode 1)
-
-;; Set font size
-(set-face-attribute 'default nil :height 140)
+;; mac friendly font
+(when window-system
+  (setq default-font "-apple-Monaco-medium-normal-normal-*-16-*-*-*-m-0-iso10646-1")
+  (set-face-attribute 'default nil :font default-font))
 
 ;; Make the browser the OS X default
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
