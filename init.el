@@ -340,6 +340,9 @@
 (use-package ido-vertical-mode
   :init (ido-vertical-mode 1))
 
+(use-package ido-ubiquitous
+  :init (ido-ubiquitous-mode 1))
+
 (use-package puppet-mode)
 
 (use-package web-mode

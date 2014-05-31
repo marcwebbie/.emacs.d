@@ -35,6 +35,7 @@
 (depends-on "htmlize")
 (depends-on "httprepl")
 (depends-on "idle-highlight-mode")
+(depends-on "ido-ubiquitous")
 (depends-on "ido-vertical-mode")
 (depends-on "idomenu")
 (depends-on "js2-mode")
