@@ -46,6 +46,14 @@
   (tooltip-mode -1)
   (blink-cursor-mode -1))
 
+(add-hook 'emacs-lisp-mode-hook
+          (lambda()
+            (setq mode-name "el")))
+
+(add-hook 'projectile-mode-hook
+          (lambda()
+            (setq mode-name "pj")))
+
 ;;;; Packages
 
 (use-package hl-line
@@ -55,15 +63,6 @@
   :config (dash-enable-font-lock))
 
 (use-package dired-x)
-
-(use-package diminish
-  :init
-  (progn
-    (eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
-    (eval-after-load "eldoc" '(diminish 'eldoc-mode))
-    (eval-after-load "smartparens" '(diminish 'smartparens-mode))
-    (eval-after-load "git-gutter+" '(diminish 'git-gutter+-mode))
-    (eval-after-load "guide-key" '(diminish 'guide-key-mode))))
 
 (use-package ido
   :init (ido-mode 1)
@@ -409,6 +408,17 @@
          ("C-c m" . vr/mc-mark)
          ("C-r" . vr/isearch-backward)
          ("C-s" . vr/isearch-forward)))
+
+
+(use-package diminish
+  :init
+  (progn
+    (eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
+    (eval-after-load "eldoc" '(diminish 'eldoc-mode))
+    (eval-after-load "smartparens" '(diminish 'smartparens-mode))
+    (eval-after-load "git-gutter+" '(diminish 'git-gutter+-mode))
+    (eval-after-load "guide-key" '(diminish 'guide-key-mode))
+    (eval-after-load "magit" '(diminish 'magit-auto-revert-mode))))
 
 ;;;; Custom packages
 
