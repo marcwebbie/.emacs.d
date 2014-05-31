@@ -31,12 +31,20 @@
 
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on) ;; handle shell colours
 
+
+;;;; Appearance:
+
 (load-theme 'molokai :no-confirm)
 
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (when (string= (buffer-name) "*scratch*")
-              (animate-string ";; I would love to change the world, but they won't give me the source code" (/ (frame-height) 2)))))
+(setq visible-bell t
+      font-lock-maximum-decoration t
+      color-theme-is-global t
+      truncate-partial-width-windows nil)
+
+(when window-system
+  (setq frame-title-format '(buffer-file-name "%f" ("%b")))
+  (tooltip-mode -1)
+  (blink-cursor-mode -1))
 
 ;;;; Packages
 
@@ -47,6 +55,15 @@
   :config (dash-enable-font-lock))
 
 (use-package dired-x)
+
+(use-package diminish
+  :init
+  (progn
+    (eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
+    (eval-after-load "eldoc" '(diminish 'eldoc-mode))
+    (eval-after-load "smartparens" '(diminish 'smartparens-mode))
+    (eval-after-load "git-gutter+" '(diminish 'git-gutter+-mode))
+    (eval-after-load "guide-key" '(diminish 'guide-key-mode))))
 
 (use-package ido
   :init (ido-mode 1)
@@ -71,6 +88,9 @@
 (use-package multiple-cursors
   :bind (("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
+         ("C-c C-<" . mc/mark-all-like-this)
+         ("C-c C-w" . mc/mark-all-words-like-this)
+         ("C-c C-s" . mc/mark-all-symbols-like-this)
          ("C-S-c C-S-c" . mc/edit-lines)))
 
 (use-package popwin
@@ -89,9 +109,7 @@
   :init (add-hook 'projectile-mode-hook 'projectile-rails-on))
 
 (use-package drag-stuff
-  :init (drag-stuff-global-mode 1)
-  :bind (("M-N" . drag-stuff-down)
-         ("M-P" . drag-stuff-up)))
+  :init (drag-stuff-global-mode 1))
 
 (use-package misc
   :bind ("M-z" . zap-up-to-char))
@@ -356,9 +374,6 @@
                         (setq web-mode-style-padding 2)
                         (setq web-mode-script-padding 2)))))
 
-(use-package discover
-  :init (global-discover-mode 1))
-
 (use-package ert-async
   :config (add-to-list 'emacs-lisp-mode-hook 'ert-async-activate-font-lock-keywords))
 
@@ -401,17 +416,19 @@
 
 ;;;; Bindings
 
+(bind-key "<f8>" (λ (find-file (f-expand "init.el" user-emacs-directory))))
+(bind-key "<f6>" 'linum-mode)
+
 (bind-key "C-a" 'back-to-indentation-or-beginning-of-line)
-(bind-key "C-7" 'comment-or-uncomment-current-line-or-region)
-(bind-key "C-6" 'linum-mode)
+(bind-key "C-;" 'comment-or-uncomment-current-line-or-region)
 (bind-key "C-v" 'scroll-up-five)
+(bind-key "M-v" 'scroll-down-five)
 (bind-key "C-j" 'newline-and-indent)
 
 (bind-key "M-g" 'goto-line)
-(bind-key "M-n" 'open-line-below)
-(bind-key "M-p" 'open-line-above)
+(bind-key "M-n" 'drag-stuff-down)
+(bind-key "M-p" 'drag-stuff-up)
 (bind-key "M-j" 'join-line-or-lines-in-region)
-(bind-key "M-v" 'scroll-down-five)
 (bind-key "M-k" 'kill-this-buffer)
 (bind-key "M-o" 'other-window)
 (bind-key "M-1" 'delete-other-windows)
@@ -425,6 +442,8 @@
 
 (bind-key "M-+" 'text-scale-increase)
 (bind-key "M-_" 'text-scale-decrease)
+
+(bind-key "M-j" (lambda () (interactive) (join-line -1)))
 
 (bind-key "C-c g" 'google)
 (bind-key "C-c d" 'duplicate-current-line-or-region)
@@ -441,17 +460,6 @@
    (interactive)
    (if (y-or-n-p "Quit Emacs? ")
        (save-buffers-kill-emacs))))
-
-(bind-key
- "C-8"
- (lambda ()
-   (interactive)
-   (find-file (f-expand "init.el" user-emacs-directory))))
-
-(bind-key "M-j"
-          (lambda ()
-            (interactive)
-            (join-line -1)))
 
 ;; Other keybindings
 (bind-key "M-." 'find-tag)
