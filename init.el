@@ -70,7 +70,8 @@
 
 (use-package multiple-cursors
   :bind (("C->" . mc/mark-next-like-this)
-         ("C-<" . mc/mark-previous-like-this)))
+         ("C-<" . mc/mark-previous-like-this)
+         ("C-S-c C-S-c" . mc/edit-lines)))
 
 (use-package popwin
   :config (setq display-buffer-function 'popwin:display-buffer))
@@ -459,8 +460,16 @@
 (bind-key "C-c t b" 'ruby-test-run)
 (define-key 'help-command "R" 'yari)
 
+(global-unset-key (kbd "C-x +")) ;; used to be balance-windows
+(bind-key "C-x + -" (lambda ()(interactive) (replace-region-by 's-dashed-words)))
+(bind-key "C-x + _" (lambda ()(interactive) (replace-region-by 's-snake-case)))
+(bind-key "C-x + c" (lambda ()(interactive) (replace-region-by 's-lower-camel-case)))
+(bind-key "C-x + C" (lambda ()(interactive) (replace-region-by 's-upper-camel-case)))
+
 ;;;; Sandbox
 
 (let ((sandbox-path (f-expand "sandbox" user-emacs-directory)))
   (when (f-dir? sandbox-path)
     (-each (f--files sandbox-path (f-ext? it "el")) 'load)))
+
+;;;; End

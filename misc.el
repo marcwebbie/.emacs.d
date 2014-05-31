@@ -37,6 +37,9 @@
 ;; Remove selected region if typing
 (pending-delete-mode 1)
 
+;; Remove text in active region if inserting text
+(delete-selection-mode 1)
+
 ;; Allow some commands
 (dolist (command '(narrow-to-region downcase-region upcase-region))
   (put command 'disabled nil))
@@ -79,3 +82,6 @@
 
 ;; Show column number in mode line
 (column-number-mode 1)
+
+;; Undo/redo window configuration with C-c <left>/<right>
+(winner-mode 1)

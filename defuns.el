@@ -294,4 +294,22 @@ them. These include the path relative to the project root."
   (interactive)
   (set-default-font "Monaco-14"))
 
+(defun replace-region-by (fn)
+  (let* ((beg (region-beginning))
+         (end (region-end))
+         (contents (buffer-substring beg end)))
+    (delete-region beg end)
+    (insert (funcall fn contents))))
+
+(defun kill-region-or-backward-word ()
+  "kill region if active, otherwise kill backward word"
+  (interactive)
+  (if (region-active-p)
+      (kill-region (region-beginning) (region-end))
+    (backward-kill-word 1)))
+
+(defun kill-to-beginning-of-line ()
+  (interactive)
+  (kill-region (save-excursion (beginning-of-line) (point))
+               (point)))
 ;;;
