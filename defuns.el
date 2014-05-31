@@ -148,6 +148,17 @@ there's a region, all lines that region covers will be duplicated."
         (buffer-substring (region-beginning) (region-end))
       (read-string "Query: ")))))
 
+;; Youtube
+(defun youtube ()
+  "Search YouTube with a query or region if any."
+  (interactive)
+  (browse-url
+   (concat
+    "http://www.youtube.com/results?search_query="
+    (url-hexify-string (if mark-active
+                           (buffer-substring (region-beginning) (region-end))
+                         (read-string "Search YouTube: "))))))
+
 (defun comment-or-uncomment-current-line-or-region ()
   "Comments or uncomments current current line or whole lines in region."
   (interactive)
