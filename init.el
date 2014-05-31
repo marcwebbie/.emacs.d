@@ -225,6 +225,7 @@
   (progn
     (use-package smartparens-config)
     (use-package smartparens-ruby)
+    (use-package smartparens-python)
     (use-package smartparens-html)
     (smartparens-global-mode 1)
     (show-smartparens-global-mode 1))
@@ -457,6 +458,7 @@
 (bind-key "M-j" (lambda () (interactive) (join-line -1)))
 
 (bind-key "C-c g" 'google)
+(bind-key "C-c y" 'youtube)
 (bind-key "C-c d" 'duplicate-current-line-or-region)
 (bind-key "C-c n" 'clean-up-buffer-or-region)
 (bind-key "C-c s" 'swap-windows)
@@ -492,3 +494,16 @@
     (-each (f--files sandbox-path (f-ext? it "el")) 'load)))
 
 ;;;; End
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(magit-use-overlays nil)
+ '(send-mail-function (quote smtpmail-send-it)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
