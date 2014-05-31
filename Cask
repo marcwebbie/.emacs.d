@@ -15,6 +15,7 @@
 (depends-on "cyberpunk-theme")
 (depends-on "dash")
 (depends-on "discover")
+(depends-on "rbenv")
 (depends-on "drag-stuff")
 (depends-on "epl")
 (depends-on "ert-async")

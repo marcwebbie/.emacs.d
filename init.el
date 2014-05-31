@@ -181,7 +181,11 @@
 (use-package ruby-test-mode
   :bind ("C-c C-t" . ruby-test-run-at-point))
 
-(use-package robe)
+(use-package robe
+  :config (add-hook 'ruby-mode-hook 'robe-mode))
+
+(use-package rbenv
+  :init (global-rbenv-mode))
 
 (use-package sublimity
   :config
