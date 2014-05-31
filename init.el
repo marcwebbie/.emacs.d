@@ -446,7 +446,7 @@
             (join-line -1)))
 
 ;; Other keybindings
-(bind-key "C-." 'find-tag)
+(bind-key "M-." 'find-tag)
 (bind-key "C-c t s" 'shoulda:run-should-at-point)
 (bind-key "C-c t c" 'shoulda:run-context-at-point)
 (bind-key "C-c t b" 'ruby-test-run)
