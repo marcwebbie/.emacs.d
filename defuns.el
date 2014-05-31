@@ -294,17 +294,4 @@ them. These include the path relative to the project root."
   (interactive)
   (set-default-font "Monaco-14"))
 
-(defun stringfy-single ()
-  (interactive)
-  (let ((my-substring (buffer-substring (region-beginning) (region-end))))
-    (delete-region (region-beginning) (region-end))
-    (insert (concat "'" my-substring "'"))))
-
-(defun stringfy-double ()
-  (interactive)
-  (let ((my-substring (buffer-substring (region-beginning) (region-end))))
-    (delete-region (region-beginning) (region-end))
-    (insert (concat "\"" my-substring "\""))))
-
-
 ;;;
