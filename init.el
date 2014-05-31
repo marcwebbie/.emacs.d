@@ -134,7 +134,9 @@
   :bind ("C-c SPC" . ace-jump-mode))
 
 (use-package expand-region
-  :bind ("C-=" . er/expand-region))
+  :bind (("C-=" . er/expand-region)
+         ("C-\\" . er/expand-region)
+         ("C-|" . er/contract-region)))
 
 (use-package cua-base
   :init (cua-mode 1)
@@ -460,7 +462,7 @@
        (save-buffers-kill-emacs))))
 
 ;; Other keybindings
-(bind-key "M-." 'find-tag)
+;; (bind-key "M-." 'find-tag)
 (bind-key "C-c t s" 'shoulda:run-should-at-point)
 (bind-key "C-c t c" 'shoulda:run-context-at-point)
 (bind-key "C-c t b" 'ruby-test-run)
