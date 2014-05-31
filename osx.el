@@ -15,8 +15,12 @@
 ;; Make the browser the OS X default
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
 
-;; In dired, move deletions to trash
-(setq delete-by-moving-to-trash t)
+;; Move to trash when deleting stuff
+(setq delete-by-moving-to-trash t
+      trash-directory "~/.Trash/emacs")
+
+;; Ignore .DS_Store files with ido mode
+(add-to-list 'ido-ignore-files "\\.DS_Store")
 
 (defun finder ()
   "Opens file directory in Finder."
