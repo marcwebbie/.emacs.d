@@ -135,6 +135,7 @@
 (use-package expand-region
   :bind (("C-=" . er/expand-region)
          ("C-\\" . er/expand-region)
+         ("M-\\" . er/mark-ruby-block-up)
          ("C-|" . er/contract-region)))
 
 (use-package cua-base
