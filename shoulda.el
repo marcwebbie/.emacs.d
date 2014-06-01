@@ -1,6 +1,7 @@
 ;;; shoulda.el --- Shoulda test support for ruby
 ;;; Development in Ruby
-
+;;; Commentary:
+;;; Code:
 
 (defun shoulda:run-should-at-point ()
   "Run Shoulda should test at point"
