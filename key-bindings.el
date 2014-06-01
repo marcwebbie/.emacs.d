@@ -50,6 +50,14 @@
 (bind-key "C-:" 'hippie-expand-lines)
 (bind-key "C-," 'completion-at-point)
 
+;; git-gutter
+(global-unset-key (kbd "C-x v"))
+(bind-key "C-x v =" 'git-gutter:popup-hunk)
+(bind-key "C-x v p" 'git-gutter:previous-hunk)
+(bind-key "C-x v n" 'git-gutter:next-hunk)
+(bind-key "C-x v s" 'git-gutter:stage-hunk)
+(bind-key "C-x v r" 'git-gutter:revert-hunk)
+
 ;; magit
 (bind-key "C-x g" 'magit-status)
 (bind-key "q" 'magit-quit-session magit-status-mode-map)
