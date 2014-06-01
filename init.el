@@ -20,6 +20,7 @@
 (load-local "defuns")
 (load-local "hippie")
 (load-local "shoulda")
+(load-local "jstestdriver")
 
 
 ;;;; Hooks
