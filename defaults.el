@@ -13,6 +13,13 @@
 ;; Do not make any backup files
 (setq make-backup-files nil)
 
+;; Do not ask for confirmation
+(setq confirm-nonexistent-file-or-buffer nil)
+
+(setq kill-buffer-query-functions
+      (remq 'process-kill-buffer-query-function
+            kill-buffer-query-functions))
+
 ;; Set default browser
 (setq browse-url-browser-function 'browse-url-generic)
 (setq browse-url-generic-program "firefox")
