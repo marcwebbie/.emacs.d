@@ -21,6 +21,8 @@
 (bind-key "C-c y" 'youtube)
 
 (bind-key "M-j" (λ (join-line -1)))
+(bind-key "M-h" 'kill-to-beginning-of-line)
+(bind-key "M-Z" 'zap-up-to-char)
 
 ;; Change word separators
 (global-unset-key (kbd "C-x +")) ;; used to be balance-windows
