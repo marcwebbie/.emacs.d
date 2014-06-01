@@ -12,7 +12,7 @@
 (depends-on "f")
 (depends-on "flx-ido")
 (depends-on "flycheck")
-(depends-on "git-gutter+")
+(depends-on "git-gutter")
 (depends-on "haml-mode")
 (depends-on "ido-ubiquitous")
 (depends-on "ido-vertical-mode")

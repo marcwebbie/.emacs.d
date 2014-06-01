@@ -52,7 +52,7 @@
     (eval-after-load "drag-stuff" '(diminish 'drag-stuff-mode))
     (eval-after-load "eldoc" '(diminish 'eldoc-mode))
     (eval-after-load "flycheck" '(diminish 'flycheck-mode))
-    (eval-after-load "git-gutter+" '(diminish 'git-gutter+-mode))
+    (eval-after-load "git-gutter" '(diminish 'git-gutter-mode))
     (eval-after-load "guide-key" '(diminish 'guide-key-mode))
     (eval-after-load "magit" '(diminish 'magit-auto-revert-mode))
     (eval-after-load "smartparens" '(diminish 'smartparens-mode))
@@ -89,8 +89,8 @@
     (setq flycheck-display-errors-function nil)
     (add-hook 'after-init-hook 'global-flycheck-mode)))
 
-(use-package git-gutter+
-  :init (global-git-gutter+-mode t))
+(use-package git-gutter
+  :init (global-git-gutter-mode t))
 
 (use-package haml-mode)
 
