@@ -2,7 +2,8 @@
 ;;(setq redisplay-dont-pause t)
 
 ;; Do not make any backup files
-(setq make-backup-files nil)
+(setq make-backup-files nil) ; stop creating those backup~ files
+(setq auto-save-default nil) ; stop creating those #autosave# files
 
 ;; Do not show annying menu-bar tips
 (setq suggest-key-bindings nil)
