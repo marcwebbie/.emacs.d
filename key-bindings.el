@@ -21,7 +21,6 @@
 (bind-key "C-c y" 'youtube)
 
 (bind-key "M-j" (λ (join-line -1)))
-(bind-key "M-w" 'kill-region-or-thing-at-point)
 
 ;; Change word separators
 (global-unset-key (kbd "C-x +")) ;; used to be balance-windows
