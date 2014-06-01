@@ -36,8 +36,8 @@
 
 (use-package ack-and-a-half)
 
-;; (use-package auto-complete
-;;   :init (global-auto-complete-mode t))
+(use-package auto-complete
+  :init (global-auto-complete-mode t))
 
 (use-package coffee-mode
   :init
