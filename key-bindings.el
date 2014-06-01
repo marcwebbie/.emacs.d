@@ -45,7 +45,6 @@
 
 ;; magit
 (bind-key "C-x g" 'magit-status)
-(bind-key "C-c C-a" 'magit-just-amend magit-status-mode-map)
 (bind-key "q" 'magit-quit-session magit-status-mode-map)
 
 ;; multiple-cursors

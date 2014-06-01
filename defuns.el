@@ -273,13 +273,6 @@ Otherwise point moves to beginning of line."
 
 ;;;; Other
 
-(defun magit-just-amend ()
-  "Amend changes without any prompt"
-  (interactive)
-  (save-window-excursion
-    (magit-with-refresh
-      (shell-command "git --no-pager commit --amend --reuse-message=HEAD"))))
-
 (defadvice magit-status (around magit-fullscreen activate)
   (window-configuration-to-register :magit-fullscreen)
   ad-do-it
