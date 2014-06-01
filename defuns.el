@@ -7,6 +7,9 @@
 
 ;;;; Editing
 
+(autoload 'zap-up-to-char "misc"
+  "Kill up to, but not including ARGth occurrence of CHAR.")
+
 (defun sp-kill-sexp-with-a-twist-of-lime ()
   (interactive)
   (if (sp-point-in-string)
