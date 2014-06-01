@@ -111,15 +111,6 @@ there's a region, all lines that region covers will be duplicated."
        (progn (goto-char min) (line-beginning-position))
        (progn (goto-char max) (line-end-position))))))
 
-(defun kill-region-or-thing-at-point (beg end)
-  "Kill region or word at point."
-  (interactive "r")
-  (unless (region-active-p)
-    (save-excursion
-      (setq beg (re-search-backward "\\_<" nil t))
-      (setq end (re-search-forward "\\_>" nil t))))
-  (kill-ring-save beg end))
-
 (defun replace-region-by (fn)
   (let* ((beg (region-beginning))
          (end (region-end))
