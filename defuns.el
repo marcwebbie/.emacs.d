@@ -1,13 +1,33 @@
-;;; defuns.el --- Functions -*- lexical-binding: t; -*-
+;; shorthand for interactive lambdas
+(defmacro λ (&rest body)
+  `(lambda ()
+     (interactive)
+     ,@body))
 
-(defun nuke-all-buffers ()
-  "Kill all buffers, leaving *scratch* only."
+
+;;;; Editing
+
+(defun sp-kill-sexp-with-a-twist-of-lime ()
   (interactive)
-  (mapc
-   (lambda (buffer)
-     (kill-buffer buffer))
-   (buffer-list))
-  (delete-other-windows))
+  (if (sp-point-in-string)
+      (let ((end (plist-get (sp-get-string) :end)))
+        (kill-region (point) (1- end)))
+    (let ((beg (line-beginning-position))
+          (end (line-end-position)))
+      (if (or (comment-only-p beg end)
+              (s-matches? "\\s+" (buffer-substring-no-properties beg end)))
+          (kill-line)
+        (sp-kill-sexp)))))
+
+(defun eval-and-replace ()
+  "Replace the preceding sexp with its value."
+  (interactive)
+  (backward-kill-sexp)
+  (condition-case nil
+      (prin1 (eval (read (current-kill 0)))
+             (current-buffer))
+    (error (message "Invalid expression")
+           (insert (current-kill 0)))))
 
 (defun open-line-below ()
   "Open a line below the line the point is at.
@@ -45,8 +65,6 @@ Then move to that line and indent accordning to mode"
          (forward-line -1)
          (indent-according-to-mode))))
 
-;; NOTE: (region-beginning) and (region-end) are not saved in
-;; variables since they can change after each clean step.
 (defun clean-up-buffer-or-region ()
   "Untabifies, indents and deletes trailing whitespace from buffer or region."
   (interactive)
@@ -60,15 +78,6 @@ Then move to that line and indent accordning to mode"
     (save-restriction
       (narrow-to-region (region-beginning) (region-end))
       (delete-trailing-whitespace))))
-
-(defun back-to-indentation-or-beginning-of-line ()
-  "Moves point back to indentation if there is any
-non blank characters to the left of the cursor.
-Otherwise point moves to beginning of line."
-  (interactive)
-  (if (= (point) (save-excursion (back-to-indentation) (point)))
-      (beginning-of-line)
-    (back-to-indentation)))
 
 (defun duplicate-current-line-or-region (arg)
   "Duplicates the current line or region ARG times.
@@ -89,6 +98,97 @@ there's a region, all lines that region covers will be duplicated."
         (insert region)
         (setq end (point)))
       (goto-char (+ origin (* (length region) arg) arg)))))
+
+(defun comment-or-uncomment-current-line-or-region ()
+  "Comments or uncomments current current line or whole lines in region."
+  (interactive)
+  (save-excursion
+    (let (min max)
+      (if (region-active-p)
+          (setq min (region-beginning) max (region-end))
+        (setq min (point) max (point)))
+      (comment-or-uncomment-region
+       (progn (goto-char min) (line-beginning-position))
+       (progn (goto-char max) (line-end-position))))))
+
+(defun kill-region-or-thing-at-point (beg end)
+  "Kill region or word at point."
+  (interactive "r")
+  (unless (region-active-p)
+    (save-excursion
+      (setq beg (re-search-backward "\\_<" nil t))
+      (setq end (re-search-forward "\\_>" nil t))))
+  (kill-ring-save beg end))
+
+(defun replace-region-by (fn)
+  (let* ((beg (region-beginning))
+         (end (region-end))
+         (contents (buffer-substring beg end)))
+    (delete-region beg end)
+    (insert (funcall fn contents))))
+
+(defun kill-region-or-backward-word ()
+  "kill region if active, otherwise kill backward word"
+  (interactive)
+  (if (region-active-p)
+      (kill-region (region-beginning) (region-end))
+    (backward-kill-word 1)))
+
+(defun kill-to-beginning-of-line ()
+  (interactive)
+  (kill-region (save-excursion (beginning-of-line) (point))
+               (point)))
+
+(defun url-decode-region (beg end)
+  (interactive "r")
+  (let ((content (url-unhex-string (buffer-substring beg end))))
+    (goto-char end)
+    (newline)
+    (insert content)))
+
+(defun url-encode-region (beg end)
+  (interactive "r")
+  (let ((content (url-hexify-string (buffer-substring beg end))))
+    (goto-char end)
+    (newline)
+    (insert content)))
+
+
+;;;; Navigation
+
+(defun back-to-indentation-or-beginning-of-line ()
+  "Moves point back to indentation if there is any
+non blank characters to the left of the cursor.
+Otherwise point moves to beginning of line."
+  (interactive)
+  (if (= (point) (save-excursion (back-to-indentation) (point)))
+      (beginning-of-line)
+    (back-to-indentation)))
+
+(defun scroll-down-five ()
+  "Scrolls down five rows."
+  (interactive)
+  (scroll-down 5))
+
+(defun scroll-up-five ()
+  "Scrolls up five rows."
+  (interactive)
+  (scroll-up 5))
+
+(defun find-project-root (dir)
+  (f--traverse-upwards (f-dir? (f-expand ".git" it)) dir))
+
+
+;;;; Buffers, Windows
+
+(defun nuke-all-buffers ()
+  "Kill all buffers, leaving *scratch* only."
+  (interactive)
+  (mapc
+   (lambda (buffer)
+     (kill-buffer buffer))
+   (buffer-list))
+  (delete-other-windows))
 
 (defun swap-windows ()
   "If you have 2 windows, it swaps them."
@@ -138,8 +238,11 @@ there's a region, all lines that region covers will be duplicated."
         (kill-buffer buffer)
         (message "File '%s' successfully removed" filename)))))
 
+
+;;;; External services
+
 (defun google ()
-  "Googles a query or region if any."
+  "Search Googles with a query or region if any."
   (interactive)
   (browse-url
    (concat
@@ -148,7 +251,6 @@ there's a region, all lines that region covers will be duplicated."
         (buffer-substring (region-beginning) (region-end))
       (read-string "Query: ")))))
 
-;; Youtube
 (defun youtube ()
   "Search YouTube with a query or region if any."
   (interactive)
@@ -159,181 +261,32 @@ there's a region, all lines that region covers will be duplicated."
                            (buffer-substring (region-beginning) (region-end))
                          (read-string "Search YouTube: "))))))
 
-(defun comment-or-uncomment-current-line-or-region ()
-  "Comments or uncomments current current line or whole lines in region."
+(defun finder ()
+  "Opens file directory in Finder."
   (interactive)
-  (save-excursion
-    (let (min max)
-      (if (region-active-p)
-          (setq min (region-beginning) max (region-end))
-        (setq min (point) max (point)))
-      (comment-or-uncomment-region
-       (progn (goto-char min) (line-beginning-position))
-       (progn (goto-char max) (line-end-position))))))
+  (let ((file (buffer-file-name)))
+    (if file
+        (shell-command
+         (format "%s %s" (executable-find "open") (file-name-directory file)))
+      (error "Buffer is not attached to any file."))))
 
-(defun join-line-or-lines-in-region ()
-  "Join this line or the lines in the selected region."
-  (interactive)
-  (cond ((region-active-p)
-         (let ((min (line-number-at-pos (region-beginning))))
-           (goto-char (region-end))
-           (while (> (line-number-at-pos) min)
-             (join-line))))
-        (t (call-interactively 'join-line))))
 
-(defun scroll-down-five ()
-  "Scrolls down five rows."
-  (interactive)
-  (scroll-down 5))
-
-(defun scroll-up-five ()
-  "Scrolls up five rows."
-  (interactive)
-  (scroll-up 5))
-
-(defun re-builder-large ()
-  "Just like `re-builder', only make the font and window larger."
-  (interactive)
-  (re-builder)
-  (text-scale-increase 5)
-  (set-window-text-height (selected-window) 7))
-
-(defun url-decode-region (beg end)
-  (interactive "r")
-  (let ((content (url-unhex-string (buffer-substring beg end))))
-    (goto-char end)
-    (newline)
-    (insert content)))
-
-(defun url-encode-region (beg end)
-  (interactive "r")
-  (let ((content (url-hexify-string (buffer-substring beg end))))
-    (goto-char end)
-    (newline)
-    (insert content)))
-
-(defun dired-open-marked-files ()
-  "Open marked files."
-  (interactive)
-  (let ((distinguish-one-marked nil))
-    (mapc 'find-file
-          (dired-map-over-marks (dired-get-file-for-visit)
-                                current-prefix-arg))))
-
-(defun find-project-root (dir)
-  (f--traverse-upwards (f-dir? (f-expand ".git" it)) dir))
-
-(defun projectile-completion-fn (prompt choises)
-  "Projectile completion function that only shows file name.
-
-If two files have same name, new completion appears to select between
-them. These include the path relative to the project root."
-  (interactive)
-  (let* ((stripped-choises
-          (-uniq (--map (file-name-nondirectory it) choises)))
-         (choise
-          (ido-completing-read prompt stripped-choises))
-         (matching-files
-          (-filter
-           (lambda (file)
-             (equal (file-name-nondirectory file) choise))
-           choises)))
-    (if (> (length matching-files) 1)
-        (ido-completing-read prompt matching-files)
-      (car matching-files))))
+;;;; Other
 
 (defun magit-just-amend ()
+  "Amend changes without any prompt"
   (interactive)
   (save-window-excursion
-    (shell-command "git --no-pager commit --amend --reuse-message=HEAD")
-    (magit-refresh)))
+    (magit-with-refresh
+      (shell-command "git --no-pager commit --amend --reuse-message=HEAD"))))
 
-(defun sp-kill-sexp-with-a-twist-of-lime ()
+(defadvice magit-status (around magit-fullscreen activate)
+  (window-configuration-to-register :magit-fullscreen)
+  ad-do-it
+  (delete-other-windows))
+
+(defun magit-quit-session ()
+  "Restores the previous window configuration and kills the magit buffer"
   (interactive)
-  (if (sp-point-in-string)
-      (let ((end (plist-get (sp-get-string) :end)))
-        (kill-region (point) (1- end)))
-    (let ((beg (line-beginning-position))
-          (end (line-end-position)))
-      (if (or (comment-only-p beg end)
-              (s-matches? "\\s+" (buffer-substring-no-properties beg end)))
-          (kill-line)
-        (sp-kill-sexp)))))
-
-(defun eval-and-replace ()
-  "Replace the preceding sexp with its value."
-  (interactive)
-  (backward-kill-sexp)
-  (condition-case nil
-      (prin1 (eval (read (current-kill 0)))
-             (current-buffer))
-    (error (message "Invalid expression")
-           (insert (current-kill 0)))))
-
-(defun kill-region-or-thing-at-point (beg end)
-  "Kill region or word at point."
-  (interactive "r")
-  (unless (region-active-p)
-    (save-excursion
-      (setq beg (re-search-backward "\\_<" nil t))
-      (setq end (re-search-forward "\\_>" nil t))))
-  (kill-ring-save beg end))
-
-(defun done ()
-  "Add/remove async done callback for Mocha spec."
-  (interactive)
-  (save-excursion
-    (when (re-search-backward "^\s*it\s+\\(['\"]\\).+\\1" nil t)
-      (let ((line (buffer-substring-no-properties (line-beginning-position)
-                                                  (line-end-position))))
-        (goto-char (line-end-position))
-        (if (s-ends-with? "(done) ->" line)
-            (progn
-              (forward-char -3)
-              (delete-char -7))
-          (progn
-            (forward-char -2)
-            (insert "(done) ")))))))
-
-(defun set-font-anonymous-pro ()
-  "Set default font to be Anonymous Pro 14"
-  (interactive)
-  (set-default-font "Anonymous Pro-14"))
-
-(defun set-font-monaco ()
-  "Set default font to be Monaco 14"
-  (interactive)
-  (set-default-font "Monaco-14"))
-
-(defun replace-region-by (fn)
-  (let* ((beg (region-beginning))
-         (end (region-end))
-         (contents (buffer-substring beg end)))
-    (delete-region beg end)
-    (insert (funcall fn contents))))
-
-(defun kill-region-or-backward-word ()
-  "kill region if active, otherwise kill backward word"
-  (interactive)
-  (if (region-active-p)
-      (kill-region (region-beginning) (region-end))
-    (backward-kill-word 1)))
-
-(defun kill-to-beginning-of-line ()
-  (interactive)
-  (kill-region (save-excursion (beginning-of-line) (point))
-               (point)))
-
-(defmacro rename-modeline (package-name mode new-name)
-  `(eval-after-load ,package-name
-     '(defadvice ,mode (after rename-modeline activate)
-        (setq mode-name ,new-name))))
-
-
-;; shorthand for interactive lambdas
-(defmacro λ (&rest body)
-  `(lambda ()
-     (interactive)
-     ,@body))
-
-;;;
+  (kill-buffer)
+  (jump-to-register :magit-fullscreen))

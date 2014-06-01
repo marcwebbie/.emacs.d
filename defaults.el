@@ -1,3 +1,12 @@
+;; Redraw the display before it processes queued input events
+;;(setq redisplay-dont-pause t)
+
+;; Do not make any backup files
+(setq make-backup-files nil)
+
+;; Do not show annying menu-bar tips
+(setq suggest-key-bindings nil)
+
 ;; Allow pasting selection outside of Emacs
 (setq x-select-enable-clipboard t)
 
@@ -11,8 +20,8 @@
 ;; Highlight current line
 (global-hl-line-mode 1)
 
-;; Highlight symbol at point
-;(add-hook 'find-file-hook 'idle-highlight-mode)
+;; Do not show any tooltips
+(tooltip-mode -1)
 
 ;; Auto refresh buffers
 (global-auto-revert-mode 1)
@@ -74,6 +83,7 @@
 
 ;; Save minibuffer history
 (savehist-mode 1)
+(setq savehist-file "~/.emacs.d/savehist")
 (setq history-length 1000)
 
 ;; Undo/redo window configuration with C-c <left>/<right>
