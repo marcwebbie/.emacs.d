@@ -105,11 +105,16 @@
   :mode (("\\.js$" . js2-mode)
          ("Jakefile$" . js2-mode))
   :interpreter ("node" . js2-mode)
-  :bind (("C-a" . back-to-indentation-or-beginning-of-line)
-         ("C-M-h" . backward-kill-word))
   :config
   (progn
-    (add-hook 'js2-mode-hook (lambda () (setq js2-basic-offset 2)))))
+    (setq-default js2-basic-offset 2)
+    (setq-default js2-auto-indent-p t)
+    (setq-default js2-cleanup-whitespace t)
+    (setq-default js2-enter-indents-newline t)
+    (setq-default js2-global-externs "jQuery $")
+    (setq-default js2-indent-on-enter-key t)
+    (setq-default js2-show-parse-errors nil) ;; We'll let fly do the error parsing...
+    (setq-default js2-mode-indent-ignore-first-tab t)))
 
 (use-package magit
   :init
