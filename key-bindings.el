@@ -23,6 +23,13 @@
 (bind-key "M-j" (λ (join-line -1)))
 (bind-key "M-w" 'kill-region-or-thing-at-point)
 
+;; Change word separators
+(global-unset-key (kbd "C-x +")) ;; used to be balance-windows
+(bind-key "C-x + -" (λ (replace-region-by 's-dashed-words)))
+(bind-key "C-x + _" (λ (replace-region-by 's-snake-case)))
+(bind-key "C-x + c" (λ (replace-region-by 's-lower-camel-case)))
+(bind-key "C-x + C" (λ (replace-region-by 's-upper-camel-case)))
+
 ;; ace-jump-mode
 (bind-key "C-c SPC" 'ace-jump-mode)
 (bind-key "C-x SPC" 'ace-jump-mode-pop-mark)
