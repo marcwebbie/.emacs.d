@@ -86,8 +86,9 @@
 (use-package flycheck
   :config
   (progn
-    (setq flycheck-display-errors-function nil)
-    (add-hook 'after-init-hook 'global-flycheck-mode)))
+    (add-hook 'after-init-hook 'global-flycheck-mode)
+    (setq flycheck-check-syntax-automatically '(save idle-change mode-enabled))
+    (setq flycheck-display-errors-function nil)))
 
 (use-package git-gutter
   :init (global-git-gutter-mode t))
