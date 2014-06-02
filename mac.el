@@ -7,10 +7,9 @@
 (setq mac-command-modifier 'meta)
 (setq ns-function-modifier 'hyper)
 
-;; mac friendly font
-(when window-system
-  (setq default-font "-apple-Monaco-medium-normal-normal-*-15-*-*-*-m-0-iso10646-1")
-  (set-face-attribute 'default nil :font default-font))
+;; OSX friendly font
+;; (when window-system
+;;   (set-face-attribute 'default nil :font "-apple-Monaco-medium-normal-normal-*-14-*-*-*-m-0-iso10646-1"))
 
 ;; Make the browser the OS X default
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
