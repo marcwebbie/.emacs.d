@@ -31,7 +31,7 @@ Or, for emacs24 (i.e. 24.3, stable):
 
 ### Compile emacs 24 from source on Red Hat 6
 
-    curl -fsSkl https://github.com/marcwebbie/emacs/raw/master/scripts/compile_emacs24_rh6.sh | sh
+    curl -fsSkl https://raw.githubusercontent.com/marcwebbie/emacs/master/scripts/compile_emacs24_rh6.sh | sh
 
 ### Fetch the config files:
 
