@@ -46,11 +46,6 @@
 (bind-key "C-|" 'er/contract-region)
 (bind-key "M-\\" 'er/mark-ruby-block-up)
 
-;; hippie
-(bind-key "C-." 'hippie-expand-no-case-fold)
-(bind-key "C-:" 'hippie-expand-lines)
-(bind-key "C-," 'completion-at-point)
-
 ;; git-gutter
 (global-unset-key (kbd "C-x v"))
 (bind-key "C-x v =" 'git-gutter:popup-hunk)
@@ -58,6 +53,11 @@
 (bind-key "C-x v n" 'git-gutter:next-hunk)
 (bind-key "C-x v s" 'git-gutter:stage-hunk)
 (bind-key "C-x v r" 'git-gutter:revert-hunk)
+
+;; hippie
+(bind-key "C-." 'hippie-expand-no-case-fold)
+(bind-key "C-:" 'hippie-expand-lines)
+(bind-key "C-," 'completion-at-point)
 
 ;; idomenu
 (bind-key "M-i" 'idomenu)
