@@ -4,10 +4,12 @@
 
 (bind-key "<f6>" 'linum-mode)
 (bind-key "<f8>" (λ (find-file (f-expand "init.el" user-emacs-directory))))
+(bind-key "<f7>" 'ansi-term)
 
 (bind-key "C-a" 'back-to-indentation-or-beginning-of-line)
 (bind-key "C-j" 'newline-and-indent)
-(bind-key "C-z" 'ansi-term)
+(bind-key "C-z" 'zap-up-to-char)
+
 (bind-key "C-M-;" 'comment-or-uncomment-current-line-or-region)
 
 (bind-key "C-x C-c" (λ (if (y-or-n-p "Quit Emacs? ") (save-buffers-kill-emacs))))
@@ -16,13 +18,14 @@
 (bind-key "C-c C-k" 'delete-this-buffer-and-file)
 
 (bind-key "C-c d" 'duplicate-current-line-or-region)
-(bind-key "C-c n" 'clean-up-buffer-or-region)
 (bind-key "C-c g" 'google)
+(bind-key "C-c n" 'clean-up-buffer-or-region)
+(bind-key "C-c o" 'occur)
 (bind-key "C-c y" 'youtube)
 
-(bind-key "M-j" (λ (join-line -1)))
 (bind-key "M-h" 'kill-to-beginning-of-line)
-(bind-key "M-Z" 'zap-up-to-char)
+(bind-key "M-j" (λ (join-line -1)))
+(bind-key "M-o" 'other-window)
 
 ;; Change word separators
 (global-unset-key (kbd "C-x +")) ;; used to be balance-windows
