@@ -3,7 +3,8 @@
 This is my emacs configuration files. If you want to use them, the
 best thing is probably to fork the project at Github
 (<http://github.com/marcwebbie/emacs>) and then make your changes to that
-branch.
+branch. This config is based on
+[rejeep's](https://github.com/rejeep/emacs) and [magnar's](https://github.com/magnars/.emacs.d) configs.
 
 ## Installing emacs
 
@@ -15,7 +16,7 @@ I use Cocoa Emacs, installed like this:
 
     brew install emacs --cocoa --srgb
 
-### Ubuntu (<http://askubuntu.com/questions/297170>)
+### Ubuntu [source](http://askubuntu.com/questions/297170)
 
     sudo add-apt-repository ppa:cassou/emacs
     sudo apt-get update
@@ -28,16 +29,19 @@ Or, for emacs24 (i.e. 24.3, stable):
 
     sudo apt-get install emacs24 emacs24-el emacs24-common-non-dfsg
 
-
 ### Compile emacs 24 from source on Red Hat 6
 
-    curl -fsSkL https://raw.githubusercontent.com/marcwebbie/emacs/master/compile_emacs24_rh6.sh | sh
+    curl -fsSkl https://github.com/marcwebbie/emacs/raw/master/scripts/compile_emacs24_rh6.sh | sh
 
 ### Fetch the config files:
 
     git clone git://github.com/marcwebbie/emacs.git ~/.emacs.d
 
 ### Install all ELPA packages (make sure you have [Cask](https://github.com/cask/cask) installed):
+
+    ~/.emacs.d/scripts/install.sh
+
+- or -
 
     cd ~/.emacs.d
     cask
