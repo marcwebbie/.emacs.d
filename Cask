@@ -16,6 +16,7 @@
 (depends-on "flycheck")
 (depends-on "git-gutter")
 (depends-on "haml-mode")
+(depends-on "idomenu")
 (depends-on "ido-ubiquitous")
 (depends-on "ido-vertical-mode")
 (depends-on "js2-mode")

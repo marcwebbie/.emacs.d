@@ -98,6 +98,8 @@
 
 (use-package haml-mode)
 
+(use-package idomenu)
+
 (use-package js-mode
   :mode ("\\.json$" . js-mode)
   :init

@@ -59,6 +59,9 @@
 (bind-key "C-x v s" 'git-gutter:stage-hunk)
 (bind-key "C-x v r" 'git-gutter:revert-hunk)
 
+;; idomenu
+(bind-key "M-i" 'idomenu)
+
 ;; magit
 (bind-key "C-x g" 'magit-status)
 (bind-key "q" 'magit-quit-session magit-status-mode-map)
