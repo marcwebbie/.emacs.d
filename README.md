@@ -41,7 +41,7 @@ Or, for emacs24 (i.e. 24.3, stable):
 
     ~/.emacs.d/scripts/install.sh
 
-- or -
+Or,
 
     cd ~/.emacs.d
     cask
