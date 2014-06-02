@@ -15,7 +15,7 @@ rm -rf autoconf-2.69
 # compile emacs 24.3
 echo "Download and compiling emacs..."
 cd /tmp
-curl -L http://mirrors.syringanetworks.net/gnu/emacs/emacs-24.3.tar.gz | tar zx
+curl -L http://ftp.gnu.org/gnu/emacs/emacs-24.3.tar.gz | tar zx
 cd emacs-24.3/
 ./autogen.sh && ./configure && make bootstrap && sudo make install
 cd ..
