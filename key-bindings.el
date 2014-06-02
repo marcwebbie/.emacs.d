@@ -47,12 +47,12 @@
 (bind-key "M-\\" 'er/mark-ruby-block-up)
 
 ;; git-gutter
-(global-unset-key (kbd "C-x v"))
-(bind-key "C-x v =" 'git-gutter:popup-hunk)
-(bind-key "C-x v p" 'git-gutter:previous-hunk)
-(bind-key "C-x v n" 'git-gutter:next-hunk)
-(bind-key "C-x v s" 'git-gutter:stage-hunk)
-(bind-key "C-x v r" 'git-gutter:revert-hunk)
+(global-unset-key (kbd "C-c v"))
+(bind-key "C-c v =" 'git-gutter:popup-hunk) ;; show hunk diff
+(bind-key "C-c v p" 'git-gutter:previous-hunk)
+(bind-key "C-c v n" 'git-gutter:next-hunk)
+(bind-key "C-c v s" 'git-gutter:stage-hunk)
+(bind-key "C-c v r" 'git-gutter:revert-hunk)
 
 ;; hippie
 (bind-key "C-." 'hippie-expand-no-case-fold)
