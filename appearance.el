@@ -35,5 +35,7 @@
 
 ;; Shorten Major mode names
 (add-hook 'emacs-lisp-mode-hook (lambda() (setq mode-name "el")))
+(add-hook 'ruby-mode-hook (lambda() (setq mode-name "rb")))
+(add-hook 'js2-mode-hook (lambda () (setq mode-name "js2")))
 
 ;;;
