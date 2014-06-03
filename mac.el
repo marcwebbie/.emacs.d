@@ -2,6 +2,10 @@
 
 ;;; Code:
 
+;; Set default spell program
+;; installed by: `brew install aspell --all`
+(setq ispell-program-name "/usr/local/bin/aspell")
+
 ;; Switch the Cmd and Meta keys
 (setq mac-option-modifier 'super)
 (setq mac-command-modifier 'meta)
