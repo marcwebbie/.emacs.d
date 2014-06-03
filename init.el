@@ -47,9 +47,6 @@
     (setq whitespace-action '(auto-cleanup))
     (setq whitespace-style '(trailing space-before-tab indentation empty space-after-tab))))
 
-(use-package ctags-update
-  :config (add-hook 'projectile-rails-mode-hook 'turn-on-ctags-auto-update-mode))
-
 (use-package diminish
   :config
   (progn

@@ -6,7 +6,6 @@
 (depends-on "auto-complete")
 (depends-on "cask")
 (depends-on "coffee-mode")
-(depends-on "ctags-update")
 (depends-on "cyberpunk-theme")
 (depends-on "diminish")
 (depends-on "drag-stuff")
