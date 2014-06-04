@@ -147,6 +147,8 @@
 (use-package projectile-rails
   :init (add-hook 'projectile-mode-hook 'projectile-rails-on))
 
+(use-package puppet-mode)
+
 (use-package ruby-mode
   :init
   (progn

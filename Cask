@@ -27,6 +27,7 @@
 (depends-on "nyan-mode")
 (depends-on "projectile")
 (depends-on "projectile-rails")
+(depends-on "puppet-mode")
 (depends-on "ruby-test-mode")
 (depends-on "ruby-tools")
 (depends-on "s")
