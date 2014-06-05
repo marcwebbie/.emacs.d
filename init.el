@@ -3,11 +3,47 @@
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (setq inhibit-startup-message t)
+(setq Buffer-menu-use-frame-buffer-list nil)
 
-(require 'cask "~/.cask/cask.el")
-(cask-initialize)
-(require 'f)
+(add-to-list 'load-path "~/.emacs.d/lisp/")
 (require 'use-package)
+
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(package-refresh-contents)
+(package-initialize)
+
+;; (defvar required-packages
+;;   '(use-package) "a list of packages to ensure are installed at launch.")
+
+;; (dolist (p required-packages)
+;;     (when (not (package-installed-p p))
+;;       (package-install p)))
+
+;;(unless (package-installed-p 'use-package)
+;;  (package-install 'use-package))
+
+;;(when (not (package-installed-p 'use-package))
+;;  (package-install 'use-package))
+
+(use-package f
+  :ensure t)
+
+;; (require 'package)
+;; (add-to-list 'package-archives
+;;              '("melpa" . "http://melpa.milkbox.net/packages/") t)
+;; (package-initialize)
+
+;; (defvar required-packages
+;;   '(f  use-package) "a list of packages to ensure are installed at launch.")
+
+;; (dolist (p required-packages)
+;;     (when (not (package-installed-p p))
+;;       (package-install p)))
+
+;; (require 'f)
+;; (require 'use-package)
 
 (setq default-directory (f-full (getenv "HOME")))
 
@@ -22,7 +58,6 @@
 (load-local "shoulda")
 (load-local "jstestdriver")
 
-
 ;;;; Hooks
 
 ;; Clean trailling whitespace when saving
@@ -34,20 +69,25 @@
 
 ;;;; Packages
 
-(use-package ace-jump-mode)
+(use-package ace-jump-mode
+  :ensure t)
 
-(use-package ack-and-a-half)
+(use-package ack-and-a-half
+  :ensure t)
 
 (use-package auto-complete
+  :ensure t
   :init (global-auto-complete-mode t))
 
 (use-package coffee-mode
+:ensure t
   :init
   (progn
     (setq whitespace-action '(auto-cleanup))
     (setq whitespace-style '(trailing space-before-tab indentation empty space-after-tab))))
 
 (use-package diminish
+:ensure t
   :config
   (progn
     (eval-after-load "auto-complete" '(diminish 'auto-complete-mode))
@@ -60,15 +100,18 @@
     (eval-after-load "yasnippet" '(diminish 'yas-minor-mode))))
 
 (use-package drag-stuff
+:ensure t
   :init (drag-stuff-mode t))
 
 (use-package emacs-lisp-mode
   :interpreter (("emacs" . emacs-lisp-mode))
   :mode ("Cask" . emacs-lisp-mode))
 
-(use-package expand-region)
+(use-package expand-region
+:ensure t)
 
 (use-package flx-ido
+:ensure t
   :init
   (progn
     (ido-mode 1)
@@ -85,6 +128,7 @@
       :init (ido-ubiquitous-mode 1))))
 
 (use-package flycheck
+:ensure t
   :config
   (progn
     (add-hook 'after-init-hook 'global-flycheck-mode)
@@ -92,11 +136,14 @@
     (setq flycheck-display-errors-function nil)))
 
 (use-package git-gutter
+:ensure t
   :init (global-git-gutter-mode t))
 
-(use-package haml-mode)
+(use-package haml-mode
+:ensure t)
 
-(use-package idomenu)
+(use-package idomenu
+:ensure t)
 
 (use-package js-mode
   :mode ("\\.json$" . js-mode)
@@ -105,6 +152,7 @@
     (add-hook 'js-mode-hook (lambda () (setq js-indent-level 2)))))
 
 (use-package js2-mode
+:ensure t
   :mode (("\\.js$" . js2-mode)
          ("Jakefile$" . js2-mode))
   :interpreter ("node" . js2-mode)
@@ -120,22 +168,27 @@
     (setq-default js2-mode-indent-ignore-first-tab t)))
 
 (use-package magit
+:ensure t
   :init
   (progn
     (set-default 'magit-stage-all-confirm nil)
     (set-default 'magit-unstage-all-confirm nil)))
 
 (use-package markdown-mode
+:ensure t
   :mode (("\\.text\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode)
          ("\\.md\\'" . markdown-mode)))
 
-(use-package multiple-cursors)
+(use-package multiple-cursors
+:ensure t)
 
 (use-package nyan-mode
+:ensure t
   :init (nyan-mode 1))
 
 (use-package projectile
+:ensure t
   :init (projectile-global-mode 1)
   :config
   (progn
@@ -145,6 +198,7 @@
     (add-to-list 'projectile-globally-ignored-files ".DS_Store")))
 
 (use-package projectile-rails
+  :ensure t
   :init (add-hook 'projectile-mode-hook 'projectile-rails-on))
 
 (use-package ruby-mode
@@ -153,17 +207,22 @@
     (use-package ruby-tools)
     (use-package ruby-test-mode)))
 
-(use-package s)
+(use-package s
+:ensure t)
 
-(use-package sass-mode)
+(use-package sass-mode
+:ensure t)
 
 (use-package saveplace
+:ensure t
   :config (setq-default save-place t))
 
 (use-package scss-mode
+:ensure t
   :mode "\\.scss\\'")
 
 (use-package smartparens
+:ensure t
   :init
   (progn
     (use-package smartparens-config)
@@ -180,17 +239,17 @@
     (sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p))))
 
 (use-package smex
+:ensure t
   :init (smex-initialize))
 
 (use-package visual-regexp
+:ensure t
   :config
   (progn
     (use-package visual-regexp-steroids)))
 
-(use-package winner
-  :config (winner-mode 1))
-
-(use-package yaml-mode)
+(use-package yaml-mode
+:ensure t)
 
 
 ;;;; Bindings
