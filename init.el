@@ -6,13 +6,12 @@
 
 (require 'cask "~/.cask/cask.el")
 (cask-initialize)
-(require 'f)
 (require 'use-package)
 
 (setq default-directory (f-full (getenv "HOME")))
 
 (defun load-local (file)
-  (load (f-expand file user-emacs-directory)))
+  (load (expand-file-name file user-emacs-directory)))
 
 (load-local "appearance")
 (when (eq system-type 'darwin) (load-local "mac"))
@@ -36,9 +35,16 @@
 
 (use-package ace-jump-mode)
 
-(use-package ack-and-a-half)
+(use-package ack-and-a-half
+  :init
+  (progn
+    (defalias 'ack 'ack-and-a-half)
+    (defalias 'ack-same 'ack-and-a-half-same)
+    (defalias 'ack-find-file 'ack-and-a-half-find-file)
+    (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)))
 
 (use-package auto-complete
+  :diminish auto-complete-mode
   :init (global-auto-complete-mode t))
 
 (use-package coffee-mode
@@ -47,24 +53,23 @@
     (setq whitespace-action '(auto-cleanup))
     (setq whitespace-style '(trailing space-before-tab indentation empty space-after-tab))))
 
-(use-package diminish
-  :config
-  (progn
-    (eval-after-load "auto-complete" '(diminish 'auto-complete-mode))
-    (eval-after-load "drag-stuff" '(diminish 'drag-stuff-mode))
-    (eval-after-load "flycheck" '(diminish 'flycheck-mode))
-    (eval-after-load "git-gutter" '(diminish 'git-gutter-mode))
-    (eval-after-load "ruby-test-mode" '(diminish 'ruby-test-mode))
-    (eval-after-load "magit" '(diminish 'magit-auto-revert-mode))
-    (eval-after-load "smartparens" '(diminish 'smartparens-mode))
-    (eval-after-load "yasnippet" '(diminish 'yas-minor-mode))))
+(use-package diminish)
 
 (use-package drag-stuff
+  :diminish drag-stuff-mode
   :init (drag-stuff-mode t))
 
 (use-package emacs-lisp-mode
   :interpreter (("emacs" . emacs-lisp-mode))
   :mode ("Cask" . emacs-lisp-mode))
+
+(use-package emmet-mode
+  :diminish emmet-mode
+  :init
+  (progn
+    (add-hook 'emmet-mode-hook (lambda () (setq emmet-indentation 2))) ;; indent 2 spaces.
+    (add-hook 'sgml-mode-hook 'emmet-mode)
+    (add-hook 'css-mode-hook  'emmet-mode)))
 
 (use-package expand-region)
 
@@ -85,6 +90,7 @@
       :init (ido-ubiquitous-mode 1))))
 
 (use-package flycheck
+  :diminish flycheck-mode
   :config
   (progn
     (add-hook 'after-init-hook 'global-flycheck-mode)
@@ -92,6 +98,7 @@
     (setq flycheck-display-errors-function nil)))
 
 (use-package git-gutter
+  :diminish git-gutter-mode
   :init (global-git-gutter-mode t))
 
 (use-package haml-mode)
@@ -120,6 +127,7 @@
     (setq-default js2-mode-indent-ignore-first-tab t)))
 
 (use-package magit
+  :diminish magit-auto-revert-mode
   :init
   (progn
     (set-default 'magit-stage-all-confirm nil)
@@ -150,6 +158,7 @@
 (use-package puppet-mode)
 
 (use-package ruby-mode
+  :diminish ruby-test-mode
   :init
   (progn
     (use-package ruby-tools)
@@ -166,11 +175,11 @@
   :mode "\\.scss\\'")
 
 (use-package smartparens
+  :diminish smartparens-mode
   :init
   (progn
     (use-package smartparens-config)
     (use-package smartparens-ruby)
-    (use-package smartparens-python)
     (use-package smartparens-html)
     (smartparens-global-mode 1)
     (show-smartparens-global-mode 1))

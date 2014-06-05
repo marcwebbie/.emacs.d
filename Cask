@@ -9,6 +9,7 @@
 (depends-on "cyberpunk-theme")
 (depends-on "diminish")
 (depends-on "drag-stuff")
+(depends-on "emmet-mode")
 (depends-on "expand-region")
 (depends-on "f")
 (depends-on "flx-ido")
