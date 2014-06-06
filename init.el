@@ -61,7 +61,8 @@
 
 (use-package emacs-lisp-mode
   :interpreter (("emacs" . emacs-lisp-mode))
-  :mode ("Cask" . emacs-lisp-mode))
+  :mode ("Cask" . emacs-lisp-mode)
+  :config (add-hook 'emacs-lisp-mode-hook (lambda() (setq mode-name "el"))))
 
 (use-package emmet-mode
   :diminish emmet-mode
@@ -117,6 +118,7 @@
   :interpreter ("node" . js2-mode)
   :config
   (progn
+    (add-hook 'js2-mode-hook (lambda () (setq mode-name "js2")))
     (setq-default js2-basic-offset 2)
     (setq-default js2-auto-indent-p t)
     (setq-default js2-cleanup-whitespace t)
@@ -159,12 +161,16 @@
 
 (use-package puppet-mode)
 
+(use-package python-mode
+  :config (add-hook 'python-mode-hook (lambda() (setq mode-name "py"))))
+
 (use-package ruby-mode
   :diminish ruby-test-mode
   :init
   (progn
     (use-package ruby-tools)
-    (use-package ruby-test-mode)))
+    (use-package ruby-test-mode))
+  :config (add-hook 'ruby-mode-hook (lambda() (setq mode-name "rb"))))
 
 (use-package s)
 
