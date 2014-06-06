@@ -33,4 +33,9 @@
   ;; Choose best font when in windows system
   (set-best-font))
 
+(setq scroll-margin 10
+      scroll-conservatively 0
+      scroll-up-aggressively 0.01
+      scroll-down-aggressively 0.01)
+
 ;;;

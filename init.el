@@ -45,7 +45,10 @@
 
 (use-package auto-complete
   :diminish auto-complete-mode
-  :init (global-auto-complete-mode t))
+  :init
+  (progn
+    (global-auto-complete-mode t)
+    (add-hook 'python-mode-hook 'jedi:ac-setup)))
 
 (use-package coffee-mode
   :init
@@ -170,7 +173,17 @@
   (progn
     (use-package ruby-tools)
     (use-package ruby-test-mode))
-  :config (add-hook 'ruby-mode-hook (lambda() (setq mode-name "rb"))))
+  :config
+  (progn
+    (add-hook 'ruby-mode-hook (lambda() (setq mode-name "rb")))
+    (use-package rspec-mode
+      :config
+      (progn
+        (setq rspec-use-rake-flag nil)
+        (defadvice rspec-compile (around rspec-compile-around activate)
+          "Use BASH shell for running the specs because of ZSH issues."
+          (let ((shell-file-name "/bin/bash"))
+            ad-do-it))))))
 
 (use-package s)
 
@@ -205,6 +218,16 @@
   :config
   (progn
     (use-package visual-regexp-steroids)))
+
+(use-package web-mode
+  :init (progn
+          (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+          (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
+  :config (progn
+            (add-hook 'web-mode-hook
+                      (lambda ()
+                        (setq web-mode-style-padding 2)
+                        (setq web-mode-script-padding 2)))))
 
 (use-package winner
   :config (winner-mode 1))
