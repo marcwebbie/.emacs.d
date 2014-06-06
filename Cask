@@ -41,3 +41,4 @@
 (depends-on "visual-regexp")
 (depends-on "visual-regexp-steroids")
 (depends-on "yaml-mode")
+(depends-on "pomodoro")
