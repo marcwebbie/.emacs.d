@@ -1,3 +1,5 @@
+;;;; defuns.el --- Various functions
+
 ;; shorthand for interactive lambdas
 (defmacro λ (&rest body)
   `(lambda ()
