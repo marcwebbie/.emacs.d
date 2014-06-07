@@ -116,13 +116,6 @@ there's a region, all lines that region covers will be duplicated."
        (progn (goto-char min) (line-beginning-position))
        (progn (goto-char max) (line-end-position))))))
 
-(defun replace-region-by (fn)
-  (let* ((beg (region-beginning))
-         (end (region-end))
-         (contents (buffer-substring beg end)))
-    (delete-region beg end)
-    (insert (funcall fn contents))))
-
 (defun kill-region-or-backward-word ()
   "kill region if active, otherwise kill backward word"
   (interactive)
@@ -279,3 +272,5 @@ Otherwise point moves to beginning of line."
   (interactive)
   (kill-buffer)
   (jump-to-register :magit-fullscreen))
+
+;;;; end
