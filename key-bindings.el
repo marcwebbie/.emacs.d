@@ -112,6 +112,8 @@
 (bind-key "M-o" 'swoop)
 
 ;; visual-regexp-steroids
+(bind-key "C-s" 'vr/isearch-forward)
+(bind-key "C-r" 'vr/isearch-backward)
 (bind-key "C-c r" 'vr/replace)
 (bind-key "C-c q" 'vr/query-replace)
 
