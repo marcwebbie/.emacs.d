@@ -166,6 +166,9 @@
 (use-package python-mode
   :config (add-hook 'python-mode-hook (lambda() (setq mode-name "py"))))
 
+(use-package re-builder
+  :init (setq reb-re-syntax 'string))
+
 (use-package ruby-mode
   :diminish ruby-test-mode
   :init
