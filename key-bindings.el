@@ -109,8 +109,8 @@
 (bind-key "C-x C-m" 'smex)
 
 ;; visual-regexp-steroids
-(bind-key "C-c r" 'vr/query-replace)
-(bind-key "C-c q" 'vr/query-query-replace)
+(bind-key "C-c r" 'vr/replace)
+(bind-key "C-c q" 'vr/query-replace)
 
 (provide 'key-bindings)
 ;;; key-bindings.el ends here
