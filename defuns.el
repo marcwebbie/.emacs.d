@@ -1,4 +1,6 @@
-;;;; defuns.el --- Various functions
+;;; defuns.el --- various functions
+;;; Commentary:
+;;; Code:
 
 ;; shorthand for interactive lambdas
 (defmacro λ (&rest body)
