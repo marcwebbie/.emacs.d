@@ -109,6 +109,7 @@
 (bind-key "M-x" 'smex)
 (bind-key "C-x C-m" 'smex)
 
+;; swoop
 (bind-key "M-o" 'swoop)
 
 ;; visual-regexp-steroids
