@@ -229,6 +229,14 @@ Otherwise point moves to beginning of line."
         (kill-buffer buffer)
         (message "File '%s' successfully removed" filename)))))
 
+;;;; Custom
+
+(defun re-builder-large ()
+  "Just like `re-builder', only make the font and window larger."
+  (interactive)
+  (re-builder)
+  (text-scale-increase 5)
+  (set-window-text-height (selected-window) 7))
 
 ;;;; External services
 
