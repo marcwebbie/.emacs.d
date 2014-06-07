@@ -213,6 +213,8 @@
 (use-package smex
   :init (smex-initialize))
 
+(use-package swoop)
+
 (use-package visual-regexp
   :config
   (progn

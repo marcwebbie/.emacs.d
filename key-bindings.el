@@ -25,7 +25,6 @@
 
 (bind-key "M-h" 'kill-to-beginning-of-line)
 (bind-key "M-j" (λ (join-line -1)))
-(bind-key "M-o" 'other-window)
 (bind-key "M-<up>" 'open-line-above)
 (bind-key "M-<down>" 'open-line-below)
 
@@ -109,6 +108,8 @@
 ;; smex
 (bind-key "M-x" 'smex)
 (bind-key "C-x C-m" 'smex)
+
+(bind-key "M-o" 'swoop)
 
 ;; visual-regexp-steroids
 (bind-key "C-c r" 'vr/replace)
