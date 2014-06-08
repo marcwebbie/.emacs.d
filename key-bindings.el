@@ -14,8 +14,8 @@
 
 (bind-key "C-x C-c" (λ (if (y-or-n-p "Quit Emacs? ") (save-buffers-kill-emacs))))
 
-(bind-key "C-c C-r" 'rename-this-buffer-and-file)
-(bind-key "C-c C-k" 'delete-this-buffer-and-file)
+(bind-key "C-c R" 'rename-this-buffer-and-file)
+(bind-key "C-c D" 'delete-this-buffer-and-file)
 
 (bind-key "C-c d" 'duplicate-current-line-or-region)
 (bind-key "C-c g" 'google)
