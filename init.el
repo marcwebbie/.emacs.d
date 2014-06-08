@@ -162,7 +162,7 @@
 
 (use-package puppet-mode)
 
-(use-package python-mode
+(use-package python
   :config (add-hook 'python-mode-hook (lambda() (setq mode-name "py"))))
 
 (use-package re-builder
