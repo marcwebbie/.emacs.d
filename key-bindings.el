@@ -27,6 +27,11 @@
 (bind-key "M-j" (λ (join-line -1)))
 (bind-key "M-<up>" 'open-line-above)
 (bind-key "M-<down>" 'open-line-below)
+(global-set-key (kbd "C-c s")
+                 (lambda () (interactive) (ansi-term (getenv "SHELL") (projectile-project-root))))
+(global-set-key (kbd "C-c s")
+                (lambda () (interactive) (ansi-term (getenv "SHELL") (projectile-project-root))))
+
 
 ;; Change word separators
 (global-unset-key (kbd "C-x +")) ;; used to be balance-windows
