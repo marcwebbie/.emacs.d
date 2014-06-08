@@ -18,9 +18,10 @@
 (load-local "defaults")
 (load-local "defuns")
 (load-local "hippie")
-(load-local "shoulda")
 (load-local "jstestdriver")
 
+;;;; Bindings
+(load-local "key-bindings")
 
 ;;;; Hooks
 
@@ -197,6 +198,8 @@
 (use-package scss-mode
   :mode "\\.scss\\'")
 
+(use-package shoulda)
+
 (use-package smartparens
   :diminish smartparens-mode
   :init
@@ -238,9 +241,5 @@
 
 (use-package yaml-mode)
 
-
-;;;; Bindings
-
-(load-local "key-bindings")
 
 ;;;; ends init.el

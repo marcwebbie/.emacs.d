@@ -36,6 +36,7 @@
 (depends-on "s")
 (depends-on "sass-mode")
 (depends-on "scss-mode")
+(depends-on "shoulda" :git "https://github.com/marcwebbie/shoulda.el")
 ;; (depends-on "smartscan")
 (depends-on "smartparens")
 (depends-on "smex")
