@@ -20,8 +20,6 @@
 (load-local "hippie")
 (load-local "jstestdriver")
 
-;;;; Bindings
-(load-local "key-bindings")
 
 ;;;; Hooks
 
@@ -241,5 +239,8 @@
 
 (use-package yaml-mode)
 
+
+;;;; Bindings
+(load-local "key-bindings")
 
 ;;;; ends init.el
