@@ -20,18 +20,15 @@
 (bind-key "C-c d" 'duplicate-current-line-or-region)
 (bind-key "C-c g" 'google)
 (bind-key "C-c n" 'clean-up-buffer-or-region)
-(bind-key "C-c o" 'occur)
 (bind-key "C-c y" 'youtube)
 
 (bind-key "M-h" 'kill-to-beginning-of-line)
 (bind-key "M-j" (λ (join-line -1)))
 (bind-key "M-<up>" 'open-line-above)
 (bind-key "M-<down>" 'open-line-below)
+
 (global-set-key (kbd "C-c s")
                  (lambda () (interactive) (ansi-term (getenv "SHELL") (projectile-project-root))))
-(global-set-key (kbd "C-c s")
-                (lambda () (interactive) (ansi-term (getenv "SHELL") (projectile-project-root))))
-
 
 ;; Change word separators
 (global-unset-key (kbd "C-x +")) ;; used to be balance-windows
@@ -115,7 +112,7 @@
 (bind-key "C-x C-m" 'smex)
 
 ;; swoop
-(bind-key "M-o" 'swoop)
+(bind-key "C-c o" 'swoop)
 
 ;; visual-regexp-steroids
 (bind-key "C-s" 'vr/isearch-forward)
