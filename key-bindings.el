@@ -84,8 +84,8 @@
 (bind-key "C-c t b" 'ruby-test-run)
 
 ;; shoulda
-(bind-key "C-c t s" 'shoulda:run-should-at-point)
-(bind-key "C-c t c" 'shoulda:run-context-at-point)
+(bind-key "C-c t s" 'shoulda-run-should-at-point)
+(bind-key "C-c t c" 'shoulda-run-context-at-point)
 (bind-key "C-c t j" 'jstestdriver:run-should-at-point)
 
 ;; smartparens
