@@ -59,8 +59,8 @@
 (bind-key "C-c v r" 'git-gutter:revert-hunk)
 
 ;; hippie
-(bind-key "C-." 'hippie-expand-no-case-fold)
-(bind-key "C-:" 'hippie-expand-lines)
+(bind-key "M-/" 'hippie-expand-no-case-fold)
+(bind-key "M-?" 'hippie-expand-lines)
 (bind-key "C-," 'completion-at-point)
 
 ;; idomenu
