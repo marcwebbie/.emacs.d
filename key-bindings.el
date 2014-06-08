@@ -9,6 +9,7 @@
 (bind-key "C-a" 'back-to-indentation-or-beginning-of-line)
 (bind-key "C-j" 'newline-and-indent)
 (bind-key "C-z" 'zap-up-to-char)
+(bind-key "C-|" 'align-regexp)
 
 (bind-key "C-M-;" 'comment-or-uncomment-current-line-or-region)
 
@@ -49,7 +50,6 @@
 (bind-key "C-=" 'er/expand-region)
 (bind-key "C-+" 'er/contract-region)
 (bind-key "C-\\" 'er/expand-region)
-(bind-key "C-|" 'er/contract-region)
 (bind-key "M-\\" 'er/mark-ruby-block-up)
 
 ;; git-gutter
