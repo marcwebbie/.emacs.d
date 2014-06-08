@@ -64,7 +64,7 @@
 (use-package emacs-lisp-mode
   :interpreter (("emacs" . emacs-lisp-mode))
   :mode ("Cask" . emacs-lisp-mode)
-  :config (add-hook 'emacs-lisp-mode-hook (lambda() (setq mode-name "el"))))
+  :init (add-hook 'emacs-lisp-mode-hook (lambda() (setq mode-name "el"))))
 
 (use-package emmet-mode
   :diminish emmet-mode
