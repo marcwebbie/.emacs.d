@@ -10,7 +10,9 @@
   (save-excursion
     (let* ((test_name (when (search-backward-regexp "[ \t]+test\(['\"]\\(.*?\\)['\"]," nil t) (match-string-no-properties 1)))
            (test_cmd (concat "bundle exec rake \"test:jstestdriver:ove_jquery[" test_name "]\"")))
-      (if test_name (compilation-start test_cmd)) (error "Test name not found!"))))
+      (if test_name
+          (compilation-start test_cmd)
+        (error "Test name not found!")))))
 
 (provide 'jstestdriver)
 ;;; jstestdriver.el ends here
