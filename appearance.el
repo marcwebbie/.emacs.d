@@ -6,7 +6,7 @@
   (when (file-directory-p path)
     (add-to-list 'custom-theme-load-path path)))
 
-(load-theme 'cyberpunk :no-confirm)
+(load-theme 'ir-black-mod :no-confirm)
 
 (setq visible-bell t
       font-lock-maximum-decoration t
