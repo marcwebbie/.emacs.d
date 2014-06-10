@@ -173,18 +173,27 @@
   :init
   (progn
     (use-package ruby-tools)
-    (use-package ruby-test-mode))
-  :config
-  (progn
-    (add-hook 'ruby-mode-hook (lambda() (setq mode-name "rb")))
+    (use-package ruby-test-mode)
+    (use-package rvm
+      :init (rvm-use-default)
+      :config (setq rvm-verbose nil))
+    (use-package inf-ruby
+      :init (add-hook 'after-init-hook 'inf-ruby-switch-setup))
     (use-package rspec-mode
       :config
       (progn
         (setq rspec-use-rake-flag nil)
         (defadvice rspec-compile (around rspec-compile-around activate)
           "Use BASH shell for running the specs because of ZSH issues."
-          (let ((shell-file-name "/bin/bash"))
-            ad-do-it))))))
+          (let ((shell-file-name "/bin/bash")) ad-do-it)))))
+  :config (add-hook 'ruby-mode-hook (lambda() (setq mode-name "rb")))
+  :mode (("\\.rake$" . ruby-mode)
+         ("\\.gemspec$" . ruby-mode)
+         ("\\.ru$" . ruby-mode)
+         ("Rakefile$" . ruby-mode)
+         ("Gemfile$" . ruby-mode)
+         ("Capfile$" . ruby-mode)
+         ("Guardfile$" . ruby-mode)))
 
 (use-package s)
 
