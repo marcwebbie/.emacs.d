@@ -258,6 +258,8 @@
 
 (use-package yaml-mode)
 
+(use-package yari)
+
 
 ;;;; Bindings
 (load-local "key-bindings")

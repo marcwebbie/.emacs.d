@@ -37,6 +37,7 @@
 (depends-on "ruby-tools")
 (depends-on "s")
 (depends-on "sass-mode")
+(depends-on "scala-mode")
 (depends-on "scss-mode")
 (depends-on "shoulda" :git "https://github.com/marcwebbie/shoulda.el")
 (depends-on "skewer-mode")
@@ -48,6 +49,7 @@
 (depends-on "visual-regexp")
 (depends-on "visual-regexp-steroids")
 (depends-on "web-mode")
+(depends-on "yari")
 (depends-on "yaml-mode")
 
 ;;;;
