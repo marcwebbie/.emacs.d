@@ -174,9 +174,12 @@
   (progn
     (use-package ruby-tools)
     (use-package ruby-test-mode)
-    (use-package rvm
-      :init (rvm-use-default)
-      :config (setq rvm-verbose nil))
+    (use-package rbenv
+      :init
+      (progn
+        (global-rbenv-mode)
+        (setenv "PATH" (concat (getenv "HOME") "/.rbenv/shims:" (getenv "HOME") "/.rbenv/bin:" (getenv "PATH")))
+        (setq exec-path (cons (concat (getenv "HOME") "/.rbenv/shims") (cons (concat (getenv "HOME") "/.rbenv/bin") exec-path)))))
     (use-package inf-ruby
       :init (add-hook 'after-init-hook 'inf-ruby-switch-setup))
     (use-package rspec-mode
@@ -206,6 +209,13 @@
   :mode "\\.scss\\'")
 
 (use-package shoulda)
+
+(use-package skewer-mode
+  :init
+  (progn
+    (add-hook 'js2-mode-hook 'skewer-mode)
+    (add-hook 'css-mode-hook 'skewer-css-mode)
+    (add-hook 'html-mode-hook 'skewer-html-mode)))
 
 (use-package smartparens
   :diminish smartparens-mode
