@@ -205,6 +205,10 @@
 (use-package saveplace
   :config (setq-default save-place t))
 
+(use-package scala-mode
+  :init (modify-coding-system-alist 'file "\\.\\(scala\\|sbt\\)\\'" 'utf-8)
+  :mode "\\.\\(scala\\|sbt\\)\\'")
+
 (use-package scss-mode
   :mode "\\.scss\\'")
 
