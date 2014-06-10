@@ -139,6 +139,7 @@
     (set-default 'magit-unstage-all-confirm nil)))
 
 (use-package markdown-mode
+  :config (add-hook 'markdown-mode-hook (lambda() (setq mode-name "md")))
   :mode (("\\.text\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode)
          ("\\.md\\'" . markdown-mode)))
@@ -149,6 +150,7 @@
   :init (nyan-mode 1))
 
 (use-package projectile
+  :diminish projectile-mode
   :init (projectile-global-mode 1)
   :config
   (progn
@@ -239,6 +241,9 @@
 
 (use-package smex
   :init (smex-initialize))
+
+(use-package subword
+  :diminish subword-mode)
 
 (use-package swoop)
 
