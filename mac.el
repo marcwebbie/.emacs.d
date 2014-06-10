@@ -20,3 +20,8 @@
 ;; Move to trash when deleting stuff
 (setq delete-by-moving-to-trash t
       trash-directory "~/.Trash/emacs")
+
+;; Fix path for zsh in emacs shells
+(if (not (getenv "TERM_PROGRAM"))
+    (setenv "PATH"
+            (shell-command-to-string "source $HOME/.zshrc && printf $PATH")))
