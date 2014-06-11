@@ -128,4 +128,4 @@
 (set-default 'fill-column 80)
 
 ;; Show trailing whitespace
-(setq-default show-trailing-whitespace 0)
+;; (setq-default show-trailing-whitespace 0)
