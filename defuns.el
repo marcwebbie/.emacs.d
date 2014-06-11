@@ -244,6 +244,10 @@ Otherwise point moves to beginning of line."
   "Search Googles with a query or region if any."
   (interactive)
   (browse-url
+(defun ipython ()
+    (interactive)
+    (ansi-term "/usr/bin/ipython"))
+
    (concat
     "http://www.google.com/search?ie=utf-8&oe=utf-8&q="
     (if (region-active-p)
