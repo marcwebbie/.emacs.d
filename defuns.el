@@ -238,16 +238,20 @@ Otherwise point moves to beginning of line."
   (text-scale-increase 5)
   (set-window-text-height (selected-window) 7))
 
+(defun set-presentation-font ()
+  (interactive)
+  (set-default-font "Monaco-18"))
+
 ;;;; External services
+
+(defun ipython ()
+    (interactive)
+    (ansi-term "/usr/bin/ipython"))
 
 (defun google ()
   "Search Googles with a query or region if any."
   (interactive)
   (browse-url
-(defun ipython ()
-    (interactive)
-    (ansi-term "/usr/bin/ipython"))
-
    (concat
     "http://www.google.com/search?ie=utf-8&oe=utf-8&q="
     (if (region-active-p)
