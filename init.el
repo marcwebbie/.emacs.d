@@ -149,6 +149,14 @@
 (use-package nyan-mode
   :init (nyan-mode 1))
 
+(use-package org
+  :init
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)
+     (ruby . t)
+     (lisp . t))))
+
 (use-package projectile
   :diminish projectile-mode
   :init (projectile-global-mode 1)
