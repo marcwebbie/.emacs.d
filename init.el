@@ -179,12 +179,13 @@
   :init (setq reb-re-syntax 'string))
 
 (use-package ruby-mode
-  :diminish ruby-test-mode
   :init
   (progn
+    (add-hook 'ruby-mode-hook (lambda() (setq mode-name "rb")))
     (use-package ruby-tools
       :diminish ruby-tools-mode)
-    (use-package ruby-test-mode)
+    (use-package ruby-test-mode
+      :diminish ruby-test-mode)
     (use-package rbenv
       :init
       (progn
@@ -200,7 +201,6 @@
         (defadvice rspec-compile (around rspec-compile-around activate)
           "Use BASH shell for running the specs because of ZSH issues."
           (let ((shell-file-name "/bin/bash")) ad-do-it)))))
-  :config (add-hook 'ruby-mode-hook (lambda() (setq mode-name "rb")))
   :mode (("\\.rake$" . ruby-mode)
          ("\\.gemspec$" . ruby-mode)
          ("\\.ru$" . ruby-mode)
