@@ -182,7 +182,8 @@
   :diminish ruby-test-mode
   :init
   (progn
-    (use-package ruby-tools)
+    (use-package ruby-tools
+      :diminish ruby-tools-mode)
     (use-package ruby-test-mode)
     (use-package rbenv
       :init
