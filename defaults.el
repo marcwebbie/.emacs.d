@@ -129,3 +129,8 @@
 
 ;; Show trailing whitespace
 ;; (setq-default show-trailing-whitespace 0)
+
+;; Add support to iso key
+(require 'iso-transl)
+
+;;;;
