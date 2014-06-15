@@ -31,6 +31,7 @@
 (depends-on "projectile")
 (depends-on "projectile-rails")
 (depends-on "puppet-mode")
+(depends-on "rainbow-mode")
 (depends-on "rbenv")
 (depends-on "rspec-mode")
 (depends-on "ruby-test-mode")

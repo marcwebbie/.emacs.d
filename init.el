@@ -175,6 +175,9 @@
 (use-package python
   :config (add-hook 'python-mode-hook (lambda() (setq mode-name "py"))))
 
+(use-package rainbow-mode
+  :diminish rainbow-mode)
+
 (use-package re-builder
   :init (setq reb-re-syntax 'string))
 
