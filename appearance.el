@@ -33,9 +33,14 @@
   ;; Choose best font when in windows system
   (set-best-font))
 
-(setq scroll-margin 10
-      scroll-conservatively 0
-      scroll-up-aggressively 0.01
-      scroll-down-aggressively 0.01)
+;; Configure scrolling
+(setq scroll-margin 10           ; Drag the point along while scrolling
+      scroll-conservatively 1000 ; Never recenter the screen while scrolling
+      scroll-error-top-bottom t  ; Move to beg/end of buffer before
+                                 ; signalling an error
+      ;; These settings make trackpad scrolling on OS X much more predictable
+      ;; and smooth
+      mouse-wheel-progressive-speed nil
+      mouse-wheel-scroll-amount '(1))
 
-;;;
+;;;;
