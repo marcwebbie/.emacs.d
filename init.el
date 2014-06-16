@@ -198,7 +198,12 @@
         (setenv "PATH" (concat (getenv "HOME") "/.rbenv/shims:" (getenv "HOME") "/.rbenv/bin:" (getenv "PATH")))
         (setq exec-path (cons (concat (getenv "HOME") "/.rbenv/shims") (cons (concat (getenv "HOME") "/.rbenv/bin") exec-path)))))
     (use-package inf-ruby
-      :init (add-hook 'after-init-hook 'inf-ruby-switch-setup))
+      :config
+      (progn
+        (add-hook 'after-init-hook 'inf-ruby-switch-setup)
+        (add-hook 'ruby-mode-hook 'inf-ruby-minor-mode)))
+    (use-package robe
+      :init (add-hook 'ruby-mode-hook 'robe-mode))
     (use-package rspec-mode
       :config
       (progn

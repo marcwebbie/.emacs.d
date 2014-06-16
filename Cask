@@ -34,6 +34,7 @@
 (depends-on "puppet-mode")
 (depends-on "rainbow-mode")
 (depends-on "rbenv")
+(depends-on "robe")
 (depends-on "rspec-mode")
 (depends-on "ruby-test-mode")
 (depends-on "ruby-tools")
