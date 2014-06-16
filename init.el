@@ -83,15 +83,13 @@
     (ido-mode 1)
     (ido-everywhere 1)
     (flx-ido-mode 1)
-    (setq ido-use-faces nil)
-    (setq ido-file-extensions-order '(".py" ".rb" ".el" ".coffee" ".js"))
-    (add-to-list 'ido-ignore-files "\\.DS_Store"))
-  :config
-  (progn
     (use-package ido-vertical-mode
       :init (ido-vertical-mode 1))
     (use-package ido-ubiquitous
-      :init (ido-ubiquitous-mode 1))))
+      :init (ido-ubiquitous-mode 1)
+    (setq ido-use-faces nil)
+    (setq ido-file-extensions-order '(".py" ".rb" ".el" ".coffee" ".js"))
+    (add-to-list 'ido-ignore-files "\\.DS_Store"))))
 
 (use-package flycheck
   :diminish flycheck-mode
