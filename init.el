@@ -109,6 +109,8 @@
 
 (use-package idomenu)
 
+(use-package imenu-anywhere)
+
 (use-package js-mode
   :mode ("\\.json$" . js-mode)
   :init

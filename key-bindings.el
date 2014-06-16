@@ -69,6 +69,9 @@
 ;; idomenu
 (bind-key "M-i" 'idomenu)
 
+;; imenu-anywhere
+(bind-key "C-." 'imenu-anywhere)
+
 ;; magit
 (bind-key "C-x g" 'magit-status)
 (bind-key "q" 'magit-quit-session magit-status-mode-map)
