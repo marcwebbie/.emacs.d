@@ -136,9 +136,9 @@
    `(org-link ((t (:foreground, *keywords* :underline t))))
    `(org-checkbox ((t (:foreground, *keywords* :background, *background-color* :bold t))))
    `(org-clock-overlay ((t (:foreground, *mode-line-bg* :background, *string*))))
-   `(org-block-begin-line ((t (:foreground, *comments*))))
-   `(org-block-background ((t (:background "#333333"))))
-   `(org-block-end-line ((t (:foreground, *comments*))))
+   `(org-block-begin-line ((t (:foreground, *comments*, :background, *background-color*))))
+   `(org-block-end-line ((t (:foreground, *comments*, :background, *background-color*))))
+   `(org-block-background ((t (:background "#222"))))
 
    ;; starter kit
    `(esk-paren-face ((t (:foreground, *string-inner*))))))
