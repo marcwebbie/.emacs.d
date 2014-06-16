@@ -24,6 +24,7 @@
 (bind-key "C-c y" 'youtube)
 
 (bind-key "M-h" 'kill-to-beginning-of-line)
+(bind-key "M-g M-g" 'goto-line-with-feedback)
 (bind-key "M-j" (λ (join-line -1)))
 (bind-key "M-<up>" 'open-line-above)
 (bind-key "M-<down>" 'open-line-below)

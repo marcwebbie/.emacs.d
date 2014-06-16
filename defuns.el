@@ -147,6 +147,23 @@ there's a region, all lines that region covers will be duplicated."
 
 ;;;; Navigation
 
+(defun goto-line-with-feedback ()
+  "Show line numbers temporarily, while prompting for the line
+number input."
+  (interactive)
+  (let ((line-numbers-off-p (if (boundp 'linum-mode)
+                                (not linum-mode)
+                              t)))
+    (unwind-protect
+        (progn
+          (when line-numbers-off-p
+            (linum-mode 1))
+          (call-interactively 'goto-line))
+      (when line-numbers-off-p
+        (linum-mode -1))))
+  (save-excursion
+    (hs-show-block)))
+
 (defun back-to-indentation-or-beginning-of-line ()
   "Moves point back to indentation if there is any
 non blank characters to the left of the cursor.
@@ -240,7 +257,7 @@ Otherwise point moves to beginning of line."
 
 (defun set-presentation-font ()
   (interactive)
-  (set-default-font "Monaco-18"))
+  (set-frame-font "Monaco-38"))
 
 ;;;; External services
 
