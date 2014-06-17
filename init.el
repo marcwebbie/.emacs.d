@@ -155,7 +155,8 @@
    'org-babel-load-languages
    '((python . t)
      (ruby . t)
-     (lisp . t))))
+     (lisp . t)
+     (R . t))))
 
 (use-package projectile
   :diminish projectile-mode
