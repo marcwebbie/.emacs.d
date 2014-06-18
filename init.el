@@ -158,6 +158,9 @@
      (lisp . t)
      (R . t))))
 
+(use-package pomodoro
+  :init (pomodoro-add-to-mode-line))
+
 (use-package projectile
   :diminish projectile-mode
   :init (projectile-global-mode 1)

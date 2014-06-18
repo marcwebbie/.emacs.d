@@ -29,6 +29,7 @@
 (depends-on "multi-term")
 (depends-on "nyan-mode")
 (depends-on "swoop")
+(depends-on "pomodoro")
 (depends-on "projectile")
 (depends-on "projectile-rails")
 (depends-on "puppet-mode")
