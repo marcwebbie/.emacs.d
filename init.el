@@ -303,7 +303,7 @@
  ;; '(font-lock-function-name-face ((t (:bold t))))
  ;; '(font-lock-keyword-face ((t (:bold t)))))
  '(web-mode-html-tag-face ((t (:foreground "#ffb070" :background nil))))
- '(sp-show-pair-match-face ((t (:foreground magenta :bold t))))
+ '(sp-show-pair-match-face ((t (:foreground "#d33682"))))
  '(sp-show-pair-mismatch-face ((t (:foreground "#ff0000"))))
  )
 
