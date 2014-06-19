@@ -282,7 +282,8 @@
             (add-hook 'web-mode-hook
                       (lambda ()
                         (setq web-mode-style-padding 2)
-                        (setq web-mode-script-padding 2)))))
+                        (setq web-mode-script-padding 2)
+                        (define-key web-mode-map [(return)] 'newline-and-indent)))))
 
 (use-package winner
   :config (winner-mode 1))
