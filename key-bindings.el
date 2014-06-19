@@ -33,11 +33,10 @@
                  (lambda () (interactive) (ansi-term (getenv "SHELL") (projectile-project-root))))
 
 ;; Change word separators
-(global-unset-key (kbd "C-x +")) ;; used to be balance-windows
-(bind-key "C-x + -" (λ (replace-region-by 's-dashed-words)))
-(bind-key "C-x + _" (λ (replace-region-by 's-snake-case)))
-(bind-key "C-x + c" (λ (replace-region-by 's-lower-camel-case)))
-(bind-key "C-x + C" (λ (replace-region-by 's-upper-camel-case)))
+(bind-key "C-c m -" (λ (replace-region-by 's-dashed-words)))
+(bind-key "C-c m _" (λ (replace-region-by 's-snake-case)))
+(bind-key "C-c m c" (λ (replace-region-by 's-lower-camel-case)))
+(bind-key "C-c m C" (λ (replace-region-by 's-upper-camel-case)))
 
 ;; ace-jump-mode
 (bind-key "C-c SPC" 'ace-jump-mode)
