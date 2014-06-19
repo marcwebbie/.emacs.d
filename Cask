@@ -43,7 +43,7 @@
 (depends-on "sass-mode")
 (depends-on "scala-mode")
 (depends-on "scss-mode")
-(depends-on "shoulda" :git "https://github.com/marcwebbie/shoulda.el")
+(depends-on "shoulda")
 (depends-on "skewer-mode")
 ;; (depends-on "smartscan")
 (depends-on "smartparens")
