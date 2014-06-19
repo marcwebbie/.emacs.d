@@ -302,9 +302,9 @@
 (custom-set-faces
  ;; '(font-lock-function-name-face ((t (:bold t))))
  ;; '(font-lock-keyword-face ((t (:bold t)))))
-  '(web-mode-html-tag-face ((t (:foreground "#ffb070" :background nil)))))
-  '(sp-show-pair-match-face ((t (:foreground magenta :bold t))))
-  '(sp-show-pair-mismatch-face ((t (:foreground "#ff0000"))))
+ '(web-mode-html-tag-face ((t (:foreground "#ffb070" :background nil))))
+ '(sp-show-pair-match-face ((t (:foreground magenta :bold t))))
+ '(sp-show-pair-mismatch-face ((t (:foreground "#ff0000"))))
  )
 
 
