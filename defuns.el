@@ -36,6 +36,13 @@
     (error (message "Invalid expression")
            (insert (current-kill 0)))))
 
+(defun replace-region-by (fn)
+  (let* ((beg (region-beginning))
+         (end (region-end))
+         (contents (buffer-substring beg end)))
+    (delete-region beg end)
+    (insert (funcall fn contents))))
+
 (defun open-line-below ()
   "Open a line below the line the point is at.
 Then move to that line and indent accordning to mode"
