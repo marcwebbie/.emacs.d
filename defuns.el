@@ -137,19 +137,22 @@ there's a region, all lines that region covers will be duplicated."
   (kill-region (save-excursion (beginning-of-line) (point))
                (point)))
 
-(defun url-decode-region (beg end)
+(defun url-decode-region (start end)
+  "URL decode a region."
   (interactive "r")
-  (let ((content (url-unhex-string (buffer-substring beg end))))
-    (goto-char end)
-    (newline)
-    (insert content)))
+  (save-excursion
+    (let ((text (url-unhex-string (buffer-substring start end))))
+      (delete-region start end)
+      (insert text))))
 
-(defun url-encode-region (beg end)
+
+(defun url-encode-region (start end)
+  "URL encode a region."
   (interactive "r")
-  (let ((content (url-hexify-string (buffer-substring beg end))))
-    (goto-char end)
-    (newline)
-    (insert content)))
+  (save-excursion
+    (let ((text (url-hexify-string (buffer-substring start end))))
+      (delete-region start end)
+      (insert text))))
 
 
 ;;;; Navigation
