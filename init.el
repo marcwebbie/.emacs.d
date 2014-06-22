@@ -88,7 +88,7 @@
     (use-package ido-ubiquitous
       :init (ido-ubiquitous-mode 1)
       (setq ido-use-faces nil)
-      (setq ido-file-extensions-order '(".py" ".rb" ".el" ".coffee" ".js"))
+      (setq ido-file-extensions-order '(".py" ".rb" ".el" ".js" ".coffee"))
       (add-to-list 'ido-ignore-files "\\.DS_Store"))))
 
 (use-package flycheck
