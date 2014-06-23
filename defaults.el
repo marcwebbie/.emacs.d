@@ -130,6 +130,14 @@
 ;; Show trailing whitespace
 ;; (setq-default show-trailing-whitespace 0)
 
+;;;; Hooks
+
+;; Clean trailling whitespace when saving
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;; handle shell colours
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
 ;; Add support to iso key
 (require 'iso-transl)
 

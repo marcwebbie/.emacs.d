@@ -1,8 +1,8 @@
 ;; Turn off mouse interface early in startup to avoid momentary display
+(setq inhibit-startup-message t)
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-(setq inhibit-startup-message t)
 
 (require 'cask "~/.cask/cask.el")
 (cask-initialize)
@@ -19,15 +19,6 @@
 (load-local "defuns")
 (load-local "hippie")
 (load-local "jstestdriver")
-
-
-;;;; Hooks
-
-;; Clean trailling whitespace when saving
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-
-;; handle shell colours
-(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 
 ;;;; Packages
