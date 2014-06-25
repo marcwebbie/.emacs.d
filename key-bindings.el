@@ -30,7 +30,7 @@
 (bind-key "M-<down>" 'open-line-below)
 
 (global-set-key (kbd "C-c s")
-                 (lambda () (interactive) (ansi-term (getenv "SHELL") (projectile-project-root))))
+                (lambda () (interactive) (ansi-term (getenv "SHELL") (projectile-project-root))))
 
 ;; Change word separators
 (bind-key "C-c m -" (λ (replace-region-by 's-dashed-words)))
