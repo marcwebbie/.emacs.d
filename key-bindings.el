@@ -65,9 +65,6 @@
 (bind-key "M-?" 'hippie-expand-lines)
 (bind-key "C-," 'completion-at-point)
 
-;; idomenu
-(bind-key "M-i" 'idomenu)
-
 ;; imenu-anywhere
 (bind-key "C-." 'imenu-anywhere)
 

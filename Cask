@@ -18,7 +18,6 @@
 (depends-on "haml-mode")
 (depends-on "ido-ubiquitous")
 (depends-on "ido-vertical-mode")
-(depends-on "idomenu")
 (depends-on "imenu-anywhere")
 (depends-on "inf-ruby")
 (depends-on "ir-black-theme")

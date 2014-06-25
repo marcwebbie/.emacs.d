@@ -96,8 +96,6 @@
 
 (use-package haml-mode)
 
-(use-package idomenu)
-
 (use-package imenu-anywhere)
 
 (use-package js-mode
