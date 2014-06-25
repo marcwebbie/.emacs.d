@@ -156,6 +156,7 @@
   :config
   (progn
     (setq projectile-enable-caching t)
+    (setq projectile-use-git-grep t)
     (setq projectile-require-project-root nil)
     (setq projectile-completion-system 'ido)
     (add-to-list 'projectile-globally-ignored-files ".DS_Store")))
