@@ -54,6 +54,5 @@
 (depends-on "web-mode")
 (depends-on "yaml-mode")
 (depends-on "yari")
-;; (depends-on "smartscan")
 
 ;;;;
