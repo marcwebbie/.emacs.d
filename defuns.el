@@ -145,7 +145,6 @@ there's a region, all lines that region covers will be duplicated."
       (delete-region start end)
       (insert text))))
 
-
 (defun url-encode-region (start end)
   "URL encode a region."
   (interactive "r")
