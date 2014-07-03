@@ -242,8 +242,8 @@
     (use-package smartparens-config)
     (use-package smartparens-ruby)
     (use-package smartparens-html)
-    (smartparens-global-mode 1)
-    (show-smartparens-global-mode 1))
+    (smartparens-global-mode t)
+    (show-smartparens-global-mode t))
   :config
   (progn
     (setq smartparens-strict-mode t)
