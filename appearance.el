@@ -22,9 +22,9 @@
   (when (string-equal system-type "gnu/linux")
     (set-frame-font (cond ((member "Inconsolata" (font-family-list)) "Inconsolata-14")
                           ((member "Ubuntu Mono" (font-family-list)) "Ubuntu Mono-14")
-                          ((member "Monaco" (font-family-list)) "Monaco-12")
-                          ((member "DejaVu Sans Mono" (font-family-list)) "DejaVu Sans Mono-12")
-                          ((member "Monospace" (font-family-list)) "Monospace-12"))) t t))
+                          ((member "Monaco" (font-family-list)) "Monaco-14")
+                          ((member "DejaVu Sans Mono" (font-family-list)) "DejaVu Sans Mono-14")
+                          ((member "Monospace" (font-family-list)) "Monospace-14"))) t t))
 
 (when window-system
   (setq frame-title-format '(buffer-file-name "%f" ("%b")))
