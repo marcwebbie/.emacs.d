@@ -25,3 +25,5 @@ ac-comphist.dat
 autosaves/*
 .#*
 /.cask/
+/projectile-bookmarks.eld
+/savehist
