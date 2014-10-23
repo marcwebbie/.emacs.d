@@ -43,7 +43,6 @@
 (depends-on "scala-mode")
 (depends-on "scss-mode")
 (depends-on "shoulda")
-(depends-on "skewer-mode")
 (depends-on "smartparens")
 (depends-on "smex")
 (depends-on "solarized-theme")
