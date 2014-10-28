@@ -61,12 +61,12 @@
 (bind-key "C-c v r" 'git-gutter:revert-hunk)
 
 ;; hippie
-(bind-key "M-/" 'hippie-expand-no-case-fold)
+(bind-key "C-." 'hippie-expand-no-case-fold)
 (bind-key "M-?" 'hippie-expand-lines)
-(bind-key "C-," 'completion-at-point)
+(bind-key "M-/" 'completion-at-point)
 
 ;; imenu-anywhere
-(bind-key "C-." 'imenu-anywhere)
+(bind-key "M-i" 'imenu-anywhere)
 
 ;; magit
 (bind-key "C-x g" 'magit-status)
