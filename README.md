@@ -29,10 +29,6 @@ Or, for emacs24 (i.e. 24.3, stable):
 
     sudo apt-get install emacs24 emacs24-el emacs24-common-non-dfsg
 
-### Compile emacs 24 from source on Red Hat 6
-
-    curl -fsSkl https://raw.githubusercontent.com/marcwebbie/emacs/master/scripts/compile_emacs24_rh6.sh | sh
-
 ### Fetch the config files:
 
     git clone git://github.com/marcwebbie/emacs.git ~/.emacs.d
@@ -56,7 +52,7 @@ If you want to use my settings straight out of the box, here are some things to 
 
  * Start by reading up on all the cool stuff in key-bindings.el.
 
- * Autocomplete using hippie-expand with `M-/` (autocomplete entire lines with `C-:`)
+ * Autocomplete using hippie-expand with `C-.` (autocomplete entire lines with `C-:`)
 
  * On a mac, the Meta key `M` is bound to Command.
 
@@ -65,11 +61,6 @@ If you want to use my settings straight out of the box, here are some things to 
  * Watch [emacsrocks.com](http://emacsrocks.com)
 
 ## Optional env setup
-
-### Using Xdefaults for setting fonts in linux
-
-    echo "Emacs.font: Inconsolata-12" >> ~/.Xdefaults
-    xrdb -merge ~/.Xdefaults
 
 ### Setting emacs to run in daemon mode
 
