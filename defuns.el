@@ -264,10 +264,6 @@ Otherwise point moves to beginning of line."
   (text-scale-increase 5)
   (set-window-text-height (selected-window) 7))
 
-(defun set-presentation-font ()
-  (interactive)
-  (set-frame-font "Monaco-38"))
-
 ;;;; External services
 
 (defun ipython ()
