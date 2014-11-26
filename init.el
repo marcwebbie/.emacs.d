@@ -14,7 +14,6 @@
   (load (expand-file-name file user-emacs-directory)))
 
 (load-local "appearance")
-(when (eq system-type 'darwin) (load-local "mac"))
 (load-local "defaults")
 (load-local "defuns")
 (load-local "hippie")
@@ -298,5 +297,7 @@
 ;;;; Bindings
 (load-local "key-bindings")
 
+;;;; OSX settings
+(when (eq system-type 'darwin) (load-local "mac"))
 
 ;;;; ends init.el
