@@ -138,6 +138,10 @@
 ;; handle shell colours
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
+(add-hook 'text-mode-hook (lambda() (visual-line-mode 1)))
+
+(add-to-list 'warning-suppress-types '(undo discard-info))
+
 ;; Add support to iso key
 (require 'iso-transl)
 
