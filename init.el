@@ -174,6 +174,12 @@
 (use-package re-builder
   :init (setq reb-re-syntax 'string))
 
+(use-package rst
+  :config
+  (add-hook 'rst-mode-hook
+            (lambda()
+              (flyspell-mode 1))))
+
 (use-package ruby-mode
   :init
   (progn
