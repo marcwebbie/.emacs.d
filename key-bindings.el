@@ -13,6 +13,7 @@
 
 (bind-key "C-M-;" 'comment-or-uncomment-current-line-or-region)
 
+(bind-key "C-x C-b" 'buffer-menu)
 (bind-key "C-x C-c" (λ (if (y-or-n-p "Quit Emacs? ") (save-buffers-kill-emacs))))
 
 (bind-key "C-c R" 'rename-this-buffer-and-file)
@@ -55,9 +56,9 @@
 ;; flyspell
 (bind-key "<f6>" 'mw/spell)
 (bind-key "C-?" 'ispell-word)
-(bind-key "C-c l e" (λ (ispell-change-dictionary "english") (flyspell-buffer)))
-(bind-key "C-c l f" (λ (ispell-change-dictionary "francais") (flyspell-buffer)))
-(bind-key "C-c l p" (λ (ispell-change-dictionary "portugues") (flyspell-buffer)))
+(bind-key "C-c l e" (λ (ispell-change-dictionary "en_GB") (flyspell-buffer)))
+(bind-key "C-c l f" (λ (ispell-change-dictionary "fr_FR") (flyspell-buffer)))
+(bind-key "C-c l p" (λ (ispell-change-dictionary "pt_BR") (flyspell-buffer)))
 
 ;; git-gutter
 (global-unset-key (kbd "C-c v"))
