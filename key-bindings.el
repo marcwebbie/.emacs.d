@@ -52,6 +52,13 @@
 (bind-key "C-\\" 'er/expand-region)
 (bind-key "M-\\" 'er/mark-ruby-block-up)
 
+;; flyspell
+(bind-key "<f6>" 'mw/spell)
+(bind-key "C-?" 'ispell-word)
+(bind-key "C-c l e" (λ (ispell-change-dictionary "english") (flyspell-buffer)))
+(bind-key "C-c l f" (λ (ispell-change-dictionary "francais") (flyspell-buffer)))
+(bind-key "C-c l p" (λ (ispell-change-dictionary "portugues") (flyspell-buffer)))
+
 ;; git-gutter
 (global-unset-key (kbd "C-c v"))
 (bind-key "C-c v =" 'git-gutter:popup-hunk) ;; show hunk diff
