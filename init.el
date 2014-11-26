@@ -298,6 +298,6 @@
 (load-local "key-bindings")
 
 ;;;; OSX settings
-(when (eq system-type 'darwin) (load-local "mac"))
+(when (eq system-type 'darwin) (load-local "osx"))
 
 ;;;; ends init.el
