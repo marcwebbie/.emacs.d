@@ -313,20 +313,23 @@ Otherwise point moves to beginning of line."
   (kill-buffer)
   (jump-to-register :magit-fullscreen))
 
+
 ;;;; My functions
 
 (defun mw/spell (choice)
-   "Switch between language dictionaries."
-   (interactive "cChoose:  (1) English | (2) French | (3) Portuguese")
-    (cond ((eq choice ?1)
-           (λ (ispell-chage-dictionary "english"))
-           (flyspell-buffer))
-          ((eq choice ?2)
-           (λ (ispell-chage-dictionary "francais"))
-           (flyspell-buffer))
-          ((eq choice ?3)
-           (λ (ispell-chage-dictionary "portugues"))
-           (flyspell-buffer))
-          (t (message "No changes have been made."))))
+  "Switch between language dictionaries."
+  (interactive "cChoose:  (1) English | (2) French | (3) Portuguese")
+  (let ((lang (cond
+               ((eq choice ?1) "en_GB")
+               ((eq choice ?2) "fr_FR")
+               ((eq choice ?3) "pt_BR"))))
+    (if lang (progn
+               (message (format "Chosen dictionary: %s" lang))
+               (ispell-change-dictionary lang)
+               ;; (setq ispell-dictionary lang)
+               (flyspell-buffer)
+               )
+      (message "Not a valid choice"))))
+
 
 ;;;; end
