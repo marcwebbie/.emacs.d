@@ -96,7 +96,6 @@
 
 (use-package imenu-anywhere)
 
-;; (setq ispell-program-name (cond ((eq system-type 'darwin) "/Usr/local/bin/aspell") (t "aspell"))
 (use-package ispell
   :config
   (setq ispell-program-name "aspell"
