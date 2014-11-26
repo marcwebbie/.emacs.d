@@ -105,6 +105,7 @@
   :requires ispell
   :config
     (add-hook 'text-mode-hook 'turn-on-flyspell)
+    ;; (add-hook 'text-mode-hook 'flyspell-mode)
     (add-hook 'prog-mode-hook 'flyspell-prog-mode))
 
 (use-package js-mode
