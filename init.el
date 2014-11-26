@@ -97,6 +97,18 @@
 
 (use-package imenu-anywhere)
 
+;; (setq ispell-program-name (cond ((eq system-type 'darwin) "/Usr/local/bin/aspell") (t "aspell"))
+(use-package ispell
+  :config
+  (setq ispell-program-name "aspell"
+        ispell-extra-args '("--sug-mode=ultra")))
+
+(use-package flyspell
+  :requires ispell
+  :config
+    (add-hook 'text-mode-hook 'turn-on-flyspell)
+    (add-hook 'prog-mode-hook 'flyspell-prog-mode))
+
 (use-package js-mode
   :mode ("\\.json$" . js-mode)
   :init
