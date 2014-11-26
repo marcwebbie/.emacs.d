@@ -144,7 +144,11 @@
    '((python . t)
      (ruby . t)
      (lisp . t)
-     (R . t))))
+     (R . t)))
+  :config
+  (add-hook 'org-mode-hook
+            (lambda()
+              (flyspell-mode 1))))
 
 (use-package pomodoro
   :init (pomodoro-add-to-mode-line))
