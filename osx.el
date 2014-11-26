@@ -15,9 +15,6 @@
 ;; Make the browser the OS X default
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
 
-;; keybinding to toggle full screen mode
-(global-set-key (quote [M-f11]) (quote ns-toggle-fullscreen))
-
 ;; Move to trash when deleting stuff
 (setq delete-by-moving-to-trash t
       trash-directory "~/.Trash/emacs")
