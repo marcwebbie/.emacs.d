@@ -301,4 +301,9 @@
 ;;;; OSX settings
 (when (eq system-type 'darwin) (load-local "osx"))
 
-;;;; ends init.el
+;;;; Custom variables
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load-local "custom")
+
+(provide 'init)
+;;; init.el ends here
