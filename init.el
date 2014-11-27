@@ -216,8 +216,6 @@
       (progn
         (add-hook 'after-init-hook 'inf-ruby-switch-setup)
         (add-hook 'ruby-mode-hook 'inf-ruby-minor-mode)))
-    (use-package robe
-      :init (add-hook 'ruby-mode-hook 'robe-mode))
     (use-package rspec-mode
       :config
       (progn
