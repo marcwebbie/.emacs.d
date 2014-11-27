@@ -30,6 +30,7 @@
 (depends-on "nyan-mode")
 (depends-on "pallet")
 (depends-on "pomodoro")
+(depends-on "paradox")
 (depends-on "projectile")
 (depends-on "projectile-rails")
 (depends-on "puppet-mode")
