@@ -292,13 +292,14 @@
 
 (use-package yaml-mode)
 
-(use-package yari)
 
 ;;;; Bindings
 (load-local "key-bindings")
 
+
 ;;;; OSX settings
 (when (eq system-type 'darwin) (load-local "osx"))
+
 
 ;;;; Custom variables
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
