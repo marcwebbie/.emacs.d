@@ -86,6 +86,7 @@
   (progn
     (add-hook 'after-init-hook 'global-flycheck-mode)
     (setq flycheck-check-syntax-automatically '(save idle-change mode-enabled))
+    (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
     (setq flycheck-display-errors-function nil)))
 
 (use-package git-gutter
