@@ -140,8 +140,12 @@
    `(org-block-end-line ((t (:foreground, *comments*, :background, *background-color*))))
    `(org-block-background ((t (:background "#222"))))
 
-   ;; starter kit
-   `(esk-paren-face ((t (:foreground, *string-inner*))))))
+   ;; rst-mode
+   '(rst-level-1-face ((t (:inherit org-level-1 :background nil :height 1.3))))
+   '(rst-level-2-face ((t (:inherit org-level-2 :background nil))))
+   '(rst-level-3-face ((t (:inherit org-level-3 :background nil))))
+   '(rst-level-4-face ((t (:inherit org-level-4 :background nil))))
+   ))
 
 ;;;###autoload
 (when (and (boundp 'custom-theme-load-path) load-file-name)
