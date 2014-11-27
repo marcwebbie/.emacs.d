@@ -15,11 +15,12 @@
 
 (defun set-best-font ()
   (when (string-equal system-type "darwin")
-    (set-frame-font (cond ((member "Menlo" (font-family-list)) "Menlo-14")
-                          ((member "Monaco" (font-family-list)) "Monaco-14")
-                          ((member "Ubuntu Mono" (font-family-list)) "Ubuntu Mono-14")
-                          ((member "Inconsolata" (font-family-list)) "Inconsolata-14")
-                          )) t t)
+    (set-frame-font (cond
+                     ((member "Inconsolata" (font-family-list)) "Inconsolata-14")
+                     ((member "Menlo" (font-family-list)) "Menlo-12")
+                     ((member "Ubuntu Mono" (font-family-list)) "Ubuntu Mono-14")
+                     ((member "Monaco" (font-family-list)) "Monaco-14")
+                     )) t t)
   (when (string-equal system-type "gnu/linux")
     (set-frame-font (cond ((member "Inconsolata" (font-family-list)) "Inconsolata-14")
                           ((member "Ubuntu Mono" (font-family-list)) "Ubuntu Mono-14")
