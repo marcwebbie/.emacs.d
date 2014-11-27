@@ -6,6 +6,7 @@
 
 (require 'cask "~/.cask/cask.el")
 (cask-initialize)
+(require 'pallet)
 (require 'use-package)
 
 (setq default-directory (f-full (getenv "HOME")))
@@ -162,8 +163,8 @@
             (lambda()
               (flyspell-mode 1))))
 
-(use-package pomodoro
-  :init (pomodoro-add-to-mode-line))
+(use-package pallet
+  :init (pallet-mode t))
 
 (use-package projectile
   :diminish projectile-mode
