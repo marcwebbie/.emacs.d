@@ -331,5 +331,10 @@ Otherwise point moves to beginning of line."
                )
       (message "Not a valid choice"))))
 
+(defun mw/buffer-django-p ()
+  (save-excursion
+    (search-forward-regexp "{% base\\|{% if\\|{% include\\|{% block"
+                           nil
+                           t)))
 
 ;;;; end
