@@ -34,11 +34,12 @@
 
 (defun pelican-pelicanconf-var (var)
   (let ((cmd (format "cd %s && python -c 'from pelicanconf import *; print(%s)'" (pelican-find-root) var)))
-    (string-trim-right (shell-command-to-string cmd))))
+    (s-trim-right (shell-command-to-string cmd))))
 
 (defun pelican-publishconf-var (var)
   (let ((cmd (format "cd %s && python -c 'from publishconf import *; print(%s)'" (pelican-find-root) var)))
-    (string-trim-right (shell-command-to-string cmd))))
+    (s-trim-right (shell-command-to-string cmd))))
+
 
 ;; ========================
 ;; Make
