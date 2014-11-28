@@ -277,15 +277,26 @@
     (use-package visual-regexp-steroids)))
 
 (use-package web-mode
-  :init (progn
-          (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
-          (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
-  :config (progn
-            (add-hook 'web-mode-hook
-                      (lambda ()
-                        (setq web-mode-style-padding 2)
-                        (setq web-mode-script-padding 2)
-                        (define-key web-mode-map [(return)] 'newline-and-indent)))))
+   :mode (("\\.html\\'" . web-mode)
+          ("\\.html\\.erb\\'" . web-mode)
+          ("\\.mustache\\'" . web-mode)
+          ("\\.jinja\\'" . web-mode))
+  :init
+  (progn
+    (setq web-mode-enable-current-element-highlight t)
+    (setq web-mode-enable-auto-pairing nil))
+  :config
+  (progn
+    (setq web-mode-engines-alist
+          '(("django" . "\\.djhtml")
+            ;; ("django" . my-current-buffer-django-p)) ;; set engine to django on django buffer
+            ("django" . "templates/.*\\.html")))
+    (add-hook 'web-mode-hook
+              (lambda ()
+                (setq web-mode-style-padding 2)
+                (setq web-mode-script-padding 2)
+                (setq web-mode-markup-indent-offset 2)
+                (define-key web-mode-map [(return)] 'newline-and-indent)))))
 
 (use-package winner
   :config (winner-mode 1))
