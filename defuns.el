@@ -267,8 +267,8 @@ Otherwise point moves to beginning of line."
 ;;;; External services
 
 (defun ipython ()
-    (interactive)
-    (ansi-term "/usr/bin/ipython"))
+  (interactive)
+  (ansi-term "/usr/bin/ipython"))
 
 (defun google ()
   "Search Googles with a query or region if any."
