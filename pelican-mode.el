@@ -21,6 +21,10 @@
   (let ((conf (pelican-find-in-parents "pelicanconf.py")))
     (if conf conf)))
 
+(defun pelican-pelicanconf-var (var)
+  (let ((cmd (format "cd %s && python -c 'from pelicanconf import *; print(%s)'" (pelican-find-root) var)))
+    (string-trim-right (shell-command-to-string cmd))))
+
 ;; ========================
 ;; Make
 ;; ========================
