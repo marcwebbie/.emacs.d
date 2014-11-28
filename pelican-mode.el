@@ -2,12 +2,6 @@
 ;; Helper functions
 ;; ========================
 
-(defun string-trim-right (s)
-  "Remove whitespace at the end of string."
-  (if (string-match "[ \t\n\r]+\\'" s)
-      (replace-match "" t t s)
-    s))
-
 
 ;; ========================
 ;; Misc functions
