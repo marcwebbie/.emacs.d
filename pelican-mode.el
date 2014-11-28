@@ -67,6 +67,31 @@
   (interactive)
   (pelican-make "html"))
 
+
+;; ========================
+;; Posts
+;; ========================
+
+(defun pelican-new-draft-rst (title)
+  "Create new draft rst post"
+  (interactive "sPost title: ")
+  (let* (
+         (slug (s-dashed-words title))
+         (draft-path (format "content/%s.rst" slug))
+         (category "<CATEGORY>")
+         (tags "<TAGS>")
+         (header (pelican-rst-header
+                  title
+                  (pelican-timestamp-now)
+                  "draft"
+                  category
+                  tags
+                  slug)))
+    (write-region header nil draft-path)
+    (find-file draft-path)
+    ))
+
+
 ;; ========================
 ;; Define mode
 ;; ========================
