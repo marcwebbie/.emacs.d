@@ -32,13 +32,46 @@
   (let ((conf (pelican-find-in-parents "pelicanconf.py")))
     (if conf conf)))
 
-(defun pelican-pelicanconf-var (var)
-  (let ((cmd (format "cd %s && python -c 'from pelicanconf import *; print(%s)'" (pelican-find-root) var)))
-    (s-trim-right (shell-command-to-string cmd))))
+(defun pelican-field (name value)
+  "Helper to format a field NAME and VALUE."
+  (if value (format "%s: %s\n" name value) ""))
+
+
+(defun pelican-rst-header (title date status category tags slug)
+  "Generate a Pelican reStructuredText header.
+
+All parameters but TITLE may be nil to omit them. DATE may be a
+string or 't to use the current date and time."
+  (let ((title (format "%s\n%s\n%s\n\n"
+                       (make-string (string-width title) ?#)
+                       title
+                       (make-string (string-width title) ?#)))
+        (status (pelican-field ":status" status))
+        (category (pelican-field ":category" category))
+        (tags (pelican-field ":tags" tags))
+        (slug (pelican-field ":slug" slug))
+        (date (if date (format ":date: %s\n"
+                               (if (stringp date) date
+                                 (pelican-timestamp-now)))
+                "")))
+    (concat title date status tags category slug "\n")))
+
+(defun pelican-conf-var (var)
+  (let* ((cmd (format "cd %s && python -c '%s = str();from pelicanconf import *; print(%s)'"
+                      (pelican-find-root)
+                      var
+                      var))
+         (output (string-trim-right (shell-command-to-string cmd))))
+    (if (equal "" output) nil output)))
 
 (defun pelican-publishconf-var (var)
-  (let ((cmd (format "cd %s && python -c 'from publishconf import *; print(%s)'" (pelican-find-root) var)))
-    (s-trim-right (shell-command-to-string cmd))))
+  (let* ((cmd (format "cd %s && python -c '%s = str();from publishconf import *; print(%s)'"
+                      (pelican-find-root)
+                      var
+                      var))
+         (output (string-trim-right (shell-command-to-string cmd))))
+    (if (equal "" output) nil output)))
+
 
 
 ;; ========================
