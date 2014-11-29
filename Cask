@@ -30,6 +30,7 @@
 (depends-on "nyan-mode")
 (depends-on "pallet")
 (depends-on "paradox")
+(depends-on "pelican-mode" :git "https://github.com/marcwebbie/pelican-mode.el")
 (depends-on "projectile")
 (depends-on "projectile-rails")
 (depends-on "puppet-mode")
