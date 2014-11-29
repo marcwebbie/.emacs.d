@@ -72,10 +72,13 @@
 ;; Posts
 ;; ========================
 
-(defun pelican-new-draft-rst (title)
-  "Create new draft rst post"
+;;;###autoload
+(defun pelican-new-post-draft (title)
+  "Create new rst post draft and open it in a new buffer"
   (interactive "sPost title: ")
   (let* (
+         (conf-content-var (pelican-conf-var "PATH"))
+         (content-path (if conf-content-var conf-content-var "output"))
          (slug (s-dashed-words title))
          (draft-path (format "content/%s.rst" slug))
          (category "<CATEGORY>")
@@ -88,6 +91,7 @@
                   tags
                   slug)))
     (write-region header nil draft-path)
+    (message "Created new rst draft at: %s" draft-path)
     (find-file draft-path)
     ))
 
