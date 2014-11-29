@@ -36,8 +36,7 @@
   :diminish auto-complete-mode
   :init
   (progn
-    (global-auto-complete-mode t)
-    (add-hook 'python-mode-hook 'jedi:ac-setup)))
+    (global-auto-complete-mode t)))
 
 (use-package coffee-mode
   :init
