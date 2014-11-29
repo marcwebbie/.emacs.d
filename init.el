@@ -18,7 +18,6 @@
 (load-local "defaults")
 (load-local "defuns")
 (load-local "hippie")
-(load-local "pelican-mode")
 
 
 ;;;; Packages
