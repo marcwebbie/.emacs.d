@@ -165,6 +165,8 @@
 (use-package pallet
   :init (pallet-mode t))
 
+(use-package pelican-mode)
+
 (use-package projectile
   :diminish projectile-mode
   :init (projectile-global-mode 1)
