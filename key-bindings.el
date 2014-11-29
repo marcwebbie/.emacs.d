@@ -88,6 +88,11 @@
 (bind-key "C-c C-s" 'mc/mark-all-symbols-like-this)
 (bind-key "C-S-c C-S-c" 'mc/edit-lines)
 
+;; pelican-mode
+(global-unset-key (kbd "C-c ="))
+(bind-key "C-c = d" 'pelican-mode-new-posts-draft) ;; create new draft post
+(bind-key "C-c = m g" 'pelican-make-generate) ;; run make generate html task
+
 ;; ruby-test-mode
 (bind-key "C-c t b" 'ruby-test-run)
 
