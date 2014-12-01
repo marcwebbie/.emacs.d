@@ -44,6 +44,13 @@
     (setq whitespace-action '(auto-cleanup))
     (setq whitespace-style '(trailing space-before-tab indentation empty space-after-tab))))
 
+(use-package cc-mode
+  :mode ("\\.h\\'" . c++-mode)
+  :config
+  (progn
+    (setq c-basic-offset 4)
+    (c-set-offset 'substatement-open 0)))
+
 (use-package diminish)
 
 (use-package drag-stuff
