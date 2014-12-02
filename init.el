@@ -191,6 +191,7 @@
 (use-package puppet-mode)
 
 (use-package python
+  :bind ("C-c ;" . (λ (insert "import pdb;pdb.set_trace() # DEBUG #")))
   :config (add-hook 'python-mode-hook (lambda() (setq mode-name "py"))))
 
 (use-package rainbow-mode

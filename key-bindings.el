@@ -93,9 +93,6 @@
 (bind-key "C-c = d" 'pelican-mode-new-posts-draft) ;; create new draft post
 (bind-key "C-c = m g" 'pelican-make-generate) ;; run make generate html task
 
-;; python-mode
-(bind-key "C-c ;" (λ (insert "import pdb;pdb.set_trace() # DEBUG #")))
-
 ;; ruby-test-mode
 (bind-key "C-c t b" 'ruby-test-run)
 
