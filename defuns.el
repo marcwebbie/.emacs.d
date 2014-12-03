@@ -9,6 +9,11 @@
      ,@body))
 
 
+(defun set-presentation-font ()
+  (interactive)
+  (set-frame-font "Monaco-40"))
+
+
 ;;;; Editing
 
 (autoload 'zap-up-to-char "misc"
