@@ -193,8 +193,14 @@
 (use-package puppet-mode)
 
 (use-package python
-  :bind ("C-c ;" . (λ (insert "import pdb;pdb.set_trace() # DEBUG #")))
-  :config (add-hook 'python-mode-hook (lambda() (setq mode-name "py"))))
+  :config
+  (progn
+    ;; (global-pyenv-mode)
+    (add-hook 'python-mode-hook
+          '(lambda ()
+             (flycheck-mode)
+             (flycheck-select-checker 'python-flake8)))
+    (add-hook 'python-mode-hook (lambda() (setq mode-name "py")))))
 
 (use-package rainbow-mode
   :diminish rainbow-mode)
