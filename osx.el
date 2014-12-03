@@ -23,3 +23,5 @@
 (if (not (getenv "TERM_PROGRAM"))
     (setenv "PATH"
             (shell-command-to-string "source $HOME/.zshrc && printf $PATH")))
+
+(exec-path-from-shell-initialize)

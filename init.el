@@ -73,6 +73,8 @@
 
 (use-package expand-region)
 
+(use-package exec-path-from-shell)
+
 (use-package flx-ido
   :init
   (progn
