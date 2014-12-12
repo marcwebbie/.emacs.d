@@ -126,9 +126,6 @@
 (bind-key "M-x" 'smex)
 (bind-key "C-x C-m" 'smex)
 
-;; swoop
-(bind-key "M-o" 'swoop)
-
 ;; visual-regexp-steroids
 (bind-key "C-s" 'vr/isearch-forward)
 (bind-key "C-r" 'vr/isearch-backward)

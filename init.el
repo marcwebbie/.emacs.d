@@ -286,8 +286,6 @@
 (use-package subword
   :diminish subword-mode)
 
-(use-package swoop)
-
 (use-package visual-regexp
   :config
   (progn
