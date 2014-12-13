@@ -103,6 +103,10 @@
 ;; jstestdriver
 (bind-key "C-c t j" 'jstestdriver:run-should-at-point)
 
+;; python
+(bind-key "<f9>" 'add-py-debug)
+(bind-key "C-c <f9>" 'remove-py-debug)
+
 ;; smartparens
 (bind-key "C-M-k" 'sp-kill-sexp-with-a-twist-of-lime)
 (bind-key "C-M-f" 'sp-forward-sexp)
