@@ -17,11 +17,11 @@
   (when (string-equal system-type "darwin")
     (set-frame-font (cond
                      ((member "Input Mono Narrow" (font-family-list)) "Input Mono Narrow-12")
+                     ((member "Monaco" (font-family-list)) "Monaco-12")
                      ((member "Inconsolata" (font-family-list)) "Inconsolata-14")
+                     ((member "Ubuntu Mono" (font-family-list)) "Ubuntu Mono-13")
                      ((member "Source Code Pro" (font-family-list)) "Source Code Pro-12")
                      ((member "Menlo" (font-family-list)) "Menlo-12")
-                     ((member "Ubuntu Mono" (font-family-list)) "Ubuntu Mono-14")
-                     ((member "Monaco" (font-family-list)) "Monaco-14")
                      )) t t)
   (when (string-equal system-type "gnu/linux")
     (set-frame-font (cond ((member "Inconsolata" (font-family-list)) "Inconsolata-14")
