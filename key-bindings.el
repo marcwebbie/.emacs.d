@@ -53,6 +53,9 @@
 (bind-key "C-\\" 'er/expand-region)
 (bind-key "M-\\" 'er/mark-ruby-block-up)
 
+;; eshell
+(bind-key "C-c C-e" 'eshell)
+
 ;; flyspell
 (bind-key "<f6>" 'mw/spell)
 (bind-key "C-?" 'ispell-word)
