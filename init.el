@@ -22,15 +22,14 @@
 
 ;;;; Packages
 
-(use-package ace-jump-mode)
-
-(use-package ack-and-a-half
-  :init
+(use-package ace-jump-mode
+  :if (not noninteractive)
+  :config
   (progn
-    (defalias 'ack 'ack-and-a-half)
-    (defalias 'ack-same 'ack-and-a-half-same)
-    (defalias 'ack-find-file 'ack-and-a-half-find-file)
-    (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)))
+    (setq ace-jump-mode-case-fold t)
+    (ace-jump-mode-enable-mark-sync)
+    (setq ace-jump-mode-submode-list
+          '(ace-jump-word-mode ace-jump-char-mode ace-jump-line-mode))))
 
 (use-package auto-complete
   :diminish auto-complete-mode
@@ -52,13 +51,11 @@
 
 (use-package css-mode
   :if (not noninteractive)
-  :ensure css-mode
   :config (setq css-indent-offset 2))
 
 (use-package diminish)
 
 (use-package drag-stuff
-  :ensure drag-stuff
   :diminish drag-stuff-mode
   :init (drag-stuff-mode t))
 
@@ -68,7 +65,6 @@
   :init (add-hook 'emacs-lisp-mode-hook (lambda() (setq mode-name "el"))))
 
 (use-package emmet-mode
-  :ensure emmet-mode
   :diminish emmet-mode
   :init
   (progn
@@ -78,10 +74,7 @@
     (add-hook 'css-mode-hook  'emmet-mode)))
 
 (use-package expand-region
-  :if (not noninteractive)
-  :ensure expand-region
-  :bind (("C-M-SPC" . er/expand-region)
-         ("C-M-@" . er/expand-region)))
+  :if (not noninteractive))
 
 (use-package exec-path-from-shell)
 
