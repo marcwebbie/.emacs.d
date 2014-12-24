@@ -446,7 +446,7 @@
 
 
 ;;;; Custom variables
-(setq custom-file (expand-file-name "custom.el" use-emacs-directory))
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load-local "custom" 'noerror)
 
 
