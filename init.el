@@ -51,9 +51,15 @@
     (setq c-basic-offset 4)
     (c-set-offset 'substatement-open 0)))
 
+(use-package css-mode
+  :if (not noninteractive)
+  :ensure css-mode
+  :config (setq css-indent-offset 2))
+
 (use-package diminish)
 
 (use-package drag-stuff
+  :ensure drag-stuff
   :diminish drag-stuff-mode
   :init (drag-stuff-mode t))
 
@@ -63,6 +69,7 @@
   :init (add-hook 'emacs-lisp-mode-hook (lambda() (setq mode-name "el"))))
 
 (use-package emmet-mode
+  :ensure emmet-mode
   :diminish emmet-mode
   :init
   (progn
@@ -71,23 +78,46 @@
     (add-hook 'web-mode-hook 'emmet-mode)
     (add-hook 'css-mode-hook  'emmet-mode)))
 
-(use-package expand-region)
+(use-package expand-region
+  :if (not noninteractive)
+  :ensure expand-region
+  :bind (("C-M-SPC" . er/expand-region)
+         ("C-M-@" . er/expand-region)))
 
 (use-package exec-path-from-shell)
 
-(use-package flx-ido
-  :init
+(use-package ido
+  :if (not noninteractive)
+  :config
   (progn
+    (use-package ido-vertical-mode
+      :ensure ido-vertical-mode)
+    (use-package flx
+      :ensure flx)
+    (use-package flx-ido
+      :ensure flx-ido)
+    (use-package ido-ubiquitous
+      :config (ido-ubiquitous-mode 1)
+      :ensure ido-ubiquitous)
+    (setq ido-enable-flex-matching t
+          ido-use-faces nil
+          flx-ido-use-faces t
+          ido-create-new-buffer 'always)
     (ido-mode 1)
     (ido-everywhere 1)
-    (flx-ido-mode 1)
-    (use-package ido-vertical-mode
-      :init (ido-vertical-mode 1))
-    (use-package ido-ubiquitous
-      :init (ido-ubiquitous-mode 1)
-      (setq ido-use-faces nil)
-      (setq ido-file-extensions-order '(".py" ".rb" ".el" ".js" ".coffee"))
-      (add-to-list 'ido-ignore-files "\\.DS_Store"))))
+    (ido-vertical-mode 1)
+    (setq ido-file-extensions-order '(".py" ".rb" ".el" ".js"))
+    (add-to-list 'ido-ignore-files '(".DS_Store" ".pyc"))
+    (add-to-list 'ido-ignore-directories '("__pycache__" ".pyc"))
+    (flx-ido-mode 1)))
+
+(use-package files
+  :config (progn
+            (setq auto-save-default nil)
+            (setq backup-directory-alist
+                  `(("." . ,(expand-file-name
+                             (concat user-emacs-directory "backups")))))
+            (add-hook 'before-save-hook 'delete-trailing-whitespace)))
 
 (use-package flycheck
   :diminish flycheck-mode
@@ -103,6 +133,41 @@
   :init (global-git-gutter-mode t))
 
 (use-package haml-mode)
+
+(use-package ibuffer
+  :if (not noninteractive)
+  :bind ("C-x C-b" . ibuffer)
+  :config
+  (progn
+    (setq ibuffer-show-empty-filter-groups nil
+          ibuffer-saved-filter-groups
+          (list (append
+                 (cons "default"
+                       ;; Generate filters by major modes from the
+                       ;; auto-mode-alist
+                       (let ((mode-filters))
+                         (dolist (element auto-mode-alist)
+                           (when (ignore-errors (fboundp (cdr element)))
+                             (let* ((mode (cdr element))
+                                    (name (if (string-match "\\(-mode\\)?\\'"
+                                                            (symbol-name mode))
+                                              (capitalize
+                                               (substring (symbol-name mode)
+                                                          0 (match-beginning 0)))
+                                            (symbol-name mode))))
+                               (when (not (assoc-string name mode-filters))
+                                 (setq mode-filters
+                                       (cons (list name (cons 'mode mode))
+                                             mode-filters))))))
+                         mode-filters))
+                 ;; Custom added filters.
+                 '(("Magit" (name . "^\\*magit"))
+                   ("Irc" (mode . rcirc-mode))
+                   ("Css" (mode . scss-mode))
+                   ("W3m" (name . "^\\*w3m"))))))
+    (add-hook 'ibuffer-mode-hook
+              (lambda ()
+                (ibuffer-switch-to-saved-filter-groups "default")))))
 
 (use-package imenu-anywhere)
 
@@ -146,6 +211,9 @@
   (progn
     (set-default 'magit-stage-all-confirm nil)
     (set-default 'magit-unstage-all-confirm nil)))
+
+(use-package menu-bar
+  :bind ("M-k" . kill-this-buffer))
 
 (use-package markdown-mode
   :config (add-hook 'markdown-mode-hook (lambda() (setq mode-name "md")))
@@ -210,6 +278,28 @@
 (use-package rainbow-mode
   :diminish rainbow-mode)
 
+(use-package rainbow-delimiters
+  :if (not noninteractive)
+  :config (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
+
+(use-package region-bindings-mode
+  :if (not noninteractive)
+  :config (progn
+            (bind-key "m" 'mc/mark-more-like-this-extended region-bindings-mode-map)
+            (bind-key "a" 'mc/mark-all-like-this region-bindings-mode-map)
+            (bind-key "p" 'mc/mark-previous-like-this region-bindings-mode-map)
+            (bind-key "n" 'mc/mark-next-like-this region-bindings-mode-map)
+            (bind-key "b" 'mc/skip-to-previous-like-this region-bindings-mode-map)
+            (bind-key "f" 'mc/skip-to-next-like-this region-bindings-mode-map)
+            (bind-key "P" 'mc/unmark-previous-like-this region-bindings-mode-map)
+            (bind-key "N" 'mc/unmark-next-like-this region-bindings-mode-map)
+            (bind-key "u" 'er/contract-region region-bindings-mode-map)
+            (setq region-bindings-mode-disabled-modes '(term-mode))
+            (setq region-bindings-mode-disable-predicates
+                  (list (lambda () buffer-read-only)))
+            (region-bindings-mode-enable)))
+
+
 (use-package re-builder
   :init (setq reb-re-syntax 'string))
 
@@ -269,6 +359,16 @@
 
 (use-package shoulda)
 
+(use-package slime
+  :mode (("\\.lisp$" . lisp-mode)
+         ("\\.clisp$" . lisp-mode))
+  :config
+  (progn
+    (setq inferior-lisp-program (executable-find "clisp"))
+    (setq slime-contribs '(slime-fancy))
+    (add-hook 'lisp-mode-hook (lambda () (slime-mode t)))
+    (add-hook 'inferior-lisp-mode-hook (lambda () (inferior-slime-mode t)))))
+
 (use-package smartparens
   :diminish smartparens-mode
   :init
@@ -283,6 +383,9 @@
     (setq smartparens-strict-mode t)
     (setq sp-autoescape-string-quote nil)
     (setq sp-autoinsert-if-followed-by-word t)
+    (sp-with-modes sp--lisp-modes
+      (sp-local-pair "*" "*")
+      (sp-local-pair "(" nil :bind "C-("))
     (sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p))))
 
 (use-package smex
@@ -304,7 +407,7 @@
     (use-package visual-regexp-steroids)))
 
 (use-package web-mode
-   :mode (("\\.html\\'" . web-mode)
+  :mode (("\\.html\\'" . web-mode)
           ("\\.html\\.erb\\'" . web-mode)
           ("\\.mustache\\'" . web-mode)
           ("\\.jinja\\'" . web-mode))
@@ -340,23 +443,9 @@
 
 
 ;;;; Custom variables
-;; (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-;; (load-local "custom")
+(setq custom-file (expand-file-name "custom.el" use-emacs-directory))
+(load-local "custom" 'noerror)
+
 
 (provide 'init)
 ;;; init.el ends here
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(magit-use-overlays nil)
- '(paradox-github-token t)
- '(python-shell-interpreter "ipython")
- '(python-shell-interpreter-args ""))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
