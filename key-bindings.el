@@ -13,7 +13,6 @@
 
 (bind-key "C-M-;" 'comment-or-uncomment-current-line-or-region)
 
-(bind-key "C-x C-b" 'buffer-menu)
 (bind-key "C-x C-c" (λ (if (y-or-n-p "Quit Emacs? ") (save-buffers-kill-emacs))))
 
 (bind-key "C-c R" 'rename-this-buffer-and-file)
@@ -41,7 +40,7 @@
 
 ;; ace-jump-mode
 (bind-key "C-c SPC" 'ace-jump-mode)
-(bind-key "C-x SPC" 'ace-jump-mode-pop-mark)
+(bind-key "C-c C-SPC" 'ace-jump-mode-pop-mark)
 
 ;; drag-stuff
 (bind-key "M-p" 'drag-stuff-up)
@@ -50,8 +49,7 @@
 ;; expand-region
 (bind-key "C-=" 'er/expand-region)
 (bind-key "C-+" 'er/contract-region)
-(bind-key "C-\\" 'er/expand-region)
-(bind-key "M-\\" 'er/mark-ruby-block-up)
+(bind-key "C-M-SPC" 'er/expand-region)
 
 ;; eshell
 (bind-key "C-c C-e" 'eshell)
