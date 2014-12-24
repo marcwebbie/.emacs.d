@@ -20,6 +20,7 @@
 (depends-on "flycheck")
 (depends-on "git-gutter")
 (depends-on "git-timemachine")
+(depends-on "gitignore-mode")
 (depends-on "haml-mode")
 (depends-on "ido-ubiquitous")
 (depends-on "ido-vertical-mode")

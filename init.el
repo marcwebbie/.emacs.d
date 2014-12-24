@@ -131,6 +131,10 @@
   :diminish git-gutter-mode
   :init (global-git-gutter-mode t))
 
+(use-package gitignore-mode
+  :if (not noninteractive)
+  :ensure gitignore-mode)
+
 (use-package haml-mode)
 
 (use-package ibuffer
