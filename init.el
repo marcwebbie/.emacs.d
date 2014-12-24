@@ -34,9 +34,8 @@
 
 (use-package auto-complete
   :diminish auto-complete-mode
-  :init
-  (progn
-    (global-auto-complete-mode t)))
+  :config (progn
+            (global-auto-complete-mode t)))
 
 (use-package coffee-mode
   :init
