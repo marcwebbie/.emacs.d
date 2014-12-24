@@ -321,7 +321,7 @@ Otherwise point moves to beginning of line."
 
 ;;;; My functions
 
-(defun mw/spell (choice)
+(defun mw/spell-dictionary (choice)
   "Switch between language dictionaries."
   (interactive "cChoose:  (1) English | (2) French | (3) Portuguese")
   (let ((lang (cond
