@@ -55,7 +55,7 @@
 (bind-key "C-c C-e" 'eshell)
 
 ;; flyspell
-(bind-key "<f6>" 'mw/spell)
+(bind-key "<f6>" 'mw/spell-dictionary)
 (bind-key "C-?" 'ispell-word)
 (bind-key "C-c l e" (λ (ispell-change-dictionary "en_GB") (flyspell-buffer)))
 (bind-key "C-c l f" (λ (ispell-change-dictionary "fr_FR") (flyspell-buffer)))
@@ -105,8 +105,8 @@
 (bind-key "C-c t j" 'jstestdriver:run-should-at-point)
 
 ;; python
-(bind-key "<f9>" 'add-py-debug)
-(bind-key "C-c <f9>" 'remove-py-debug)
+(bind-key "<f9>" 'mw/add-py-debug python-mode-map)
+(bind-key "C-c <f9>" 'mw/remove-py-debug python-mode-map)
 
 ;; smartparens
 (bind-key "C-M-k" 'sp-kill-sexp-with-a-twist-of-lime)
