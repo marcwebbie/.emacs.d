@@ -337,18 +337,23 @@ Otherwise point moves to beginning of line."
       (message "Not a valid choice"))))
 
 (defun mw/buffer-django-p ()
+  "Test if in a django template buffer"
   (save-excursion
     (search-forward-regexp "{% base\\|{% if\\|{% include\\|{% block"
                            nil
                            t)))
 
-(defun add-py-debug ()
-  "add debug code and move line down"
+(defun mw/insert-lambda-char ()
+  (interactive)
+  (insert "λ"))
+
+(defun mw/add-py-debug ()
+  "Add debug code and move line down"
   (interactive)
   (insert "import pdb; pdb.set_trace()"))
 
-(defun remove-py-debug ()
-  "remove py debug code, if found"
+(defun mw/remove-py-debug ()
+  "Remove py debug code, if found"
   (interactive)
   (let ((x (line-number-at-pos))
     (cur (point)))
