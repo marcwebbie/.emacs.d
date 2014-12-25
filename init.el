@@ -46,38 +46,23 @@
 
 (load-theme 'solarized-light :no-confirm)
 
-(defun set-best-font ()
-  "Choose best font"
-  (when (string-equal system-type "darwin")
-    (set-frame-font
-     (cond
-      ((member "Inconsolata" (font-family-list)) "Inconsolata-14")
-      ((member "Ubuntu Mono" (font-family-list)) "Ubuntu Mono-14")
-      ((member "Input Mono Narrow" (font-family-list)) "Input Mono Narrow-12")
-      ((member "Monaco" (font-family-list)) "Monaco-12")
-      ((member "Source Code Pro" (font-family-list)) "Source Code Pro-12")
-      ((member "Menlo" (font-family-list)) "Menlo-12")
-      )) t t)
-  (when (string-equal system-type "gnu/linux")
-    (set-frame-font
-     (cond
-      ((member "Inconsolata" (font-family-list)) "Inconsolata-14")
-      ((member "Ubuntu Mono" (font-family-list)) "Ubuntu Mono-14")
-      ((member "Monaco" (font-family-list)) "Monaco-14")
-      ((member "DejaVu Sans Mono" (font-family-list)) "DejaVu Sans Mono-14")
-      ((member "Monospace" (font-family-list)) "Monospace-14")
-      )) t t))
-
 (setq visible-bell t
       font-lock-maximum-decoration t
       color-theme-is-global t
       truncate-partial-width-windows nil)
 
 (when window-system
+  (mw/set-best-font '(("Ubuntu Mono" 14)
+                 ("Inconsolata" 14)
+                 ("Input Mono Narrow" 12)
+                 ("Monaco" 12)
+                 ("Monospace" 12)
+                 ("DejaVu Sans Mono" 14)
+                 ("Source Code Pro" 14)
+                 ("Menlo" 14)))
   (setq frame-title-format '(buffer-file-name "%f" ("%b")))
   (tooltip-mode -1)
-  (blink-cursor-mode -1)
-  (set-best-font))
+  (blink-cursor-mode -1))
 
 (global-hl-line-mode 1)
 (tooltip-mode -1)
