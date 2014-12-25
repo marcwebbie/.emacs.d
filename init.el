@@ -1,12 +1,12 @@
-
 ;;----------------------------------------------------------------------------
 ;;;; Benchmarking
 ;;----------------------------------------------------------------------------
 ;; BENCHMARK=true emacs -f esup
-(when (getenv "BENCHMARK")
-  (progn
-    (add-to-list 'load-path "~/.emacs.d/esup.el")
-    (autoload 'esup "esup" "Emacs Start Up Profiler." nil)))
+;; (when (eq (getenv "BENCHMARK") "True")
+;;   (progn
+;;     (message "loading esup")
+;;     (add-to-list 'load-path "~/.emacs.d/vendor/esup.el")
+;;     (autoload 'esup "esup" "Emacs Start Up Profiler." nil)))
 
 
 ;;----------------------------------------------------------------------------
@@ -30,11 +30,6 @@
 (defun is-osx ()
   (eq system-type 'darwin))
 
-(defun imenu-elisp-sections ()
-  (setq imenu-prev-index-position-function nil)
-  (add-to-list 'imenu-generic-expression '(nil "^;;;; \\(.+\\)$" 1) t))
-(add-hook 'emacs-lisp-mode-hook 'imenu-elisp-sections)
-
 
 ;;----------------------------------------------------------------------------
 ;;;; Loading
@@ -42,6 +37,7 @@
 
 (load-local "defaults")
 (load-local "defuns")
+(load-local "hippie")
 
 
 ;;----------------------------------------------------------------------------
@@ -83,25 +79,26 @@
   (blink-cursor-mode -1)
   (set-best-font))
 
+(global-hl-line-mode 1)
+(tooltip-mode -1)
+(setq line-number-mode t)
+(setq column-number-mode t)
+
 ;; Configure scrolling
-;; (setq scroll-margin 10           ; Drag the point along while scrolling
-;;       scroll-conservatively 1000 ; Never recenter the screen while scrolling
-;;       scroll-error-top-bottom t  ; Move to beg/end of buffer before
-;;                                  ; signalling an error
-;;       ;; These settings make trackpad scrolling on OS X much more predictable
-;;       ;; and smooth
-;;       mouse-wheel-progressive-speed nil
-;;       mouse-wheel-scroll-amount '(1))
+(setq scroll-error-top-bottom t  ; Move to beg/end of buffer before signalling an error
+      scroll-conservatively 1000 ; Never recenter the screen while scrolling
+      scroll-margin 10)
 
 
 ;;----------------------------------------------------------------------------
 ;;;; Packages
 ;;----------------------------------------------------------------------------
 
-(provide 'personal)
-(provide 'osx)
-
+;; Packages setup
 (require 'use-package)
+(provide 'osx)
+(provide 'personal)
+(provide 'text)
 
 
 (use-package pallet
@@ -159,18 +156,7 @@
 
 
 (use-package hippie-exp
-  :bind ("C-." . hippie-expand)
-  :init
-  (setq hippie-expand-try-functions-list '(try-expand-dabbrev
-                                           try-expand-dabbrev-all-buffers
-                                           try-expand-dabbrev-from-kill
-                                           try-complete-file-name-partially
-                                           try-complete-file-name
-                                           try-expand-all-abbrevs
-                                           try-expand-list
-                                           try-expand-line
-                                           try-complete-lisp-symbol-partially
-                                           try-complete-lisp-symbol)))
+  :bind ("C-." . hippie-expand-no-case-fold))
 
 
 (use-package emacs-lisp-mode
@@ -237,9 +223,9 @@
   :config
   (progn
     (setq auto-save-default nil)
-    (setq backup-directory-alist
-          `(("." . ,(expand-file-name
-                     (concat user-emacs-directory "backups")))))
+    (global-auto-revert-mode 1)
+    (setq make-backup-files nil) ; stop creating those backup~ files
+    (setq auto-save-default nil) ; stop creating those #autosave# files
     (add-hook 'before-save-hook 'delete-trailing-whitespace)))
 
 
@@ -310,7 +296,13 @@
 
 
 (use-package imenu
-  :bind ("M-i" . imenu))
+  :bind ("M-i" . imenu)
+  :config
+  (progn
+    (defun imenu-elisp-sections ()
+      (setq imenu-prev-index-position-function nil)
+      (add-to-list 'imenu-generic-expression '(nil "^;;;; \\(.+\\)$" 1) t))
+    (add-hook 'emacs-lisp-mode-hook 'imenu-elisp-sections)))
 
 
 (use-package ispell
@@ -397,6 +389,7 @@
   :disabled t
   :config
   (progn
+    (setq org-src-fontify-natively t)
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((python . t)
@@ -433,6 +426,15 @@
 (use-package rainbow-delimiters
   :config (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
   :ensure t)
+
+
+(use-package recentf
+  :commands recentf-mode
+  :bind ("C-c C-f" . recentf-ido-find-file)
+  :init
+  (progn
+    (recentf-mode 1)
+    (setq recentf-max-saved-items 100)))
 
 
 (use-package region-bindings-mode
@@ -531,6 +533,14 @@
   :ensure t
   :config (setq-default save-place t))
 
+(use-package savehist
+  :defer t
+  :commands savehist-mode
+  :init
+  (progn
+    (savehist-mode 1)
+    (setq savehist-file "~/.emacs.d/savehist")
+    (setq history-length 1000)))
 
 (use-package scala-mode
   :disabled t
@@ -543,6 +553,12 @@
   :disabled t
   :ensure t
   :mode "\\.scss\\'")
+
+
+(use-package shell
+  :config
+  ;; handle shell colours
+  (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on))
 
 
 (use-package slime
@@ -579,12 +595,13 @@
          ("C-M-t" . sp-transpose-sexp))
   :config
   (progn
+    (smartparens-global-mode 1)
     (require 'smartparens-config)
     (setq smartparens-strict-mode t)
+    (show-smartparens-global-mode t)
     (setq sp-autoinsert-if-followed-by-word nil)
     (sp-with-modes sp--lisp-modes
-      (sp-local-pair "(" nil :bind "C-("))
-    (smartparens-global-mode 1)))
+      (sp-local-pair "(" nil :bind "C-("))))
 
 
 (use-package smex
@@ -596,8 +613,9 @@
 
 (use-package subword
   :diminish subword-mode
-  :config
+  :init
   (progn
+    (global-subword-mode 1)
     (defadvice subword-upcase (before upcase-word-advice activate)
       (unless (looking-back "\\b")
         (backward-word)))
@@ -609,6 +627,10 @@
     (defadvice subword-capitalize (before capitalize-word-advice activate)
       (unless (looking-back "\\b")
         (backward-word)))))
+
+
+(use-package text
+  :init (add-hook 'text-mode-hook (lambda() (visual-line-mode 1))))
 
 
 (use-package virtualenvwrapper
@@ -656,7 +678,8 @@
 
 
 (use-package winner
-  :config (winner-mode 1))
+  ;; Undo/redo window configuration with C-c <left>/<right>
+  :init (winner-mode 1))
 
 
 (use-package yaml-mode
