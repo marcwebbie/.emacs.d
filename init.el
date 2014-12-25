@@ -1,3 +1,18 @@
+
+;;----------------------------------------------------------------------------
+;;;; Benchmarking
+;;----------------------------------------------------------------------------
+;; BENCHMARK=true emacs -f esup
+(when (getenv "BENCHMARK")
+  (progn
+    (add-to-list 'load-path "~/.emacs.d/esup.el")
+    (autoload 'esup "esup" "Emacs Start Up Profiler." nil)))
+
+
+;;----------------------------------------------------------------------------
+;;;; Inital setup
+;;----------------------------------------------------------------------------
+
 ;; Turn off mouse interface early in startup to avoid momentary display
 (setq inhibit-startup-message t)
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
@@ -6,24 +21,97 @@
 
 (require 'cask "~/.cask/cask.el")
 (cask-initialize)
-(require 'pallet)
-(require 'use-package)
 
 (setq default-directory (f-full (getenv "HOME")))
 
 (defun load-local (file)
   (load (expand-file-name file user-emacs-directory)))
 
-(load-local "appearance")
+(defun is-osx ()
+  (eq system-type 'darwin))
+
+(defun imenu-elisp-sections ()
+  (setq imenu-prev-index-position-function nil)
+  (add-to-list 'imenu-generic-expression '(nil "^;;;; \\(.+\\)$" 1) t))
+(add-hook 'emacs-lisp-mode-hook 'imenu-elisp-sections)
+
+
+;;----------------------------------------------------------------------------
+;;;; Loading
+;;----------------------------------------------------------------------------
+
 (load-local "defaults")
 (load-local "defuns")
-(load-local "hippie")
 
 
+;;----------------------------------------------------------------------------
+;;;; Appearance
+;;----------------------------------------------------------------------------
+
+(load-theme 'solarized-light :no-confirm)
+
+(defun set-best-font ()
+  "Choose best font"
+  (when (string-equal system-type "darwin")
+    (set-frame-font
+     (cond
+      ((member "Inconsolata" (font-family-list)) "Inconsolata-14")
+      ((member "Ubuntu Mono" (font-family-list)) "Ubuntu Mono-14")
+      ((member "Input Mono Narrow" (font-family-list)) "Input Mono Narrow-12")
+      ((member "Monaco" (font-family-list)) "Monaco-12")
+      ((member "Source Code Pro" (font-family-list)) "Source Code Pro-12")
+      ((member "Menlo" (font-family-list)) "Menlo-12")
+      )) t t)
+  (when (string-equal system-type "gnu/linux")
+    (set-frame-font
+     (cond
+      ((member "Inconsolata" (font-family-list)) "Inconsolata-14")
+      ((member "Ubuntu Mono" (font-family-list)) "Ubuntu Mono-14")
+      ((member "Monaco" (font-family-list)) "Monaco-14")
+      ((member "DejaVu Sans Mono" (font-family-list)) "DejaVu Sans Mono-14")
+      ((member "Monospace" (font-family-list)) "Monospace-14")
+      )) t t))
+
+(setq visible-bell t
+      font-lock-maximum-decoration t
+      color-theme-is-global t
+      truncate-partial-width-windows nil)
+
+(when window-system
+  (setq frame-title-format '(buffer-file-name "%f" ("%b")))
+  (tooltip-mode -1)
+  (blink-cursor-mode -1)
+  (set-best-font))
+
+;; Configure scrolling
+;; (setq scroll-margin 10           ; Drag the point along while scrolling
+;;       scroll-conservatively 1000 ; Never recenter the screen while scrolling
+;;       scroll-error-top-bottom t  ; Move to beg/end of buffer before
+;;                                  ; signalling an error
+;;       ;; These settings make trackpad scrolling on OS X much more predictable
+;;       ;; and smooth
+;;       mouse-wheel-progressive-speed nil
+;;       mouse-wheel-scroll-amount '(1))
+
+
+;;----------------------------------------------------------------------------
 ;;;; Packages
+;;----------------------------------------------------------------------------
+
+(provide 'personal)
+(provide 'osx)
+
+(require 'use-package)
+
+
+(use-package pallet
+  :init (pallet-mode t))
+
 
 (use-package ace-jump-mode
   :if (not noninteractive)
+  :bind (("C-c SPC" . ace-jump-mode)
+         ("C-c C-SPC" . ace-jump-mode-pop-mark))
   :config
   (progn
     (setq ace-jump-mode-case-fold t)
@@ -31,16 +119,21 @@
     (setq ace-jump-mode-submode-list
           '(ace-jump-word-mode ace-jump-char-mode ace-jump-line-mode))))
 
+
 (use-package auto-complete
+  :disabled t
   :diminish auto-complete-mode
   :config (progn
             (global-auto-complete-mode t)))
 
+
 (use-package coffee-mode
-  :init
+  :disabled t
+  :config
   (progn
     (setq whitespace-action '(auto-cleanup))
     (setq whitespace-style '(trailing space-before-tab indentation empty space-after-tab))))
+
 
 (use-package cc-mode
   :mode ("\\.h\\'" . c++-mode)
@@ -49,37 +142,73 @@
     (setq c-basic-offset 4)
     (c-set-offset 'substatement-open 0)))
 
+
 (use-package css-mode
   :if (not noninteractive)
   :config (setq css-indent-offset 2))
 
+
 (use-package diminish)
 
+
 (use-package drag-stuff
+  :bind (("M-p" . drag-stuff-up)
+         ("M-n" . drag-stuff-down))
   :diminish drag-stuff-mode
   :init (drag-stuff-mode t))
+
+
+(use-package hippie-exp
+  :bind ("C-." . hippie-expand)
+  :init
+  (setq hippie-expand-try-functions-list '(try-expand-dabbrev
+                                           try-expand-dabbrev-all-buffers
+                                           try-expand-dabbrev-from-kill
+                                           try-complete-file-name-partially
+                                           try-complete-file-name
+                                           try-expand-all-abbrevs
+                                           try-expand-list
+                                           try-expand-line
+                                           try-complete-lisp-symbol-partially
+                                           try-complete-lisp-symbol)))
+
 
 (use-package emacs-lisp-mode
   :interpreter (("emacs" . emacs-lisp-mode))
   :mode ("Cask" . emacs-lisp-mode)
-  :init (add-hook 'emacs-lisp-mode-hook (lambda() (setq mode-name "el"))))
+  :config (progn
+            (add-hook 'emacs-lisp-mode-hook (lambda() (setq mode-name "el")))))
+
 
 (use-package emmet-mode
+  :ensure t
   :diminish emmet-mode
-  :init
+  :config
   (progn
     (add-hook 'emmet-mode-hook (lambda () (setq emmet-indentation 2)))
     (add-hook 'sgml-mode-hook 'emmet-mode)
     (add-hook 'web-mode-hook 'emmet-mode)
     (add-hook 'css-mode-hook  'emmet-mode)))
 
-(use-package expand-region
-  :if (not noninteractive))
 
-(use-package exec-path-from-shell)
+(use-package eshell
+  :bind ("C-c C-e" . eshell))
+
+
+(use-package expand-region
+  :ensure t
+  :bind (("C-=" . er/expand-region)
+         ("C-M-SPC" . er/expand-region)
+         ("C-+" . er/contract-region)))
+
+
+(use-package exec-path-from-shell
+  :if (is-osx)
+  :ensure t
+  :init (exec-path-from-shell-initialize))
+
 
 (use-package ido
-  :if (not noninteractive)
   :config
   (progn
     (use-package ido-vertical-mode
@@ -103,13 +232,16 @@
     (add-to-list 'ido-ignore-directories '("__pycache__" ".pyc"))
     (flx-ido-mode 1)))
 
+
 (use-package files
-  :config (progn
-            (setq auto-save-default nil)
-            (setq backup-directory-alist
-                  `(("." . ,(expand-file-name
-                             (concat user-emacs-directory "backups")))))
-            (add-hook 'before-save-hook 'delete-trailing-whitespace)))
+  :config
+  (progn
+    (setq auto-save-default nil)
+    (setq backup-directory-alist
+          `(("." . ,(expand-file-name
+                     (concat user-emacs-directory "backups")))))
+    (add-hook 'before-save-hook 'delete-trailing-whitespace)))
+
 
 (use-package flycheck
   :diminish flycheck-mode
@@ -120,15 +252,26 @@
     (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
     (setq flycheck-display-errors-function nil)))
 
+
 (use-package git-gutter
+  :ensure t
   :diminish git-gutter-mode
+  :bind (("C-c v =" . git-gutter:popup-hunk) ;; show hunk diff
+         ("C-c v p" . git-gutter:previous-hunk)
+         ("C-c v n" . git-gutter:next-hunk)
+         ("C-c v s" . git-gutter:stage-hunk)
+         ("C-c v r" . git-gutter:revert-hunk))
   :init (global-git-gutter-mode t))
 
-(use-package gitignore-mode
-  :if (not noninteractive)
-  :ensure gitignore-mode)
 
-(use-package haml-mode)
+(use-package gitignore-mode
+  :ensure t)
+
+
+(use-package haml-mode
+  :disabled t
+  :ensure t)
+
 
 (use-package ibuffer
   :if (not noninteractive)
@@ -165,118 +308,132 @@
               (lambda ()
                 (ibuffer-switch-to-saved-filter-groups "default")))))
 
-(use-package imenu-anywhere)
+
+(use-package imenu
+  :bind ("M-i" . imenu))
+
 
 (use-package ispell
-  :config
+  :defer t
+  :init
   (setq ispell-program-name "aspell"
-        ispell-extra-args '("--sug-mode=ultra")))
+        ispell-extra-args '("--sug-mode=ultra"))
+  :config
+  (progn
+    (bind-key "<f6>" 'mw/spell-dictionary)
+    (bind-key "C-?" 'ispell-word)
+    (bind-key "C-c i e" (λ (ispell-change-dictionary "en_GB") (flyspell-buffer)))
+    (bind-key "C-c i f" (λ (ispell-change-dictionary "fr_FR") (flyspell-buffer)))
+    (bind-key "C-c i p" (λ (ispell-change-dictionary "pt_BR") (flyspell-buffer)))))
+
 
 (use-package flyspell
+  :disabled t
   :requires ispell
   :config
-    (add-hook 'text-mode-hook 'turn-on-flyspell)
-    ;; (add-hook 'text-mode-hook 'flyspell-mode)
+    (add-hook 'text-mode-hook 'flyspell-mode)
+    ;; (add-hook 'text-mode-hook 'turn-on-flyspell)
     (add-hook 'prog-mode-hook 'flyspell-prog-mode))
 
-(use-package js-mode
-  :mode ("\\.json$" . js-mode)
-  :init
-  (progn
-    (add-hook 'js-mode-hook (lambda () (setq js-indent-level 2)))))
 
-(use-package js2-mode
-  :mode (("\\.js$" . js2-mode)
-         ("Jakefile$" . js2-mode))
-  :interpreter ("node" . js2-mode)
+(use-package js
+  :ensure t
+  :requires js2-mode
+  :mode ("\\.json$" . js-mode)
   :config
   (progn
-    (add-hook 'js2-mode-hook (lambda () (setq mode-name "js2")))
-    (setq-default js2-basic-offset 2)
-    (setq-default js2-auto-indent-p t)
-    (setq-default js2-cleanup-whitespace t)
-    (setq-default js2-enter-indents-newline t)
-    (setq-default js2-global-externs "jQuery $")
-    (setq-default js2-indent-on-enter-key t)
-    (setq-default js2-show-parse-errors nil) ;; We'll let fly do the error parsing...
-    (setq-default js2-mode-indent-ignore-first-tab t)))
+    (add-hook 'js-mode-hook (lambda () (setq js-indent-level 2)))
+    (use-package js2-mode
+      :ensure t
+      :mode (("\\.js$" . js2-mode)
+             ("Jakefile$" . js2-mode))
+      :interpreter ("node" . js2-mode)
+      :config
+      (progn
+        (add-hook 'js2-mode-hook (lambda () (setq mode-name "js2")))
+        (setq-default js2-basic-offset 2)
+        (setq-default js2-auto-indent-p t)
+        (setq-default js2-cleanup-whitespace t)
+        (setq-default js2-enter-indents-newline t)
+        (setq-default js2-global-externs "jQuery $")
+        (setq-default js2-indent-on-enter-key t)
+        (setq-default js2-show-parse-errors nil)
+        (setq-default js2-mode-indent-ignore-first-tab t)))))
+
 
 (use-package magit
-  :diminish magit-auto-revert-mode
-  :init
+  :ensure t
+  :bind ("C-x g" . magit-status)
+  :commands magit-status
+  :config
   (progn
     (set-default 'magit-stage-all-confirm nil)
     (set-default 'magit-unstage-all-confirm nil)))
 
+
 (use-package menu-bar
   :bind ("M-k" . kill-this-buffer))
 
+
 (use-package markdown-mode
   :config (add-hook 'markdown-mode-hook (lambda() (setq mode-name "md")))
-  :mode (("\\.text\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode)
+  :mode (("\\.markdown\\'" . markdown-mode)
          ("\\.md\\'" . markdown-mode)))
 
-(use-package multiple-cursors)
+(use-package multiple-cursors
+  :ensure t
+  :bind (("C->" . mc/mark-next-like-this)
+         ("C-<" . mc/mark-previous-like-this)
+         ("C-c C-a" . mc/mark-all-like-this)
+         ("C-c C-w" . mc/mark-all-words-like-this)))
+
 
 (use-package nyan-mode
+  :ensure t
   :init (nyan-mode 1))
 
+
 (use-package org
-  :init
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((python . t)
-     (ruby . t)
-     (lisp . t)
-     (R . t)))
-  :config
-  (add-hook 'org-mode-hook
-            (lambda()
-              (flyspell-mode 1))))
-
-(use-package pallet
-  :init (pallet-mode t))
-
-(use-package pelican-mode)
-
-(use-package projectile
-  :diminish projectile-mode
-  :init (projectile-global-mode 1)
+  :disabled t
   :config
   (progn
-    (setq projectile-enable-caching t)
-    (setq projectile-use-git-grep t)
-    (setq projectile-require-project-root nil)
-    (setq projectile-completion-system 'ido)
-    (add-to-list 'projectile-globally-ignored-files ".DS_Store")))
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((python . t)
+       (ruby . t)
+       (lisp . t)
+       (R . t)))))
 
-(use-package projectile-rails
-  :init (add-hook 'projectile-mode-hook 'projectile-rails-on))
 
-(use-package puppet-mode)
+(use-package puppet-mode
+  :disabled t
+  :ensure t)
 
-(use-package pyenv-mode)
 
 (use-package python
+  :bind (("<f9>" . mw/add-py-debug)
+         ("C-<f9>" . mw/remove-py-debug))
   :config
   (progn
-    (add-hook 'python-mode-hook
-              '(lambda () (pyenv-mode)))
-    (add-hook 'python-mode-hook
-              '(lambda () (anaconda-mode)))
+    (add-hook 'python-mode-hook '(lambda () (pyenv-mode)))
+    (add-hook 'python-mode-hook '(lambda () (anaconda-mode)))
+    (add-hook 'python-mode-hook (lambda() (setq mode-name "py")))
     (add-hook 'python-mode-hook
           '(lambda ()
              (flycheck-mode)
-             (flycheck-select-checker 'python-flake8)))
-    (add-hook 'python-mode-hook (lambda() (setq mode-name "py")))))
+             (flycheck-select-checker 'python-flake8)))))
+
 
 (use-package rainbow-mode
+  :disabled t
+  :ensure t
   :diminish rainbow-mode)
 
+
 (use-package rainbow-delimiters
-  :if (not noninteractive)
-  :config (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
+  :config (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+  :ensure t)
+
 
 (use-package region-bindings-mode
   :if (not noninteractive)
@@ -299,26 +456,40 @@
 (use-package re-builder
   :init (setq reb-re-syntax 'string))
 
+
 (use-package rst
-  :config
+  :disabled t
+  :init
   (add-hook 'rst-mode-hook
             (lambda()
               (flyspell-mode 1))))
 
+
 (use-package ruby-mode
-  :init
+  :config
   (progn
     (add-hook 'ruby-mode-hook (lambda() (setq mode-name "rb")))
     (use-package ruby-tools
       :diminish ruby-tools-mode)
     (use-package ruby-test-mode
-      :diminish ruby-test-mode)
+      :diminish ruby-test-mode
+      :bind ("C-c t b" . ruby-test-run))
+    (use-package shoulda
+      :ensure t
+      :config
+      (progn
+        (bind-key "C-c t s" 'shoulda-run-should-at-point ruby-mode-map)
+        (bind-key "C-c t c" 'shoulda-run-context-at-point  ruby-mode-map)))
     (use-package rbenv
-      :init
+      :config
       (progn
         (global-rbenv-mode)
-        (setenv "PATH" (concat (getenv "HOME") "/.rbenv/shims:" (getenv "HOME") "/.rbenv/bin:" (getenv "PATH")))
-        (setq exec-path (cons (concat (getenv "HOME") "/.rbenv/shims") (cons (concat (getenv "HOME") "/.rbenv/bin") exec-path)))))
+        (setenv "PATH" (concat (getenv "HOME") "/.rbenv/shims:"
+                               (getenv "HOME") "/.rbenv/bin:"
+                               (getenv "PATH")))
+        (setq exec-path
+              (cons (concat (getenv "HOME") "/.rbenv/shims")
+                    (cons (concat (getenv "HOME") "/.rbenv/bin") exec-path)))))
     (use-package inf-ruby
       :config
       (progn
@@ -339,23 +510,43 @@
          ("Capfile$" . ruby-mode)
          ("Guardfile$" . ruby-mode)))
 
-(use-package s)
 
-(use-package sass-mode)
+(use-package s
+  :ensure t
+  :init
+  (progn
+    (bind-key "C-c m -" (λ (replace-region-by 's-dashed-words)))
+    (bind-key "C-c m _" (λ (replace-region-by 's-snake-case)))
+    (bind-key "C-c m c" (λ (replace-region-by 's-lower-camel-case)))
+    (bind-key "C-c m C" (λ (replace-region-by 's-upper-camel-case)))))
+
+
+(use-package sass-mode
+  :disabled t
+  :ensure t
+  :defer t)
+
 
 (use-package saveplace
+  :ensure t
   :config (setq-default save-place t))
 
+
 (use-package scala-mode
-  :init (modify-coding-system-alist 'file "\\.\\(scala\\|sbt\\)\\'" 'utf-8)
+  :disabled t
+  :ensure t
+  :config (modify-coding-system-alist 'file "\\.\\(scala\\|sbt\\)\\'" 'utf-8)
   :mode "\\.\\(scala\\|sbt\\)\\'")
 
+
 (use-package scss-mode
+  :disabled t
+  :ensure t
   :mode "\\.scss\\'")
 
-(use-package shoulda)
 
 (use-package slime
+  :ensure t
   :mode (("\\.lisp$" . lisp-mode)
          ("\\.clisp$" . lisp-mode))
   :config
@@ -365,54 +556,93 @@
     (add-hook 'lisp-mode-hook (lambda () (slime-mode t)))
     (add-hook 'inferior-lisp-mode-hook (lambda () (inferior-slime-mode t)))))
 
+
 (use-package smartparens
-  :diminish smartparens-mode
-  :init
-  (progn
-    (use-package smartparens-config)
-    (use-package smartparens-ruby)
-    (use-package smartparens-html)
-    (smartparens-global-mode t)
-    (show-smartparens-global-mode t))
+  :ensure t
+  :diminish smartparens-(mode)
+  :bind (("C-M-k" . sp-kill-sexp-with-a-twist-of-lime)
+         ("C-M-f" . sp-forward-sexp)
+         ("C-M-b" . sp-backward-sexp)
+         ("C-M-n" . sp-up-sexp)
+         ("C-M-d" . sp-down-sexp)
+         ("C-M-u" . sp-backward-up-sexp)
+         ("C-M-p" . sp-backward-down-sexp)
+         ("C-M-w" . sp-copy-sexp)
+         ("M-s" . sp-splice-sexp)
+         ("M-r" . sp-splice-sexp-killing-around)
+         ("C-)" . sp-forward-slurp-sexp)
+         ("C-}" . sp-forward-barf-sexp)
+         ("C-(" . sp-backward-slurp-sexp)
+         ("C-{" . sp-backward-barf-sexp)
+         ("M-S" . sp-split-sexp)
+         ("M-J" . sp-join-sexp)
+         ("C-M-t" . sp-transpose-sexp))
   :config
   (progn
+    (require 'smartparens-config)
     (setq smartparens-strict-mode t)
-    (setq sp-autoescape-string-quote nil)
-    (setq sp-autoinsert-if-followed-by-word t)
+    (setq sp-autoinsert-if-followed-by-word nil)
     (sp-with-modes sp--lisp-modes
-      (sp-local-pair "*" "*")
       (sp-local-pair "(" nil :bind "C-("))
-    (sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p))))
+    (smartparens-global-mode 1)))
+
 
 (use-package smex
+  :ensure t
+  :bind (("M-x" . smex)
+         ("C-x C-m" . smex))
   :init (smex-initialize))
 
+
 (use-package subword
-  :diminish subword-mode)
+  :diminish subword-mode
+  :config
+  (progn
+    (defadvice subword-upcase (before upcase-word-advice activate)
+      (unless (looking-back "\\b")
+        (backward-word)))
+
+    (defadvice subword-downcase (before downcase-word-advice activate)
+      (unless (looking-back "\\b")
+        (backward-word)))
+
+    (defadvice subword-capitalize (before capitalize-word-advice activate)
+      (unless (looking-back "\\b")
+        (backward-word)))))
+
 
 (use-package virtualenvwrapper
-  :init
+  :ensure t
+  :config
   (progn
     (venv-initialize-interactive-shells) ;; interactive shell support
     (venv-initialize-eshell) ;; eshell support
     (setq venv-location "~/.virtualenvs/")))
 
+
 (use-package visual-regexp
+  :disabled t
+  :ensure t
+  :requires visual-regexp-steroids
+  :bind (("C-s" . vr/isearch-forward)
+         ("C-r" . vr/isearch-backward)
+         ("C-c r" . vr/replace)
+         ("C-c q" . vr/query-replace))
   :config
   (progn
     (use-package visual-regexp-steroids)))
 
 (use-package web-mode
+  :ensure t
+  :defer t
   :mode (("\\.html\\'" . web-mode)
           ("\\.html\\.erb\\'" . web-mode)
           ("\\.mustache\\'" . web-mode)
           ("\\.jinja\\'" . web-mode))
-  :init
-  (progn
-    (setq web-mode-enable-current-element-highlight t)
-    (setq web-mode-enable-auto-pairing nil))
   :config
   (progn
+    (setq web-mode-enable-current-element-highlight t)
+    (setq web-mode-enable-auto-pairing personal)
     (setq web-mode-engines-alist
           '(("django" . "\\.djhtml")
             ;; ("django" . my-current-buffer-django-p)) ;; set engine to django on django buffer
@@ -424,24 +654,75 @@
                 (setq web-mode-markup-indent-offset 2)
                 (define-key web-mode-map [(return)] 'newline-and-indent)))))
 
+
 (use-package winner
   :config (winner-mode 1))
 
-(use-package yaml-mode)
+
+(use-package yaml-mode
+  :ensure t)
 
 
-;;;; Bindings
-(load-local "key-bindings")
+(use-package osx
+  :if (is-osx)
+  :init
+  (progn
+    ;; ;; installed by: `brew install aspell --all`
+    (setq ispell-program-name "/usr/local/bin/aspell"
+          ispell-extra-args '("--sug-mode=ultra"))
+
+    ;; Switch the Cmd and Meta keys
+    (setq mac-option-modifier 'super)
+    (setq mac-command-modifier 'meta)
+    (setq ns-function-modifier 'hyper)
+
+    ;; Make the browser the OS X default
+    (setq browse-url-browser-function 'browse-url-default-macosx-browser)
+
+    ;; Move to trash when deleting stuff
+    (setq delete-by-moving-to-trash t
+          trash-directory "~/.Trash/emacs")
+
+    ;; Fix path for zsh in emacs shells
+    (if (not (getenv "TERM_PROGRAM"))
+        (setenv "PATH"
+                (shell-command-to-string "source $HOME/.zshrc && printf $PATH")))))
 
 
-;;;; OSX settings
-(when (eq system-type 'darwin) (load-local "osx"))
+(use-package personal
+  :config
+  (progn
+    (bind-key "C-x C-c" (λ (if (y-or-n-p "Quit Emacs? ") (save-buffers-kill-emacs))))
+    (bind-key "<f6>" 'linum-mode)
+    (bind-key "<f8>" (λ (find-file (f-expand "init.el" user-emacs-directory))))
+    (bind-key "<f7>" 'ansi-term)
+
+    (bind-key "C-a" 'back-to-indentation-or-beginning-of-line)
+    (bind-key "C-j" 'newline-and-indent)
+    (bind-key "C-z" 'zap-up-to-char)
+    (bind-key "C-|" 'align-regexp)
+
+    (bind-key "C-M-;" 'comment-or-uncomment-current-line-or-region)
+
+    (bind-key "C-c R" 'rename-this-buffer-and-file)
+    (bind-key "C-c D" 'delete-this-buffer-and-file)
+
+    (bind-key "C-c d" 'duplicate-current-line-or-region)
+    (bind-key "C-c g" 'google)
+    (bind-key "C-c n" 'clean-up-buffer-or-region)
+    (bind-key "C-c y" 'youtube)
+
+    (bind-key "M-h" 'kill-to-beginning-of-line)
+    (bind-key "M-g M-g" 'goto-line-with-feedback)
+    (bind-key "M-j" (λ (join-line -1)))
+    (bind-key "M-<up>" 'open-line-above)
+    (bind-key "M-<down>" 'open-line-below)))
 
 
 ;;;; Custom variables
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(load-local "custom" 'noerror)
 
+;;(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+;;(load-local "custom" 'noerror)
 
 (provide 'init)
 ;;; init.el ends here
