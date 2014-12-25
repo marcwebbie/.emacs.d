@@ -27,6 +27,5 @@ autosaves/*
 /.cask/
 /projectile-bookmarks.eld
 /savehist
-/.mc-lists.el
 /eshell/
 /projectile.cache
