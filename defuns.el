@@ -265,6 +265,7 @@ Otherwise point moves to beginning of line."
 (defun re-builder-large ()
   "Just like `re-builder', only make the font and window larger."
   (interactive)
+
   (re-builder)
   (text-scale-increase 5)
   (set-window-text-height (selected-window) 7))
@@ -317,6 +318,13 @@ Otherwise point moves to beginning of line."
   (interactive)
   (kill-buffer)
   (jump-to-register :magit-fullscreen))
+
+(defun recentf-ido-find-file ()
+  "Find a recent file using ido."
+  (interactive)
+  (let ((file (ido-completing-read "Choose recent file: " recentf-list nil t)))
+    (when file
+      (find-file file))))
 
 
 ;;;; My functions
