@@ -161,7 +161,7 @@ string). It returns t if a new completion is found, nil otherwise."
     (end-of-line)
     (hippie-expand nil)))
 
-;; Don't case-fold when expanding with hippe
+;; Don't case-fold when expanding with hippie
 (defun hippie-expand-no-case-fold ()
   (interactive)
   (let ((case-fold-search nil))
