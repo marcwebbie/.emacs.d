@@ -9,11 +9,6 @@
      ,@body))
 
 
-(defun set-presentation-font ()
-  (interactive)
-  (set-frame-font "Monaco-40"))
-
-
 ;;;; Editing
 
 (autoload 'zap-up-to-char "misc"
@@ -372,5 +367,19 @@ Otherwise point moves to beginning of line."
       (kill-line 1)
       (move-beginning-of-line 1))
       (goto-char cur))))
+
+(defun mw/set-best-font (fonts)
+  (when fonts
+    (let* ((fontname (car (car fonts)))
+           (fontsize (car (last (car fonts))))
+           (fontstring (format "%s-%d" fontname fontsize)))
+      ;; (message fontstring)
+      (if (member fontname (font-family-list)) (set-frame-font fontstring)
+        (mw/set-best-font (cdr fonts)))
+      )))
+
+(defun mw/set-presentation-font ()
+  (interactive)
+  (set-frame-font "Monaco-40"))
 
 ;;;; end
