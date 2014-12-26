@@ -163,9 +163,9 @@
 
 
 (use-package exec-path-from-shell
-  :disabled t
   :if (is-osx)
   :ensure t
+  :defer t
   :init (exec-path-from-shell-initialize))
 
 
