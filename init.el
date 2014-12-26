@@ -130,7 +130,8 @@
 
 
 (use-package hippie-exp
-  :bind ("C-." . hippie-expand-no-case-fold))
+  :bind (("C-." . hippie-expand-no-case-fold)
+         ("C-:" . hippie-expand-lines)))
 
 
 (use-package emacs-lisp-mode
