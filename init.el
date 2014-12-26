@@ -562,7 +562,7 @@
 
 (use-package smartparens
   :ensure t
-  :diminish smartparens-(mode)
+  ;; :diminish smartparens-(mode)
   :bind (("C-M-k" . sp-kill-sexp-with-a-twist-of-lime)
          ("C-M-f" . sp-forward-sexp)
          ("C-M-b" . sp-backward-sexp)
@@ -582,13 +582,13 @@
          ("C-M-t" . sp-transpose-sexp))
   :config
   (progn
-    (smartparens-global-mode 1)
     (require 'smartparens-config)
+    (smartparens-global-mode 1)
     (setq smartparens-global-strict-mode t)
     (show-smartparens-global-mode t)
-    (setq sp-autoinsert-if-followed-by-word nil)
-    (sp-with-modes sp--lisp-modes
-      (sp-local-pair "(" nil :bind "C-("))))
+    ;; (sp-with-modes sp--lisp-modes
+    ;;   (sp-local-pair "(" nil :bind "C-("))
+    (setq sp-autoinsert-if-followed-by-word nil)))
 
 
 (use-package smex
