@@ -37,6 +37,7 @@
 
 (load-local "defaults")
 (load-local "defuns")
+(load-local "defuns")
 (load-local "hippie")
 
 
@@ -344,6 +345,10 @@
   :commands magit-status
   :config
   (progn
+    (defadvice magit-status (around magit-fullscreen activate)
+      (window-configuration-to-register :magit-fullscreen)
+      ad-do-it
+      (delete-other-windows))
     (bind-key "q" 'magit-quit-session magit-status-mode-map)
     (set-default 'magit-stage-all-confirm nil)
     (set-default 'magit-unstage-all-confirm nil)))
