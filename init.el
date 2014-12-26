@@ -210,6 +210,7 @@
 
 
 (use-package flycheck
+  :defer t
   :diminish flycheck-mode
   :config
   (progn
@@ -414,6 +415,7 @@
 
 
 (use-package recentf
+  :defer t
   :commands recentf-mode
   :bind ("C-c C-f" . recentf-ido-find-file)
   :init
