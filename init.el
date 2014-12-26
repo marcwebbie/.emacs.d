@@ -584,7 +584,7 @@
   (progn
     (smartparens-global-mode 1)
     (require 'smartparens-config)
-    (setq smartparens-strict-mode t)
+    (setq smartparens-global-strict-mode t)
     (show-smartparens-global-mode t)
     (setq sp-autoinsert-if-followed-by-word nil)
     (sp-with-modes sp--lisp-modes
