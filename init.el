@@ -1,16 +1,5 @@
 ;;----------------------------------------------------------------------------
-;;;; Benchmarking
-;;----------------------------------------------------------------------------
-;; BENCHMARK=true emacs -f esup
-;; (when (eq (getenv "BENCHMARK") "True")
-;;   (progn
-;;     (message "loading esup")
-;;     (add-to-list 'load-path "~/.emacs.d/vendor/esup.el")
-;;     (autoload 'esup "esup" "Emacs Start Up Profiler." nil)))
-
-
-;;----------------------------------------------------------------------------
-;;;; Inital setup
+;;;; Init
 ;;----------------------------------------------------------------------------
 
 ;; Turn off mouse interface early in startup to avoid momentary display
@@ -36,7 +25,6 @@
 ;;----------------------------------------------------------------------------
 
 (load-local "defaults")
-(load-local "defuns")
 (load-local "defuns")
 (load-local "hippie")
 
