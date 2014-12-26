@@ -163,21 +163,29 @@
 
 
 (use-package exec-path-from-shell
+  :disabled t
   :if (is-osx)
   :ensure t
   :init (exec-path-from-shell-initialize))
 
 
 (use-package ido
+  :defer t
   :config
   (progn
-    (use-package ido-vertical-mode
-      :ensure ido-vertical-mode)
     (use-package flx
+      :defer t
       :ensure flx)
     (use-package flx-ido
-      :ensure flx-ido)
+      :defer t
+      :ensure flx-ido
+      :init (flx-ido-mode 1))
+    (use-package ido-vertical-mode
+      :defer t
+      :ensure ido-vertical-mode
+      :init (ido-vertical-mode 1))
     (use-package ido-ubiquitous
+      :defer t
       :config (ido-ubiquitous-mode 1)
       :ensure ido-ubiquitous)
     (setq ido-enable-flex-matching t
@@ -186,11 +194,9 @@
           ido-create-new-buffer 'always)
     (ido-mode 1)
     (ido-everywhere 1)
-    (ido-vertical-mode 1)
     (setq ido-file-extensions-order '(".py" ".rb" ".el" ".js"))
     (add-to-list 'ido-ignore-files '(".DS_Store" ".pyc"))
-    (add-to-list 'ido-ignore-directories '("__pycache__" ".pyc"))
-    (flx-ido-mode 1)))
+    (add-to-list 'ido-ignore-directories '("__pycache__" ".pyc"))))
 
 
 (use-package files
