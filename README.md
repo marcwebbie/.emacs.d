@@ -1,43 +1,23 @@
-# My emacs config
+# Emacs config
 
 This is my emacs configuration files. If you want to use them, the
 best thing is probably to fork the project at Github
 (<http://github.com/marcwebbie/emacs>) and then make your changes to that
-branch. This config is based on
-[rejeep's](https://github.com/rejeep/emacs) and [magnar's](https://github.com/magnars/.emacs.d) configs.
+branch. This config is has a lot of ideas from:
 
-## Installing emacs
+* [Rejeep's](https://github.com/rejeep/emacs)
+* [Magnar's](https://github.com/magnars/.emacs.d)
+* [Purcell's](https://github.com/purcell/emacs.d)
 
-First of all make sure you have installed Emacs version 24 or higher.
+## Installing
 
-### OSX
-
-I use Cocoa Emacs, installed like this:
-
-    brew install emacs --cocoa --srgb
-
-### Ubuntu [source](http://askubuntu.com/questions/297170)
-
-    sudo add-apt-repository ppa:cassou/emacs
-    sudo apt-get update
-
-For emacs-snapshot:
-
-    sudo apt-get install emacs-snapshot-el emacs-snapshot-gtk emacs-snapshot
-
-Or, for emacs24 (i.e. 24.3, stable):
-
-    sudo apt-get install emacs24 emacs24-el emacs24-common-non-dfsg
+First of all make sure you have installed Emacs version 24.3 or higher.
 
 ### Fetch the config files:
 
     git clone git://github.com/marcwebbie/emacs.git ~/.emacs.d
 
-### Install all ELPA packages (make sure you have [Cask](https://github.com/cask/cask) installed):
-
-    ~/.emacs.d/scripts/install.sh
-
-Or,
+### Install all packages (make sure you have [Cask](https://github.com/cask/cask) installed):
 
     cd ~/.emacs.d
     cask
@@ -50,8 +30,6 @@ If you want to use my settings straight out of the box, here are some things to 
    [Technomancy's better-defaults package](https://github.com/technomancy/better-defaults),
    and then dig through this repo for useful nuggets, instead of forking it directly.
 
- * Start by reading up on all the cool stuff in key-bindings.el.
-
  * Autocomplete using hippie-expand with `C-.` (autocomplete entire lines with `C-:`)
 
  * On a mac, the Meta key `M` is bound to Command.
@@ -60,16 +38,8 @@ If you want to use my settings straight out of the box, here are some things to 
 
  * Watch [emacsrocks.com](http://emacsrocks.com)
 
-## Optional env setup
 
-### Setting emacs to run in daemon mode
-
-    # OSX
-    alias es='/Applications/Emacs.app/Contents/MacOS/Emacs --daemon'
-    alias emacs='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -c -n $*'
-    export EDITOR='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -c'
-
-## License
+## License ([Public Domain](http://choosealicense.com/licenses/unlicense/))
 
 This is free and unencumbered software released into the public domain.
 
