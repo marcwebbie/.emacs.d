@@ -3,6 +3,7 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        kill-to-beginning-of-line
         sp--self-insert-command
         sp-backward-delete-char
         sp-delete-char
