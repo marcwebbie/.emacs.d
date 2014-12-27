@@ -186,7 +186,6 @@
       :ensure ido-vertical-mode
       :init (ido-vertical-mode 1))
     (use-package ido-ubiquitous
-      :defer t
       :config (ido-ubiquitous-mode 1)
       :ensure ido-ubiquitous)
     (setq ido-enable-flex-matching t
@@ -418,7 +417,7 @@
 (use-package recentf
   :defer t
   :commands recentf-mode
-  :bind ("C-c C-f" . recentf-ido-find-file)
+  :bind ("C-c f" . recentf-ido-find-file)
   :init
   (progn
     (recentf-mode 1)
@@ -427,6 +426,7 @@
 
 (use-package region-bindings-mode
   :if (not noninteractive)
+  :defer t
   :config (progn
             (bind-key "m" 'mc/mark-more-like-this-extended region-bindings-mode-map)
             (bind-key "a" 'mc/mark-all-like-this region-bindings-mode-map)
@@ -448,7 +448,7 @@
 
 
 (use-package rst
-  :disabled t
+  :defer t
   :init
   (add-hook 'rst-mode-hook
             (lambda()
@@ -652,7 +652,7 @@
   :config
   (progn
     (setq web-mode-enable-current-element-highlight t)
-    (setq web-mode-enable-auto-pairing personal)
+    (setq web-mode-enable-auto-pairing t)
     (setq web-mode-engines-alist
           '(("django" . "\\.djhtml")
             ;; ("django" . my-current-buffer-django-p)) ;; set engine to django on django buffer
