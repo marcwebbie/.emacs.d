@@ -675,6 +675,7 @@
 
 
 (use-package yaml-mode
+  :mode "\\.pyssword"
   :ensure t)
 
 
