@@ -3,12 +3,16 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        back-to-indentation-or-beginning-of-line
+        end-of-visual-line
+        kill-region
         kill-to-beginning-of-line
+        kill-visual-line
+        org-delete-char
+        orgtbl-self-insert-command
         sp--self-insert-command
         sp-backward-delete-char
         sp-delete-char
-        ))
-
-(setq mc/cmds-to-run-once
-      '(
+        sp-splice-sexp
+        zap-up-to-char
         ))
