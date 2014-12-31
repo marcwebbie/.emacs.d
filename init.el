@@ -586,6 +586,11 @@
     (smartparens-global-mode 1)
     (setq smartparens-global-strict-mode t)
     (show-smartparens-global-mode t)
+    (sp-with-modes '(markdown-mode gfm-mode rst-mode)
+      (sp-local-pair "*" "*" :bind "C-*")
+      (sp-local-tag "2" "**" "**")
+      (sp-local-tag "s" "```scheme" "```")
+      (sp-local-tag "<"  "<_>" "</_>" :transform 'sp-match-sgml-tags))
     ;; (sp-with-modes sp--lisp-modes
     ;;   (sp-local-pair "(" nil :bind "C-("))
     (setq sp-autoinsert-if-followed-by-word nil)))
