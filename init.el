@@ -426,7 +426,6 @@
 
 (use-package region-bindings-mode
   :if (not noninteractive)
-  :defer t
   :config (progn
             (bind-key "m" 'mc/mark-more-like-this-extended region-bindings-mode-map)
             (bind-key "a" 'mc/mark-all-like-this region-bindings-mode-map)
