@@ -49,6 +49,9 @@
       truncate-partial-width-windows nil)
 
 (when window-system
+  (setq frame-title-format '(buffer-file-name "%f" ("%b")))
+  (tooltip-mode -1)
+  (blink-cursor-mode -1)
   (mw/set-best-font '(("Ubuntu Mono" 14)
                  ("Inconsolata" 14)
                  ("Input Mono Narrow" 12)
@@ -56,10 +59,7 @@
                  ("Monospace" 12)
                  ("DejaVu Sans Mono" 14)
                  ("Source Code Pro" 14)
-                 ("Menlo" 14)))
-  (setq frame-title-format '(buffer-file-name "%f" ("%b")))
-  (tooltip-mode -1)
-  (blink-cursor-mode -1))
+                 ("Menlo" 14))))
 
 (global-hl-line-mode 1)
 (tooltip-mode -1)
