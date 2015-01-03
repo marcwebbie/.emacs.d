@@ -367,6 +367,10 @@
   :bind ("M-k" . kill-this-buffer))
 
 
+(use-package make-mode
+  :defer t)
+
+
 (use-package markdown-mode
   :config (add-hook 'markdown-mode-hook (lambda() (setq mode-name "md")))
   :mode (("\\.markdown\\'" . markdown-mode)
