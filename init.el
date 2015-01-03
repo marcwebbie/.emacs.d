@@ -26,7 +26,6 @@
 
 (setq tab-width 4) ; or any other preferred value
 (setq-default indent-tabs-mode nil)
-(add-hook 'after-save-hook 'whitespace-cleanup)
 
 
 ;;----------------------------------------------------------------------------
@@ -220,6 +219,7 @@
     (global-auto-revert-mode 1)
     (setq make-backup-files nil) ; stop creating those backup~ files
     (setq auto-save-default nil) ; stop creating those #autosave# files
+    (add-hook 'after-save-hook 'whitespace-cleanup)
     (add-hook 'before-save-hook 'delete-trailing-whitespace)))
 
 
