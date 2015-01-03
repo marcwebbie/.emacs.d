@@ -406,6 +406,19 @@
        (R . t)))))
 
 
+(use-package projectile
+  :ensure t
+  :diminish projectile-mode
+  :config
+  (progn
+    (projectile-global-mode 1)
+    (setq projectile-enable-caching t)
+    (setq projectile-use-git-grep t)
+    (setq projectile-require-project-root nil)
+    (setq projectile-completion-system 'ido)
+    (add-to-list 'projectile-globally-ignored-files ".DS_Store")))
+
+
 (use-package puppet-mode
   :disabled t
   :ensure t)
