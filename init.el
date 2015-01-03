@@ -136,7 +136,11 @@
   :bind (("M-p" . drag-stuff-up)
          ("M-n" . drag-stuff-down))
   :diminish drag-stuff-mode
-  :init (drag-stuff-mode t))
+  :config
+  (progn
+    (define-key makefile-bsdmake-mode-map (kbd "M-p") 'drag-stuff-up)
+    (define-key makefile-bsdmake-mode-map (kbd "M-n") 'drag-stuff-down)
+    (drag-stuff-global-mode t)))
 
 
 (use-package hippie-exp
