@@ -4,7 +4,9 @@
 (setq mc/cmds-to-run-for-all
       '(
         back-to-indentation-or-beginning-of-line
+        duplicate-current-line-or-region
         end-of-visual-line
+        indent-for-tab-command
         kill-region
         kill-to-beginning-of-line
         kill-visual-line
