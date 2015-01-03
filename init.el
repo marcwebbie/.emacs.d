@@ -70,6 +70,7 @@
 
 ;; Packages setup
 (require 'use-package)
+(provide 'occur)
 (provide 'osx)
 (provide 'personal)
 (provide 'text)
@@ -369,6 +370,14 @@
 (use-package nyan-mode
   :ensure t
   :init (nyan-mode 1))
+
+
+(use-package occur
+  :bind (("M-o" . occur)
+         ("C-c C-o" . multi-occur-in-this-mode))
+  :config (progn
+            (bind-key "n" 'occur-next occur-mode-map)
+            (bind-key "p" 'occur-prev occur-mode-map)))
 
 
 (use-package org
