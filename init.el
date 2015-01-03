@@ -615,20 +615,21 @@
          ("M-S" . sp-split-sexp)
          ("M-J" . sp-join-sexp)
          ("C-M-t" . sp-transpose-sexp))
+  :init
+  (progn (smartparens-global-mode 1)
+         (smartparens-strict-mode 1)
+         (setq smartparens-global-strict-mode t)
+         (show-smartparens-global-mode t))
   :config
-  (progn
-    (require 'smartparens-config)
-    (smartparens-global-mode 1)
-    (setq smartparens-global-strict-mode t)
-    (show-smartparens-global-mode t)
-    (sp-with-modes '(markdown-mode gfm-mode rst-mode)
-      (sp-local-pair "*" "*" :bind "C-*")
-      (sp-local-tag "2" "**" "**")
-      (sp-local-tag "s" "```scheme" "```")
-      (sp-local-tag "<"  "<_>" "</_>" :transform 'sp-match-sgml-tags))
-    ;; (sp-with-modes sp--lisp-modes
-    ;;   (sp-local-pair "(" nil :bind "C-("))
-    (setq sp-autoinsert-if-followed-by-word nil)))
+  (progn (require 'smartparens-config)
+         (sp-with-modes '(markdown-mode gfm-mode rst-mode)
+           (sp-local-pair "*" "*" :bind "C-*")
+           (sp-local-tag "2" "**" "**")
+           (sp-local-tag "s" "```scheme" "```")
+           (sp-local-tag "<"  "<_>" "</_>" :transform 'sp-match-sgml-tags))
+         ;; (sp-with-modes sp--lisp-modes
+         ;;   (sp-local-pair "(" nil :bind "C-("))
+         (setq sp-autoinsert-if-followed-by-word nil)))
 
 
 (use-package smex
