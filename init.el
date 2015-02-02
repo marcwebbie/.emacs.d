@@ -390,6 +390,7 @@
 
 (use-package nyan-mode
   :ensure t
+  :disabled t
   :init (nyan-mode 1))
 
 
