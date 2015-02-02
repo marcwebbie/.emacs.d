@@ -371,9 +371,14 @@
 
 
 (use-package markdown-mode
-  :config (add-hook 'markdown-mode-hook (lambda() (setq mode-name "md")))
   :mode (("\\.markdown\\'" . markdown-mode)
-         ("\\.md\\'" . markdown-mode)))
+         ("\\.md\\'" . markdown-mode))
+  :config
+  (progn
+    (bind-key "M-p" 'drag-stuff-up markdown-mode-map)
+    (bind-key "M-n" 'drag-stuff-down markdown-mode-map)
+    (add-hook 'markdown-mode-hook (lambda() (setq mode-name "md")))))
+
 
 (use-package multiple-cursors
   :ensure t
