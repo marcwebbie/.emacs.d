@@ -587,6 +587,12 @@
   :mode "\\.scss\\'")
 
 
+(use-package gradle-mode
+  :disabled t
+  :ensure t
+  :mode "\\.gradle\\'")
+
+
 (use-package shell
   :config
   ;; handle shell colours
