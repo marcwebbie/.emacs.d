@@ -4,17 +4,36 @@
 (setq mc/cmds-to-run-for-all
       '(
         back-to-indentation-or-beginning-of-line
+        comment-or-uncomment-current-line-or-region
         duplicate-current-line-or-region
         end-of-visual-line
+        hippie-expand-no-case-fold
         indent-for-tab-command
         kill-region
         kill-to-beginning-of-line
         kill-visual-line
+        markdown-exdent-or-delete
+        org-beginning-of-line
         org-delete-char
+        org-end-of-line
+        org-force-self-insert
+        org-return-indent
+        org-self-insert-command
+        org-yank
         orgtbl-self-insert-command
+        python-indent-shift-right
+        slime-space
+        smex
         sp--self-insert-command
         sp-backward-delete-char
+        sp-backward-sexp
         sp-delete-char
+        sp-forward-sexp
         sp-splice-sexp
         zap-up-to-char
+        ))
+
+(setq mc/cmds-to-run-once
+      '(
+        shell-command-on-region
         ))
