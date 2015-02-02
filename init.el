@@ -611,6 +611,17 @@
     (add-hook 'inferior-lisp-mode-hook (lambda () (inferior-slime-mode t)))))
 
 
+(use-package smart-mode-line
+  :init (progn
+          (sml/setup)
+          (sml/apply-theme 'dark)
+          (setq sml/override-theme nil)
+          (use-package nyan-mode
+            :disabled t
+            :config (nyan-mode t))
+          ))
+
+
 (use-package smartparens
   :ensure t
   ;; :diminish smartparens-(mode)
