@@ -321,6 +321,9 @@
     ;; (add-hook 'text-mode-hook 'turn-on-flyspell)
     (add-hook 'prog-mode-hook 'flyspell-prog-mode))
 
+(use-package golden-ratio
+  :config (golden-ratio-mode t))
+
 
 (use-package js
   :ensure t
