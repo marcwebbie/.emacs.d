@@ -715,6 +715,8 @@
   :defer t
   :mode (("\\.html\\'" . web-mode)
           ("\\.html\\.erb\\'" . web-mode)
+          ("\\.html\\.ejs\\'" . web-mode)
+          ("\\.ejs\\'" . web-mode)
           ("\\.mustache\\'" . web-mode)
           ("\\.jinja\\'" . web-mode))
   :config
