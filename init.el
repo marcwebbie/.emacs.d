@@ -461,7 +461,8 @@
 (use-package recentf
   :defer t
   :commands recentf-mode
-  :bind ("C-c f" . recentf-ido-find-file)
+  :bind (("C-c f" . recentf-ido-find-file)
+         ("C-c C-f" . recentf-ido-find-file))
   :init
   (progn
     (recentf-mode 1)
