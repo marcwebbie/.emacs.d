@@ -337,8 +337,17 @@
     ;; (add-hook 'text-mode-hook 'turn-on-flyspell)
     (add-hook 'prog-mode-hook 'flyspell-prog-mode))
 
+
 (use-package golden-ratio
   :config (golden-ratio-mode t))
+
+
+(use-package jedi
+  :disabled t
+  :ensure t
+  :init (progn
+          (setq auto-complete-mode t)
+          (jedi:complete)))
 
 
 (use-package js
