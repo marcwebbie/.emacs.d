@@ -4,6 +4,7 @@
 (depends-on "ace-jump-mode")
 (depends-on "ack-and-a-half")
 (depends-on "anaconda-mode")
+(depends-on "atom-dark-theme")
 (depends-on "auto-complete")
 (depends-on "cask")
 (depends-on "coffee-mode")
