@@ -436,6 +436,11 @@
   :disabled t
   :config
   (progn
+    (eval-after-load "org-toc-autoloads"
+      '(progn
+         (if (require 'org-toc nil t)
+             (add-hook 'org-mode-hook 'org-toc-enable)
+           (warn "org-toc not found"))))
     (setq org-src-fontify-natively t)
     (org-babel-do-load-languages
      'org-babel-load-languages

@@ -42,6 +42,7 @@
 (depends-on "multiple-cursors")
 (depends-on "noctilux-theme")
 (depends-on "nyan-mode")
+(depends-on "org-toc")
 (depends-on "pallet")
 (depends-on "paradox")
 (depends-on "pelican-mode")
