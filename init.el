@@ -454,7 +454,7 @@
 
 (use-package python
   :bind (("<f9>" . mw/add-py-debug)
-         ("C-<f9>" . mw/remove-py-debug))
+         ("C-<f9>" . mw/add-pudb-debug))
   :config
   (progn
     (add-hook 'python-mode-hook '(lambda () (pyenv-mode)))
