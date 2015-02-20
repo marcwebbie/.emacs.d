@@ -59,7 +59,7 @@
 ;;;; Appearance
 ;;----------------------------------------------------------------------------
 
-(load-theme 'zonokai-red :no-confirm)
+(load-theme 'atom-dark :no-confirm)
 
 (setq visible-bell t
       font-lock-maximum-decoration t
