@@ -26,7 +26,9 @@
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
-(require 'cask "~/.cask/cask.el")
+(if (file-exists-p "~/.cask/cask.el")
+    (require 'cask "~/.cask/cask.el")
+  (require 'cask "/usr/local/share/emacs/site-lisp/cask.el"))
 (cask-initialize)
 
 (setq default-directory (f-full (getenv "HOME")))
