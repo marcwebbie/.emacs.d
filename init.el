@@ -46,7 +46,9 @@
 
 (setq tab-width 4) ; or any other preferred value
 (setq-default indent-tabs-mode nil)
-
+(let ((workon-home (expand-file-name "~/.pyenv/versions")))
+  (setenv "WORKON_HOME" workon-home)
+  (setenv "VIRTUALENVWRAPPER_HOOK_DIR" workon-home))
 
 ;;----------------------------------------------------------------------------
 ;;;; Loading
@@ -61,7 +63,7 @@
 ;;;; Appearance
 ;;----------------------------------------------------------------------------
 
-(load-theme 'atom-dark :no-confirm)
+(load-theme 'gruvbox :no-confirm)
 
 (setq visible-bell t
       font-lock-maximum-decoration t
@@ -73,14 +75,17 @@
   (tooltip-mode -1)
   (blink-cursor-mode -1)
   (mw/set-best-font '(
-                      ("Ubuntu Mono" 14)
+                      ("Inconsolata" 16)
+                      ("Menlo" 14)
+                      ("Input Mono" 14)
+                      ("Input Mono Condensed" 14)
                       ("Input Mono Narrow" 14)
+                      ("Ubuntu Mono" 16)
+                      ("DejaVu Sans Mono" 14)
                       ("Monaco" 14)
                       ("Source Code Pro" 14)
-                      ("Inconsolata" 14)
                       ("Monospace" 12)
-                      ("DejaVu Sans Mono" 14)
-                      ("Menlo" 14))))
+                      )))
 
 (global-hl-line-mode -1)
 (tooltip-mode -1)
@@ -98,7 +103,11 @@
 ;;----------------------------------------------------------------------------
 
 ;; Packages setup
-(require 'use-package)
+(eval-when-compile
+  (require 'use-package))
+(require 'diminish)                ;; if you use :diminish
+(require 'bind-key)                ;; if you use any :bind variant
+
 (provide 'occur)
 (provide 'osx)
 (provide 'personal)
@@ -214,9 +223,20 @@
       :ensure flx-ido
       :init (flx-ido-mode 1))
     (use-package ido-vertical-mode
-      :defer t
       :ensure ido-vertical-mode
-      :init (ido-vertical-mode 1))
+      :init
+      (progn
+        (ido-vertical-mode 1)
+        (setq ido-use-faces t)
+        (set-face-attribute 'ido-vertical-first-match-face nil
+                            :background nil
+                            :foreground "orange")
+        (set-face-attribute 'ido-vertical-only-match-face nil
+                            :background nil
+                            :foreground nil)
+        (set-face-attribute 'ido-vertical-match-face nil
+                            :foreground nil)
+        ))
     (use-package ido-ubiquitous
       :config (ido-ubiquitous-mode 1)
       :ensure ido-ubiquitous)
@@ -338,7 +358,6 @@
   :requires ispell
   :config
     (add-hook 'text-mode-hook 'flyspell-mode)
-    ;; (add-hook 'text-mode-hook 'turn-on-flyspell)
     (add-hook 'prog-mode-hook 'flyspell-prog-mode))
 
 
@@ -416,7 +435,6 @@
   :ensure t
   :bind (("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
-         ("C-c C-a" . mc/mark-all-like-this)
          ("C-c C-w" . mc/mark-all-words-like-this)))
 
 
@@ -461,7 +479,7 @@
     (setq projectile-enable-caching t)
     (setq projectile-use-git-grep t)
     (setq projectile-require-project-root nil)
-    (setq projectile-completion-system 'ido)
+    ;; (setq projectile-completion-system 'grizzl)
     (add-to-list 'projectile-globally-ignored-files ".DS_Store")))
 
 
@@ -473,15 +491,48 @@
 (use-package python
   :bind (("<f9>" . mw/add-py-debug)
          ("C-<f9>" . mw/add-pudb-debug))
-  :config
+  :init
   (progn
-    (add-hook 'python-mode-hook '(lambda () (pyenv-mode)))
-    (add-hook 'python-mode-hook '(lambda () (anaconda-mode)))
-    (add-hook 'python-mode-hook (lambda() (setq mode-name "py")))
+    (add-hook 'python-mode-hook '(lambda () (setq python-indent 4)))
     (add-hook 'python-mode-hook
           '(lambda ()
              (flycheck-mode)
-             (flycheck-select-checker 'python-flake8)))))
+             (flycheck-select-checker 'python-flake8))))
+  :config
+  (progn
+    (use-package eldoc-mode
+      :commands (eldoc-mode)
+      :init (add-hook 'python-mode-hook 'eldoc-mode))
+
+    (use-package anaconda-mode
+      :init (add-hook 'python-mode-hook '(lambda () (anaconda-mode))))
+
+    (use-package elpy
+      :bind (("C-c t" . elpy-test-django-runner))
+      :init
+      (add-hook 'python-mode-hook 'elpy-enable)
+      (defalias 'workon 'pyvenv-workon)
+      :config
+      (elpy-enable)
+      (delete 'elpy-module-highlight-indentation elpy-modules)
+      (delete 'elpy-module-flymake elpy-modules)
+      ;; (setq elpy-rpc-backend "jedi")
+      (elpy-use-ipython))
+
+    (use-package pip-requirements
+      :mode "\\requirements.txt\\'"
+      :config (pip-requirements-mode))
+
+    (use-package pyvenv
+      :init
+      (add-hook 'python-mode-hook 'pyvenv-mode))
+
+    (use-package virtualenvwrapper
+      :init
+      (venv-initialize-interactive-shells) ;; interactive shell support
+      (venv-initialize-eshell) ;; eshell support
+      (setq venv-location "~/.pyenv/versions"))
+    ))
 
 
 (use-package rainbow-mode
@@ -722,16 +773,8 @@
 
 
 (use-package text
+  :bind (("C-x j" . eval-and-replace))
   :init (add-hook 'text-mode-hook (lambda() (visual-line-mode 1))))
-
-
-(use-package virtualenvwrapper
-  :ensure t
-  :config
-  (progn
-    (venv-initialize-interactive-shells) ;; interactive shell support
-    (venv-initialize-eshell) ;; eshell support
-    (setq venv-location "~/.virtualenvs/")))
 
 
 (use-package visual-regexp
@@ -801,11 +844,7 @@
     ;; Move to trash when deleting stuff
     (setq delete-by-moving-to-trash t
           trash-directory "~/.Trash/emacs")
-
-    ;; Fix path for zsh in emacs shells
-    (if (not (getenv "TERM_PROGRAM"))
-        (setenv "PATH"
-                (shell-command-to-string "source $HOME/.zshrc && printf $PATH")))))
+    ))
 
 
 (use-package personal
@@ -835,7 +874,10 @@
     (bind-key "M-g M-g" 'goto-line-with-feedback)
     (bind-key "M-j" (λ (join-line -1)))
     (bind-key "M-<up>" 'open-line-above)
-    (bind-key "M-<down>" 'open-line-below)))
+    (bind-key "M-<down>" 'open-line-below)
+    (bind-key "<f5>" 'recompile)
+    (bind-key "M-r" 'recompile)
+    ))
 
 
 ;;;; Custom variables
