@@ -4,7 +4,9 @@
 (setq mc/cmds-to-run-for-all
       '(
         back-to-indentation-or-beginning-of-line
+        beginning-of-buffer
         comment-or-uncomment-current-line-or-region
+        drag-stuff-up
         duplicate-current-line-or-region
         end-of-visual-line
         hippie-expand-no-case-fold
@@ -12,6 +14,7 @@
         kill-region
         kill-to-beginning-of-line
         kill-visual-line
+        kmacro-end-or-call-macro
         markdown-exdent-or-delete
         org-beginning-of-line
         org-delete-char
@@ -21,6 +24,7 @@
         org-self-insert-command
         org-yank
         orgtbl-self-insert-command
+        python-indent-shift-left
         python-indent-shift-right
         slime-space
         smex
@@ -30,10 +34,15 @@
         sp-delete-char
         sp-forward-sexp
         sp-splice-sexp
+        yaml-electric-backspace
+        yaml-electric-dash-and-dot
         zap-up-to-char
         ))
 
 (setq mc/cmds-to-run-once
       '(
+        describe-key
+        drag-stuff-down
+        help-for-help
         shell-command-on-region
         ))
