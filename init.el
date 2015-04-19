@@ -202,7 +202,6 @@
 
 
 (use-package expand-region
-  :ensure t
   :bind (("C-=" . er/expand-region)
          ("C-M-SPC" . er/expand-region)
          ("C-+" . er/contract-region)))
@@ -210,7 +209,6 @@
 
 (use-package exec-path-from-shell
   :if (is-osx)
-  :ensure t
   :defer t
   :init (exec-path-from-shell-initialize))
 
@@ -331,7 +329,9 @@
 
 (use-package golden-ratio
   :diminish golden-ratio-mode
-  :config (golden-ratio-mode t))
+  :init
+  (golden-ratio-mode t)
+  (setq golden-ratio-auto-scale t))
 
 
 (use-package js
@@ -360,19 +360,15 @@
 
 
 (use-package magit
-  :ensure t
   :bind ("C-x g" . magit-status)
   :commands magit-status
-  :config
-  (progn
-    (setq magit-last-seen-setup-instructions "1.4.0")
-    (defadvice magit-status (around magit-fullscreen activate)
-      (window-configuration-to-register :magit-fullscreen)
-      ad-do-it
-      (delete-other-windows))
-    (bind-key "q" 'magit-quit-session magit-status-mode-map)
-    (set-default 'magit-stage-all-confirm nil)
-    (set-default 'magit-unstage-all-confirm nil)))
+  :init
+  (setq magit-last-seen-setup-instructions "1.4.0")
+  (defadvice magit-status (around magit-fullscreen activate)
+    (window-configuration-to-register :magit-fullscreen)
+    ad-do-it
+    (delete-other-windows))
+  (bind-key "q" 'magit-quit-session magit-status-mode-map))
 
 
 (use-package menu-bar
@@ -472,18 +468,20 @@
 
     (use-package elpy
       :bind (("C-c t" . elpy-test-django-runner)
-             ("C-c C-f" . elpy-find-file))
+             ("C-c C-f" . elpy-find-file)
+             ("C-c C-;" . mw/set-django-settings-module))
       :init
       (elpy-enable)
       (defalias 'workon 'pyvenv-workon)
       (global-set-key (kbd "C-c ,") 'elpy-multiedit)
       (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
       (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart)
-      (defun mw/set-elpy-commands ()
-        (setq
-         elpy-test-discover-runner-command (list (executable-find "python") "-m" "unittest")
-         elpy-test-django-runner-command (list (executable-find "python") "manage.py" "test" "--noinput")))
-      (add-hook 'pyvenv-post-activate-hooks 'mw/set-elpy-commands)
+      (defun mw/set-elpy-test-runner-commands ()
+        (let ((python (executable-find "python")))
+          (setq
+           elpy-test-discover-runner-command (list python "-m" "unittest")
+           elpy-test-django-runner-command (list python "manage.py" "test" "--noinput"))))
+      (add-hook 'pyvenv-post-activate-hooks 'mw/set-elpy-test-runner-commands)
       :config
       (delete 'elpy-module-highlight-indentation elpy-modules)
       (delete 'elpy-module-flymake elpy-modules)
@@ -513,8 +511,7 @@
 
 
 (use-package rainbow-delimiters
-  :config (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-  :ensure t)
+  :config (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 
 
 (use-package recentf
@@ -527,20 +524,24 @@
 
 (use-package region-bindings-mode
   :if (not noninteractive)
-  :config (progn
-            (bind-key "m" 'mc/mark-more-like-this-extended region-bindings-mode-map)
-            (bind-key "a" 'mc/mark-all-like-this region-bindings-mode-map)
-            (bind-key "p" 'mc/mark-previous-like-this region-bindings-mode-map)
-            (bind-key "n" 'mc/mark-next-like-this region-bindings-mode-map)
-            (bind-key "b" 'mc/skip-to-previous-like-this region-bindings-mode-map)
-            (bind-key "f" 'mc/skip-to-next-like-this region-bindings-mode-map)
-            (bind-key "P" 'mc/unmark-previous-like-this region-bindings-mode-map)
-            (bind-key "N" 'mc/unmark-next-like-this region-bindings-mode-map)
-            (bind-key "u" 'er/contract-region region-bindings-mode-map)
-            (setq region-bindings-mode-disabled-modes '(term-mode))
-            (setq region-bindings-mode-disable-predicates
-                  (list (lambda () buffer-read-only)))
-            (region-bindings-mode-enable)))
+  :config
+  (progn
+    ;; multiple cursors
+    (bind-key "a" 'mc/mark-all-like-this region-bindings-mode-map)
+    (bind-key "p" 'mc/mark-previous-like-this region-bindings-mode-map)
+    (bind-key "n" 'mc/mark-next-like-this region-bindings-mode-map)
+    (bind-key "P" 'mc/unmark-previous-like-this region-bindings-mode-map)
+    (bind-key "N" 'mc/unmark-next-like-this region-bindings-mode-map)
+
+    ;; expand regions
+    (bind-key "f" 'er/mark-defun region-bindings-mode-map)
+    (bind-key "u" 'er/mark-url region-bindings-mode-map)
+    (bind-key "c" 'er/mark-python-block region-bindings-mode-map)
+
+    (setq region-bindings-mode-disabled-modes '(term-mode))
+    (setq region-bindings-mode-disable-predicates
+          (list (lambda () buffer-read-only)))
+    (region-bindings-mode-enable)))
 
 
 (use-package re-builder
@@ -603,18 +604,15 @@
 
 
 (use-package s
-  :ensure t
   :init
-  (progn
-    (bind-key "C-c m -" (λ (replace-region-by 's-dashed-words)))
-    (bind-key "C-c m _" (λ (replace-region-by 's-snake-case)))
-    (bind-key "C-c m c" (λ (replace-region-by 's-lower-camel-case)))
-    (bind-key "C-c m C" (λ (replace-region-by 's-upper-camel-case)))))
+  (bind-key "C-c m -" (λ (replace-region-by 's-dashed-words)))
+  (bind-key "C-c m _" (λ (replace-region-by 's-snake-case)))
+  (bind-key "C-c m c" (λ (replace-region-by 's-lower-camel-case)))
+  (bind-key "C-c m C" (λ (replace-region-by 's-upper-camel-case))))
 
 
 (use-package sass-mode
   :disabled t
-  :ensure t
   :defer t)
 
 
@@ -677,10 +675,7 @@
 (use-package smart-mode-line
   :init
   (setq sml/no-confirm-load-theme t)
-  (sml/setup)
-  ;; (sml/apply-theme 'automatic)
-  ;; (setq sml/override-theme nil)
-  )
+  (sml/setup))
 
 
 (use-package ace-window
@@ -689,7 +684,6 @@
 
 
 (use-package smartparens
-  :ensure t
   :bind (("C-M-k" . sp-kill-sexp-with-a-twist-of-lime)
          ("C-M-f" . sp-forward-sexp)
          ("C-M-b" . sp-backward-sexp)
@@ -719,18 +713,18 @@
      sp-autoskip-closing-pair 'always
      blink-matching-paren t))
   :config
-  (progn (require 'smartparens-config)
-         (sp-with-modes '(markdown-mode gfm-mode rst-mode)
-           (sp-local-pair "*" "*" :bind "C-*")
-           (sp-local-tag "2" "**" "**")
-           (sp-local-tag "s" "```scheme" "```")
-           (sp-local-tag "<"  "<_>" "</_>" :transform 'sp-match-sgml-tags))
-         ;; (sp-with-modes sp--lisp-modes
-         ;;   (sp-local-pair "(" nil :bind "C-("))
-         (setq sp-autoinsert-if-followed-by-word nil)))
+  (progn
+    (require 'smartparens-config)
+    (sp-with-modes '(markdown-mode gfm-mode rst-mode)
+      (sp-local-pair "*" "*" :bind "C-*")
+      (sp-local-tag "2" "**" "**")
+      (sp-local-tag "s" "```scheme" "```")
+      (sp-local-tag "<"  "<_>" "</_>" :transform 'sp-match-sgml-tags))
+    ;; (sp-with-modes sp--lisp-modes
+    ;;   (sp-local-pair "(" nil :bind "C-("))
+    (setq sp-autoinsert-if-followed-by-word nil)))
 
 (use-package smex
-  :ensure t
   :bind (("M-x" . smex)
          ("C-x C-m" . smex))
   :init (smex-initialize))
@@ -760,16 +754,13 @@
 
 
 (use-package visual-regexp
-  :disabled t
   :ensure t
-  :requires visual-regexp-steroids
   :bind (("C-s" . vr/isearch-forward)
          ("C-r" . vr/isearch-backward)
          ("C-c r" . vr/replace)
          ("C-c q" . vr/query-replace))
   :config
-  (progn
-    (use-package visual-regexp-steroids)))
+  (use-package visual-regexp-steroids))
 
 
 (use-package web-mode
