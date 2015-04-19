@@ -329,6 +329,7 @@
 
 
 (use-package golden-ratio
+  :diminish golden-ratio-mode
   :config (golden-ratio-mode t))
 
 
