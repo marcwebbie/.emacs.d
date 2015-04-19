@@ -45,7 +45,7 @@
 (load-local "defaults")
 (load-local "defuns")
 (load-local "hippie")
-(load-local "tdd")
+(load-local "vendor/tdd")
 
 
 ;;----------------------------------------------------------------------------
