@@ -464,12 +464,24 @@
     (use-package anaconda-mode
       :init (add-hook 'python-mode-hook '(lambda () (anaconda-mode))))
 
+    (use-package abl-mode
+      :disabled t
+      :init (add-hook 'python-mode-hook 'abl-mode))
+
     (use-package elpy
       :bind (("C-c t" . elpy-test-django-runner)
              ("C-c C-f" . elpy-find-file))
       :init
-      (defalias 'workon 'pyvenv-workon)
       (elpy-enable)
+      (defalias 'workon 'pyvenv-workon)
+      (global-set-key (kbd "C-c ,") 'elpy-multiedit)
+      (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
+      (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart)
+      (defun mw/set-elpy-commands ()
+        (setq
+         elpy-test-discover-runner-command (list (executable-find "python") "-m" "unittest")
+         elpy-test-django-runner-command (list (executable-find "python") "manage.py" "test" "--noinput")))
+      (add-hook 'pyvenv-post-activate-hooks 'mw/set-elpy-commands)
       :config
       (delete 'elpy-module-highlight-indentation elpy-modules)
       (delete 'elpy-module-flymake elpy-modules)
