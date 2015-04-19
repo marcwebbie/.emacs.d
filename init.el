@@ -58,8 +58,8 @@
 ;; (load-theme 'gruvbox :no-confirm)
 ;; (load-theme 'darktooth :no-confirm)
 ;; (load-theme 'smyx :no-confirm)  ;; dark black/greyish theme
-(load-theme 'twilight-bright :no-confirm)  ;; light theme
-;; (load-theme 'twilight-anti-bright :no-confirm)  ;; dark theme
+;; (load-theme 'twilight-bright :no-confirm)  ;; light theme
+(load-theme 'twilight-anti-bright :no-confirm)  ;; dark theme
 ;; (load-theme 'badger :no-confirm)  ;; dark theme based on wombat
 
 (setq visible-bell t
