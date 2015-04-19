@@ -729,7 +729,6 @@
          ;;   (sp-local-pair "(" nil :bind "C-("))
          (setq sp-autoinsert-if-followed-by-word nil)))
 
-
 (use-package smex
   :ensure t
   :bind (("M-x" . smex)
