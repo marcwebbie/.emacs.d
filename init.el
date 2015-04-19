@@ -120,7 +120,9 @@
   :init (pallet-mode t))
 
 
-(use-package tdd)
+(use-package tdd
+  :init (setq tdd-success-symbol " ⬤ "
+              tdd-failure-symbol " ⬛ "))
 
 
 (use-package ace-jump-mode
