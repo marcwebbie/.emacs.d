@@ -697,8 +697,13 @@
   (progn
     (smartparens-global-mode 1)
     (smartparens-strict-mode 1)
-    ;; (show-smartparens-global-mode t)
-    (setq smartparens-global-strict-mode t))
+    (show-smartparens-global-mode t)
+    (setq smartparens-global-strict-mode t)
+    (setq
+     sp-highlight-wrap-overlay nil
+     sp-autoescape-string-quote nil
+     sp-autoskip-closing-pair 'always
+     blink-matching-paren t))
   :config
   (progn (require 'smartparens-config)
          (sp-with-modes '(markdown-mode gfm-mode rst-mode)
