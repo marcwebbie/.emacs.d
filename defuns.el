@@ -386,4 +386,11 @@ Otherwise point moves to beginning of line."
   (interactive)
   (set-frame-font "Monaco-40"))
 
+(defun mw/set-django-settings-module (django-settings-module)
+  "set django settings module environment variable"
+  (interactive "sDjango settings module: ")
+  (progn
+    (setenv "DJANGO_SETTINGS_MODULE" django-settings-module)
+    (message "DJANGO_SETTINGS_MODULE=%s" django-settings-module)))
+
 ;;;; end
