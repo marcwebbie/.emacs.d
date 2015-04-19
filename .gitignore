@@ -29,3 +29,6 @@ autosaves/*
 /savehist
 /eshell/
 /projectile.cache
+/smex-items
+/recentf
+/ido.last
