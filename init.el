@@ -56,12 +56,11 @@
 ;; (load-theme 'solarized-light :no-confirm)
 ;; (load-theme 'solarized-dark :no-confirm)
 ;; (load-theme 'gruvbox :no-confirm)
-
-;; (load-theme 'badger :no-confirm)  ;; dark theme based on wombat
+;; (load-theme 'darktooth :no-confirm)
 ;; (load-theme 'smyx :no-confirm)  ;; dark black/greyish theme
 (load-theme 'twilight-bright :no-confirm)  ;; light theme
 ;; (load-theme 'twilight-anti-bright :no-confirm)  ;; dark theme
-;; (load-theme 'darktooth :no-confirm)
+;; (load-theme 'badger :no-confirm)  ;; dark theme based on wombat
 
 (setq visible-bell t
       font-lock-maximum-decoration t
@@ -870,3 +869,15 @@
 
 (provide 'init)
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(sp-show-pair-match-face ((t (:underline "Purple")))))
