@@ -2,23 +2,6 @@
 ;;;; Init
 ;;----------------------------------------------------------------------------
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(blink-cursor-mode nil)
- '(cursor-type (quote box))
- '(custom-safe-themes
-   (quote
-    ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "9228f25531b8da054bb2c9c0d9656b4511103e299df53e200ffad21e08aac533" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "e56f1b1c1daec5dbddc50abd00fcd00f6ce4079f4a7f66052cf16d96412a09a9" "c5a044ba03d43a725bd79700087dea813abcb6beb6be08c7eb3303ed90782482" "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" "756597b162f1be60a12dbd52bab71d40d6a2845a3e3c2584c6573ee9c332a66e" default)))
- '(paradox-github-token t))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:background nil)))))
 
 ;; Turn off mouse interface early in startup to avoid momentary display
 (setq inhibit-startup-message t)
@@ -50,6 +33,11 @@
   (setenv "WORKON_HOME" workon-home)
   (setenv "VIRTUALENVWRAPPER_HOOK_DIR" workon-home))
 
+(defun my-compilation-mode-hook ()
+  (setq truncate-lines nil) ;; automatically becomes buffer local
+  (set (make-local-variable 'truncate-partial-width-windows) nil))
+(add-hook 'compilation-mode-hook 'my-compilation-mode-hook)
+
 ;;----------------------------------------------------------------------------
 ;;;; Loading
 ;;----------------------------------------------------------------------------
@@ -57,13 +45,23 @@
 (load-local "defaults")
 (load-local "defuns")
 (load-local "hippie")
+(load-local "tdd")
 
 
 ;;----------------------------------------------------------------------------
 ;;;; Appearance
 ;;----------------------------------------------------------------------------
 
-(load-theme 'gruvbox :no-confirm)
+;; (load-theme 'monokai :no-confirm)
+;; (load-theme 'solarized-light :no-confirm)
+;; (load-theme 'solarized-dark :no-confirm)
+;; (load-theme 'gruvbox :no-confirm)
+
+;; (load-theme 'badger :no-confirm)  ;; dark theme based on wombat
+;; (load-theme 'smyx :no-confirm)  ;; dark black/greyish theme
+(load-theme 'twilight-bright :no-confirm)  ;; light theme
+;; (load-theme 'twilight-anti-bright :no-confirm)  ;; dark theme
+;; (load-theme 'darktooth :no-confirm)
 
 (setq visible-bell t
       font-lock-maximum-decoration t
@@ -75,27 +73,31 @@
   (tooltip-mode -1)
   (blink-cursor-mode -1)
   (mw/set-best-font '(
+                      ("Fira Mono" 14)
                       ("Inconsolata" 16)
-                      ("Menlo" 14)
+                      ("DejaVu Sans Mono" 14)
                       ("Input Mono" 14)
+                      ("Ubuntu Mono" 16)
+                      ("Menlo" 14)
                       ("Input Mono Condensed" 14)
                       ("Input Mono Narrow" 14)
-                      ("Ubuntu Mono" 16)
                       ("DejaVu Sans Mono" 14)
                       ("Monaco" 14)
-                      ("Source Code Pro" 14)
+                      ("monoOne" 14)
                       ("Monospace" 12)
+                      ("Source Code Pro" 14)
+                      ("Code New Roman" 16)
                       )))
 
 (global-hl-line-mode -1)
-(tooltip-mode -1)
-(setq line-number-mode t)
-(setq column-number-mode t)
+;; (tooltip-mode -1)
+;; (setq line-number-mode t)
+;; (setq column-number-mode t)
 
 ;; Configure scrolling
 (setq scroll-error-top-bottom t  ; Move to beg/end of buffer before signalling an error
       scroll-conservatively 1000 ; Never recenter the screen while scrolling
-      scroll-margin 10)
+      scroll-margin 5)
 
 
 ;;----------------------------------------------------------------------------
@@ -116,6 +118,9 @@
 
 (use-package pallet
   :init (pallet-mode t))
+
+
+(use-package tdd)
 
 
 (use-package ace-jump-mode
@@ -146,6 +151,7 @@
 
 
 (use-package cc-mode
+  :disabled t
   :mode ("\\.h\\'" . c++-mode)
   :config
   (progn
@@ -156,9 +162,6 @@
 (use-package css-mode
   :if (not noninteractive)
   :config (setq css-indent-offset 2))
-
-
-(use-package diminish)
 
 
 (use-package drag-stuff
@@ -293,42 +296,6 @@
   :ensure t)
 
 
-(use-package ibuffer
-  :if (not noninteractive)
-  :bind ("C-x C-b" . ibuffer)
-  :config
-  (progn
-    (setq ibuffer-show-empty-filter-groups nil
-          ibuffer-saved-filter-groups
-          (list (append
-                 (cons "default"
-                       ;; Generate filters by major modes from the
-                       ;; auto-mode-alist
-                       (let ((mode-filters))
-                         (dolist (element auto-mode-alist)
-                           (when (ignore-errors (fboundp (cdr element)))
-                             (let* ((mode (cdr element))
-                                    (name (if (string-match "\\(-mode\\)?\\'"
-                                                            (symbol-name mode))
-                                              (capitalize
-                                               (substring (symbol-name mode)
-                                                          0 (match-beginning 0)))
-                                            (symbol-name mode))))
-                               (when (not (assoc-string name mode-filters))
-                                 (setq mode-filters
-                                       (cons (list name (cons 'mode mode))
-                                             mode-filters))))))
-                         mode-filters))
-                 ;; Custom added filters.
-                 '(("Magit" (name . "^\\*magit"))
-                   ("Irc" (mode . rcirc-mode))
-                   ("Css" (mode . scss-mode))
-                   ("W3m" (name . "^\\*w3m"))))))
-    (add-hook 'ibuffer-mode-hook
-              (lambda ()
-                (ibuffer-switch-to-saved-filter-groups "default")))))
-
-
 (use-package imenu
   :bind ("M-i" . imenu)
   :config
@@ -365,14 +332,6 @@
   :config (golden-ratio-mode t))
 
 
-(use-package jedi
-  :disabled t
-  :ensure t
-  :init (progn
-          (setq auto-complete-mode t)
-          (jedi:complete)))
-
-
 (use-package js
   :ensure t
   :requires js2-mode
@@ -404,6 +363,7 @@
   :commands magit-status
   :config
   (progn
+    (setq magit-last-seen-setup-instructions "1.4.0")
     (defadvice magit-status (around magit-fullscreen activate)
       (window-configuration-to-register :magit-fullscreen)
       ad-do-it
@@ -426,8 +386,6 @@
          ("\\.md\\'" . markdown-mode))
   :config
   (progn
-    (bind-key "M-p" 'drag-stuff-up markdown-mode-map)
-    (bind-key "M-n" 'drag-stuff-down markdown-mode-map)
     (add-hook 'markdown-mode-hook (lambda() (setq mode-name "md")))))
 
 
@@ -472,7 +430,6 @@
 
 (use-package projectile
   :ensure t
-  :diminish projectile-mode
   :config
   (progn
     (projectile-global-mode 1)
@@ -508,15 +465,15 @@
       :init (add-hook 'python-mode-hook '(lambda () (anaconda-mode))))
 
     (use-package elpy
-      :bind (("C-c t" . elpy-test-django-runner))
+      :bind (("C-c t" . elpy-test-django-runner)
+             ("C-c C-f" . elpy-find-file))
       :init
-      (add-hook 'python-mode-hook 'elpy-enable)
       (defalias 'workon 'pyvenv-workon)
-      :config
       (elpy-enable)
+      :config
       (delete 'elpy-module-highlight-indentation elpy-modules)
       (delete 'elpy-module-flymake elpy-modules)
-      ;; (setq elpy-rpc-backend "jedi")
+      (setq elpy-rpc-backend "jedi")
       (elpy-use-ipython))
 
     (use-package pip-requirements
@@ -547,14 +504,11 @@
 
 
 (use-package recentf
-  :defer t
   :commands recentf-mode
-  :bind (("C-c f" . recentf-ido-find-file)
-         ("C-c C-f" . recentf-ido-find-file))
+  :bind (("C-c f" . recentf-ido-find-file))
   :init
-  (progn
-    (recentf-mode 1)
-    (setq recentf-max-saved-items 100)))
+  (recentf-mode 1)
+  (setq recentf-max-saved-items 100))
 
 
 (use-package region-bindings-mode
@@ -588,6 +542,7 @@
 
 
 (use-package ruby-mode
+  :disabled t
   :config
   (progn
     (add-hook 'ruby-mode-hook (lambda() (setq mode-name "rb")))
@@ -688,6 +643,7 @@
 
 
 (use-package slime
+  :disabled t
   :ensure t
   :mode (("\\.lisp$" . lisp-mode)
          ("\\.clisp$" . lisp-mode))
@@ -699,20 +655,27 @@
     (add-hook 'inferior-lisp-mode-hook (lambda () (inferior-slime-mode t)))))
 
 
+(use-package nyan-mode
+  :disabled t
+  :config (nyan-mode t))
+
+
 (use-package smart-mode-line
-  :init (progn
-          (sml/setup)
-          (sml/apply-theme 'dark)
-          (setq sml/override-theme nil)
-          (use-package nyan-mode
-            :disabled t
-            :config (nyan-mode t))
-          ))
+  :init
+  (setq sml/no-confirm-load-theme t)
+  (sml/setup)
+  ;; (sml/apply-theme 'automatic)
+  ;; (setq sml/override-theme nil)
+  )
+
+
+(use-package ace-window
+  :bind (("M-o" . ace-window))
+  :config (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
 
 (use-package smartparens
   :ensure t
-  ;; :diminish smartparens-(mode)
   :bind (("C-M-k" . sp-kill-sexp-with-a-twist-of-lime)
          ("C-M-f" . sp-forward-sexp)
          ("C-M-b" . sp-backward-sexp)
@@ -731,10 +694,11 @@
          ("M-J" . sp-join-sexp)
          ("C-M-t" . sp-transpose-sexp))
   :init
-  (progn (smartparens-global-mode 1)
-         (smartparens-strict-mode 1)
-         (setq smartparens-global-strict-mode t)
-         (show-smartparens-global-mode t))
+  (progn
+    (smartparens-global-mode 1)
+    (smartparens-strict-mode 1)
+    ;; (show-smartparens-global-mode t)
+    (setq smartparens-global-strict-mode t))
   :config
   (progn (require 'smartparens-config)
          (sp-with-modes '(markdown-mode gfm-mode rst-mode)
@@ -821,7 +785,6 @@
 
 
 (use-package yaml-mode
-  :mode "\\.pyssword"
   :ensure t)
 
 
