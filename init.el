@@ -142,8 +142,8 @@
 (use-package auto-complete
   :disabled t
   :diminish auto-complete-mode
-  :config (progn
-            (global-auto-complete-mode t)))
+  :config
+  (global-auto-complete-mode t))
 
 
 (use-package ace-jump-buffer
@@ -153,8 +153,7 @@
 
 (use-package buffer-menu
   :bind ("C-x C-b" . buffer-menu)
-  :config
-  (message "IN BUFFER MENU"))
+  :commands buffer-menu)
 
 
 (use-package coffee-mode
@@ -307,11 +306,11 @@
   :init (global-git-gutter-mode t))
 
 
-(use-package gitignore-mode
+(use-package gitignore-mode)
 
 
 (use-package haml-mode
-  :disabled t
+  :disabled t)
 
 
 (use-package imenu
@@ -325,6 +324,7 @@
 
 
 (use-package ispell
+  :disabled t
   :defer t
   :init
   (setq ispell-program-name "aspell"
@@ -452,7 +452,7 @@
 
 
 (use-package puppet-mode
-  :disabled t
+  :disabled t)
 
 
 (use-package python
@@ -485,7 +485,6 @@
       :init
       (elpy-enable)
       (defalias 'workon 'pyvenv-workon)
-      ;; (global-set-key (kbd "C-c ,") 'elpy-multiedit)
       (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
       (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart)
       (defun mw/set-elpy-test-runner-commands ()
@@ -497,7 +496,7 @@
       :config
       (delete 'elpy-module-highlight-indentation elpy-modules)
       (delete 'elpy-module-flymake elpy-modules)
-      (delete 'elpy-module-flymake elpy-module-yasnippet)
+      (delete 'elpy-module-yasnippet elpy-modules)
       (setq elpy-rpc-backend "rope")
       (elpy-use-ipython))
 
@@ -539,7 +538,6 @@
 
 
 (use-package fold-this
-  :if (not noninteractive)
   :commands fold-this)
 
 
