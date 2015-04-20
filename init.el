@@ -146,6 +146,11 @@
             (global-auto-complete-mode t)))
 
 
+(use-package ace-jump-buffer
+  :bind ("C-c b" . ace-jump-buffer)
+  :commands ace-jump-buffer)
+
+
 (use-package buffer-menu
   :bind ("C-x C-b" . buffer-menu)
   :config
