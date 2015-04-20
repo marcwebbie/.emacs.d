@@ -121,7 +121,7 @@
 
 
 (use-package tdd
-  :bind ("C-M-=" . tdd-mode)
+  :bind ("M-%" . tdd-mode)
   :commands tdd-mode
   :init (setq tdd-success-symbol " ⬤ "
               tdd-failure-symbol " ⬛ "))
@@ -190,7 +190,6 @@
 
 
 (use-package emmet-mode
-  :ensure t
   :diminish emmet-mode
   :config
   (progn
@@ -279,7 +278,6 @@
 
 
 (use-package git-gutter
-  :ensure t
   :diminish git-gutter-mode
   :bind (("C-c v =" . git-gutter:popup-hunk) ;; show hunk diff
          ("C-c v p" . git-gutter:previous-hunk)
@@ -290,12 +288,10 @@
 
 
 (use-package gitignore-mode
-  :ensure t)
 
 
 (use-package haml-mode
   :disabled t
-  :ensure t)
 
 
 (use-package imenu
@@ -337,14 +333,12 @@
 
 
 (use-package js
-  :ensure t
   :requires js2-mode
   :mode ("\\.json$" . js-mode)
   :config
   (progn
     (add-hook 'js-mode-hook (lambda () (setq js-indent-level 2)))
     (use-package js2-mode
-      :ensure t
       :mode (("\\.js$" . js2-mode)
              ("Jakefile$" . js2-mode))
       :interpreter ("node" . js2-mode)
@@ -391,14 +385,12 @@
 
 
 (use-package multiple-cursors
-  :ensure t
   :bind (("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C-w" . mc/mark-all-words-like-this)))
 
 
 (use-package nyan-mode
-  :ensure t
   :disabled t
   :init (nyan-mode 1))
 
@@ -430,7 +422,6 @@
 
 
 (use-package projectile
-  :ensure t
   :config
   (progn
     (projectile-global-mode 1)
@@ -443,7 +434,6 @@
 
 (use-package puppet-mode
   :disabled t
-  :ensure t)
 
 
 (use-package python
@@ -476,7 +466,7 @@
       :init
       (elpy-enable)
       (defalias 'workon 'pyvenv-workon)
-      (global-set-key (kbd "C-c ,") 'elpy-multiedit)
+      ;; (global-set-key (kbd "C-c ,") 'elpy-multiedit)
       (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
       (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart)
       (defun mw/set-elpy-test-runner-commands ()
@@ -488,6 +478,7 @@
       :config
       (delete 'elpy-module-highlight-indentation elpy-modules)
       (delete 'elpy-module-flymake elpy-modules)
+      (delete 'elpy-module-flymake elpy-module-yasnippet)
       (setq elpy-rpc-backend "rope")
       (elpy-use-ipython))
 
@@ -508,8 +499,7 @@
 
 
 (use-package rainbow-mode
-  ;; :disabled t
-  :ensure t
+  :disabled t
   :diminish rainbow-mode
   :config
   (add-hook 'sass-mode-hook 'rainbow-mode)
@@ -552,6 +542,7 @@
 
 
 (use-package re-builder
+  :disabled t
   :init (setq reb-re-syntax 'string))
 
 
@@ -574,7 +565,6 @@
       :diminish ruby-test-mode
       :bind ("C-c t b" . ruby-test-run))
     (use-package shoulda
-      :ensure t
       :config
       (progn
         (bind-key "C-c t s" 'shoulda-run-should-at-point ruby-mode-map)
@@ -624,7 +614,6 @@
 
 
 (use-package saveplace
-  :ensure t
   :config (setq-default save-place t))
 
 (use-package savehist
@@ -638,20 +627,17 @@
 
 (use-package scala-mode
   :disabled t
-  :ensure t
   :config (modify-coding-system-alist 'file "\\.\\(scala\\|sbt\\)\\'" 'utf-8)
   :mode "\\.\\(scala\\|sbt\\)\\'")
 
 
 (use-package scss-mode
   :disabled t
-  :ensure t
   :mode "\\.scss\\'")
 
 
 (use-package gradle-mode
   :disabled t
-  :ensure t
   :mode "\\.gradle\\'")
 
 
@@ -663,7 +649,6 @@
 
 (use-package slime
   :disabled t
-  :ensure t
   :mode (("\\.lisp$" . lisp-mode)
          ("\\.clisp$" . lisp-mode))
   :config
@@ -761,17 +746,15 @@
 
 
 (use-package visual-regexp
-  :ensure t
+  ;; :config
+  ;; (use-package visual-regexp-steroids)
   :bind (("C-s" . vr/isearch-forward)
          ("C-r" . vr/isearch-backward)
          ("C-c r" . vr/replace)
-         ("C-c q" . vr/query-replace))
-  :config
-  (use-package visual-regexp-steroids))
+         ("C-c q" . vr/query-replace)))
 
 
 (use-package web-mode
-  :ensure t
   :defer t
   :mode (("\\.html\\'" . web-mode)
           ("\\.html\\.erb\\'" . web-mode)
@@ -801,7 +784,9 @@
 
 
 (use-package yaml-mode
-  :ensure t)
+  :mode (("\\.yaml\\'" . web-mode)
+          ("\\.yml\\'" . web-mode))
+  :bind ("C-m" . newline-and-indent))
 
 
 (use-package osx
