@@ -120,6 +120,8 @@
 
 
 (use-package tdd
+  :bind ("C-M-=" . tdd-mode)
+  :commands tdd-mode
   :init (setq tdd-success-symbol " ⬤ "
               tdd-failure-symbol " ⬛ "))
 
