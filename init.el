@@ -121,7 +121,7 @@
 
 
 (use-package tdd
-  :bind ("M-%" . tdd-mode)
+  :bind ("C-<f5>" . tdd-mode)
   :commands tdd-mode
   :init (setq tdd-success-symbol " ⬤ "
               tdd-failure-symbol " ⬛ "))
@@ -487,12 +487,17 @@
       (defalias 'workon 'pyvenv-workon)
       (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
       (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart)
-      (defun mw/set-elpy-test-runner-commands ()
+
+      ;; (defun mw/set-elpy ()
+      ;;   (setq elpy-test-django-runner-command '("./manage.py" "test" "--noinput"))
+      ;;   (setq compilation-environment '("PATH=/Users/username/.pyenv/versions/myapp/bin/")))
+      (defun mw/set-elpy ()
         (let ((python (executable-find "python")))
           (setq
            elpy-test-discover-runner-command (list python "-m" "unittest")
            elpy-test-django-runner-command (list python "manage.py" "test" "--noinput"))))
-      (add-hook 'pyvenv-post-activate-hooks 'mw/set-elpy-test-runner-commands)
+      (add-hook 'pyvenv-post-activate-hooks 'mw/set-elpy)
+
       :config
       (delete 'elpy-module-highlight-indentation elpy-modules)
       (delete 'elpy-module-flymake elpy-modules)
