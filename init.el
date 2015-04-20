@@ -485,7 +485,7 @@
       :config
       (delete 'elpy-module-highlight-indentation elpy-modules)
       (delete 'elpy-module-flymake elpy-modules)
-      (setq elpy-rpc-backend "jedi")
+      (setq elpy-rpc-backend "rope")
       (elpy-use-ipython))
 
     (use-package pip-requirements
