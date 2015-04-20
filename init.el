@@ -323,15 +323,14 @@
   :disabled t
   :requires ispell
   :config
-    (add-hook 'text-mode-hook 'flyspell-mode)
-    (add-hook 'prog-mode-hook 'flyspell-prog-mode))
+  (add-hook 'text-mode-hook 'flyspell-mode)
+  (add-hook 'prog-mode-hook 'flyspell-prog-mode))
 
 
 (use-package golden-ratio
   :diminish golden-ratio-mode
   :init
-  (golden-ratio-mode t)
-  (setq golden-ratio-auto-scale t))
+  (golden-ratio-mode t))
 
 
 (use-package js
