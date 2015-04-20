@@ -146,6 +146,12 @@
             (global-auto-complete-mode t)))
 
 
+(use-package buffer-menu
+  :bind ("C-x C-b" . buffer-menu)
+  :config
+  (message "IN BUFFER MENU"))
+
+
 (use-package coffee-mode
   :disabled t
   :config
@@ -175,6 +181,15 @@
   :config
   (progn
     (drag-stuff-global-mode t)))
+
+
+(use-package dired
+  :config
+  (defun dired-back-to-start-of-files ()
+    (interactive)
+    (backward-char (- (current-column) 2)))
+  (bind-key  "C-a" 'dired-back-to-start-of-files dired-mode-map)
+  (bind-key  "k" 'dired-do-delete dired-mode-map))
 
 
 (use-package hippie-exp
@@ -396,11 +411,10 @@
 
 
 (use-package occur
-  :bind (("M-o" . occur)
-         ("C-c C-o" . multi-occur-in-this-mode))
-  :config (progn
-            (bind-key "n" 'occur-next occur-mode-map)
-            (bind-key "p" 'occur-prev occur-mode-map)))
+  :bind ("C-c C-o" . occur)
+  :config
+  (bind-key "n" 'occur-next occur-mode-map)
+  (bind-key "p" 'occur-prev occur-mode-map))
 
 
 (use-package org
@@ -519,21 +533,30 @@
   (setq recentf-max-saved-items 100))
 
 
+(use-package fold-this
+  :if (not noninteractive)
+  :commands fold-this)
+
+
 (use-package region-bindings-mode
   :if (not noninteractive)
   :config
   (progn
-    ;; multiple cursors
+    ;; multiple-cursors
     (bind-key "a" 'mc/mark-all-like-this region-bindings-mode-map)
+    (bind-key "e" 'mc/edit-lines region-bindings-mode-map)
     (bind-key "p" 'mc/mark-previous-like-this region-bindings-mode-map)
-    (bind-key "n" 'mc/mark-next-like-this region-bindings-mode-map)
     (bind-key "P" 'mc/unmark-previous-like-this region-bindings-mode-map)
+    (bind-key "n" 'mc/mark-next-like-this region-bindings-mode-map)
     (bind-key "N" 'mc/unmark-next-like-this region-bindings-mode-map)
 
-    ;; expand regions
+    ;; expand-regions
     (bind-key "f" 'er/mark-defun region-bindings-mode-map)
     (bind-key "u" 'er/mark-url region-bindings-mode-map)
     (bind-key "c" 'er/mark-python-block region-bindings-mode-map)
+
+    ;; fold-this
+    (bind-key "." 'fold-this region-bindings-mode-map)
 
     (setq region-bindings-mode-disabled-modes '(term-mode))
     (setq region-bindings-mode-disable-predicates
