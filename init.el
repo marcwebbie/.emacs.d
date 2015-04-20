@@ -505,9 +505,13 @@
 
 
 (use-package rainbow-mode
-  :disabled t
+  ;; :disabled t
   :ensure t
-  :diminish rainbow-mode)
+  :diminish rainbow-mode
+  :config
+  (add-hook 'sass-mode-hook 'rainbow-mode)
+  (add-hook 'css-mode-hook 'rainbow-mode)
+  (add-hook 'web-mode-hook 'rainbow-mode))
 
 
 (use-package rainbow-delimiters
