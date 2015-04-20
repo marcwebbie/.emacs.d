@@ -25,6 +25,7 @@
 (depends-on "f")
 (depends-on "flx-ido")
 (depends-on "flycheck")
+(depends-on "fold-this")
 (depends-on "gist")
 (depends-on "git-gutter")
 (depends-on "git-timemachine")
