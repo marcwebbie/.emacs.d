@@ -57,6 +57,7 @@
 ;; (load-theme 'solarized-dark :no-confirm)
 ;; (load-theme 'gruvbox :no-confirm)
 ;; (load-theme 'darktooth :no-confirm)
+
 ;; (load-theme 'smyx :no-confirm)  ;; dark black/greyish theme
 ;; (load-theme 'twilight-bright :no-confirm)  ;; light theme
 (load-theme 'twilight-anti-bright :no-confirm)  ;; dark theme
@@ -369,6 +370,7 @@
     (window-configuration-to-register :magit-fullscreen)
     ad-do-it
     (delete-other-windows))
+  :config
   (bind-key "q" 'magit-quit-session magit-status-mode-map))
 
 
@@ -451,9 +453,9 @@
   (progn
     (add-hook 'python-mode-hook '(lambda () (setq python-indent 4)))
     (add-hook 'python-mode-hook
-          '(lambda ()
-             (flycheck-mode)
-             (flycheck-select-checker 'python-flake8))))
+              '(lambda ()
+                 (flycheck-mode)
+                 (flycheck-select-checker 'python-flake8))))
   :config
   (progn
     (use-package eldoc-mode
