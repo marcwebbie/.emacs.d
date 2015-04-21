@@ -1,11 +1,17 @@
 ;;----------------------------------------------------------------------------
 ;;;; Init
 ;;----------------------------------------------------------------------------
+(defun is-osx ()
+  (eq system-type 'darwin))
 
+;;----------------------------------------------------------------------------
+;;;; Defaults
+;;----------------------------------------------------------------------------
 
 ;; Turn off mouse interface early in startup to avoid momentary display
 (setq inhibit-startup-message t)
-(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+(menu-bar-mode +1)
+(if (not (is-osx)) (menu-bar-mode +1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
@@ -19,85 +25,23 @@
 (defun load-local (file)
   (load (expand-file-name file user-emacs-directory)))
 
-(defun is-osx ()
-  (eq system-type 'darwin))
-
-
-;;----------------------------------------------------------------------------
-;;;; Defaults
-;;----------------------------------------------------------------------------
-
-(setq tab-width 4) ; or any other preferred value
+(setq tab-width 4)
 (setq-default indent-tabs-mode nil)
 (let ((workon-home (expand-file-name "~/.pyenv/versions")))
   (setenv "WORKON_HOME" workon-home)
   (setenv "VIRTUALENVWRAPPER_HOOK_DIR" workon-home))
 
-(defun my-compilation-mode-hook ()
-  (setq truncate-lines nil) ;; automatically becomes buffer local
-  (set (make-local-variable 'truncate-partial-width-windows) nil))
-(add-hook 'compilation-mode-hook 'my-compilation-mode-hook)
 
 ;;----------------------------------------------------------------------------
 ;;;; Loading
 ;;----------------------------------------------------------------------------
 
+
+(load-local "appearance")
 (load-local "defaults")
 (load-local "defuns")
-(load-local "hippie")
+(load-local "vendor/hippie")
 (load-local "vendor/tdd")
-
-
-;;----------------------------------------------------------------------------
-;;;; Appearance
-;;----------------------------------------------------------------------------
-
-;; (load-theme 'monokai :no-confirm)
-;; (load-theme 'solarized-light :no-confirm)
-;; (load-theme 'solarized-dark :no-confirm)
-;; (load-theme 'gruvbox :no-confirm)
-;; (load-theme 'darktooth :no-confirm)
-
-;; (load-theme 'smyx :no-confirm)  ;; dark black/greyish theme
-;; (load-theme 'twilight-bright :no-confirm)  ;; light theme
-(load-theme 'twilight-anti-bright :no-confirm)  ;; dark theme
-;; (load-theme 'badger :no-confirm)  ;; dark theme based on wombat
-
-(setq visible-bell t
-      font-lock-maximum-decoration t
-      color-theme-is-global t
-      truncate-partial-width-windows nil)
-
-(when window-system
-  (setq frame-title-format '(buffer-file-name "%f" ("%b")))
-  (tooltip-mode -1)
-  (blink-cursor-mode -1)
-  (mw/set-best-font '(
-                      ("Fira Mono" 14)
-                      ("Inconsolata" 16)
-                      ("DejaVu Sans Mono" 14)
-                      ("Input Mono" 14)
-                      ("Ubuntu Mono" 16)
-                      ("Menlo" 14)
-                      ("Input Mono Condensed" 14)
-                      ("Input Mono Narrow" 14)
-                      ("DejaVu Sans Mono" 14)
-                      ("Monaco" 14)
-                      ("monoOne" 14)
-                      ("Monospace" 12)
-                      ("Source Code Pro" 14)
-                      ("Code New Roman" 16)
-                      )))
-
-(global-hl-line-mode -1)
-;; (tooltip-mode -1)
-;; (setq line-number-mode t)
-;; (setq column-number-mode t)
-
-;; Configure scrolling
-(setq scroll-error-top-bottom t  ; Move to beg/end of buffer before signalling an error
-      scroll-conservatively 1000 ; Never recenter the screen while scrolling
-      scroll-margin 5)
 
 
 ;;----------------------------------------------------------------------------
@@ -106,9 +50,8 @@
 
 ;; Packages setup
 (eval-when-compile
-  (require 'use-package))
-(require 'diminish)                ;; if you use :diminish
-(require 'bind-key)                ;; if you use any :bind variant
+  (require 'use-package)
+  (require 'bind-key))
 
 (provide 'occur)
 (provide 'osx)
@@ -165,6 +108,11 @@
     (setq whitespace-style '(trailing space-before-tab indentation empty space-after-tab))))
 
 
+(use-package company
+  :init
+  (add-hook 'prog-mode-hook 'flyspell-prog-mode))
+
+
 (use-package cc-mode
   :disabled t
   :mode ("\\.h\\'" . c++-mode)
@@ -172,6 +120,16 @@
   (progn
     (setq c-basic-offset 4)
     (c-set-offset 'substatement-open 0)))
+
+
+(use-package compile
+  :bind ("<f5>" . recompile)
+  :init
+  (defun disable-truncate-on-compilation ()
+    (progn
+      (setq truncate-lines nil)
+      (set (make-local-variable 'truncate-partial-width-windows) nil)))
+  (add-hook 'compilation-mode-hook 'disable-truncate-on-compilation))
 
 
 (use-package css-mode
@@ -183,9 +141,8 @@
   :bind (("M-p" . drag-stuff-up)
          ("M-n" . drag-stuff-down))
   :diminish drag-stuff-mode
-  :config
-  (progn
-    (drag-stuff-global-mode t)))
+  :init
+  (drag-stuff-global-mode t))
 
 
 (use-package dired
@@ -197,7 +154,7 @@
   (bind-key  "k" 'dired-do-delete dired-mode-map))
 
 
-(use-package hippie-exp
+(use-package hippie
   :bind (("C-." . hippie-expand-no-case-fold)
          ("C-:" . hippie-expand-lines)))
 
@@ -235,47 +192,68 @@
   :init (exec-path-from-shell-initialize))
 
 
+;; (use-package ido
+;;   :commands (ido-mode ido-everywhere)
+;;   :init
+;;   (ido-mode 1)
+;;   (ido-everywhere 1)
+;;   (flx-ido-mode 1)
+;;   :config
+;;   (progn
+;;     ;; (use-package flx
+;;     ;;   :defer t
+;;     ;;   :ensure flx)
+;;     (use-package flx-ido
+;;       :requires flx
+;;       :commands flx-ido
+;;       :init (flx-ido-mode 1))
+
+;;     (use-package ido-vertical-mode
+;;       :ensure ido-vertical-mode
+;;       :init
+;;       (progn
+;;         (ido-vertical-mode 1)
+;;         (setq ido-use-faces t)
+;;         (set-face-attribute 'ido-vertical-first-match-face nil
+;;                             :background nil
+;;                             :foreground "orange")
+;;         (set-face-attribute 'ido-vertical-only-match-face nil
+;;                             :background nil
+;;                             :foreground nil)
+;;         (set-face-attribute 'ido-vertical-match-face nil
+;;                             :foreground nil)
+;;         ))
+;;     (use-package ido-ubiquitous
+;;       :config (ido-ubiquitous-mode 1)
+;;       :ensure ido-ubiquitous)
+;;     (setq ido-enable-flex-matching t
+;;           ido-use-faces nil
+;;           flx-ido-use-faces t
+;;           ido-create-new-buffer 'always)
+;;     (setq ido-file-extensions-order '(".py" ".rb" ".el" ".js"))
+;;     (add-to-list 'ido-ignore-files '(".DS_Store" ".pyc"))
+;;     (add-to-list 'ido-ignore-directories '("__pycache__"))))
+
 (use-package ido
-  :defer t
+  :commands ido-mode
+  :init
+  (ido-mode t)
   :config
-  (progn
-    (use-package flx
-      :defer t
-      :ensure flx)
-    (use-package flx-ido
-      :defer t
-      :ensure flx-ido
-      :init (flx-ido-mode 1))
-    (use-package ido-vertical-mode
-      :ensure ido-vertical-mode
-      :init
-      (progn
-        (ido-vertical-mode 1)
-        (setq ido-use-faces t)
-        (set-face-attribute 'ido-vertical-first-match-face nil
-                            :background nil
-                            :foreground "orange")
-        (set-face-attribute 'ido-vertical-only-match-face nil
-                            :background nil
-                            :foreground nil)
-        (set-face-attribute 'ido-vertical-match-face nil
-                            :foreground nil)
-        ))
-    (use-package ido-ubiquitous
-      :config (ido-ubiquitous-mode 1)
-      :ensure ido-ubiquitous)
-    (setq ido-enable-flex-matching t
-          ido-use-faces nil
-          flx-ido-use-faces t
-          ido-create-new-buffer 'always)
-    (ido-mode 1)
-    (ido-everywhere 1)
-    (setq ido-file-extensions-order '(".py" ".rb" ".el" ".js"))
-    (add-to-list 'ido-ignore-files '(".DS_Store" ".pyc"))
-    (add-to-list 'ido-ignore-directories '("__pycache__" ".pyc"))))
+  (ido-vertical-mode t)
+  (ido-ubiquitous t)
+  (flx-ido-mode t)
+  (setq ido-enable-flex-matching t) ;; disable ido faces to see flx highlights.
+  (setq ido-use-faces nil)
+  (setq ido-vertical-define-keys 'C-n-C-p-up-and-down)
+  ;; Customize match list
+  (setq ido-file-extensions-order '(".py" ".rb" ".el" ".js"))
+  (add-to-list 'ido-ignore-files '(".DS_Store" ".pyc"))
+  (add-to-list 'ido-ignore-directories '("__pycache__")))
 
 
 (use-package files
+  :bind (("C-c R" . rename-this-buffer-and-file)
+         ("C-c D" . delete-this-buffer-and-file))
   :config
   (progn
     (setq auto-save-default nil)
@@ -738,14 +716,15 @@
      blink-matching-paren t))
   :config
   (progn
+    (set-face-attribute 'sp-show-pair-match-face nil :underline "Green")
     (require 'smartparens-config)
     (sp-with-modes '(markdown-mode gfm-mode rst-mode)
       (sp-local-pair "*" "*" :bind "C-*")
       (sp-local-tag "2" "**" "**")
       (sp-local-tag "s" "```scheme" "```")
       (sp-local-tag "<"  "<_>" "</_>" :transform 'sp-match-sgml-tags))
-    ;; (sp-with-modes sp--lisp-modes
-    ;;   (sp-local-pair "(" nil :bind "C-("))
+    (sp-with-modes sp--lisp-modes
+      (sp-local-pair "(" nil :bind "C-("))
     (setq sp-autoinsert-if-followed-by-word nil)))
 
 (use-package smex
@@ -858,9 +837,6 @@
 
     (bind-key "C-M-;" 'comment-or-uncomment-current-line-or-region)
 
-    (bind-key "C-c R" 'rename-this-buffer-and-file)
-    (bind-key "C-c D" 'delete-this-buffer-and-file)
-
     (bind-key "C-c d" 'duplicate-current-line-or-region)
     (bind-key "C-c g" 'google)
     (bind-key "C-c n" 'clean-up-buffer-or-region)
@@ -871,29 +847,14 @@
     (bind-key "M-j" (λ (join-line -1)))
     (bind-key "M-<up>" 'open-line-above)
     (bind-key "M-<down>" 'open-line-below)
-    (bind-key "<f5>" 'recompile)
-    (bind-key "M-r" 'recompile)
     ))
 
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
-;;;; Custom variables
-
-;;(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-;;(load-local "custom" 'noerror)
 (when (f-exists? "user.el")
   (load-local "user"))
 
+(when (f-exists? "custom.el")
+  (load-local "custom"))
+
 (provide 'init)
-;;; init.el ends here
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(sp-show-pair-match-face ((t (:underline "Purple")))))
