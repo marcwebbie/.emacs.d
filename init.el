@@ -121,7 +121,8 @@
 
 
 (use-package tdd
-  :bind ("C-<f5>" . tdd-mode)
+  :bind (("C-<f5>" . tdd-mode)
+         ("C-%" . tdd-mode))
   :commands tdd-mode
   :init (setq tdd-success-symbol " ⬤ "
               tdd-failure-symbol " ⬛ "))
@@ -879,6 +880,8 @@
 
 ;;(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 ;;(load-local "custom" 'noerror)
+(when (f-exists? "user.el")
+  (load-local "user"))
 
 (provide 'init)
 ;;; init.el ends here
