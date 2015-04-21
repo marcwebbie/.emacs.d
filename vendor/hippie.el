@@ -166,3 +166,5 @@ string). It returns t if a new completion is found, nil otherwise."
   (interactive)
   (let ((case-fold-search nil))
     (hippie-expand nil)))
+
+(provide 'hippie)
