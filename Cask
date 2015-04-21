@@ -1,7 +1,6 @@
 (source gnu)
 (source melpa)
 
-(depends-on "abl-mode")
 (depends-on "ace-jump-buffer")
 (depends-on "ace-jump-mode")
 (depends-on "ace-window")
@@ -12,6 +11,7 @@
 (depends-on "badger-theme")
 (depends-on "cask")
 (depends-on "coffee-mode")
+(depends-on "company-anaconda")
 (depends-on "cyberpunk-theme")
 (depends-on "darktooth-theme")
 (depends-on "deft")
