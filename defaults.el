@@ -53,9 +53,6 @@
 (put 'transient-mark-mode 'permanent-local t)
 (setq-default transient-mark-mode t)
 
-;; Remove text in active region if inserting text
-(delete-selection-mode 1)
-
 ;; Lines should be 80 characters wide, not 72
 (setq fill-column 80)
 
@@ -66,7 +63,7 @@
 (setq-default truncate-lines t)
 
 ;; Don't be so stingy on the memory, we have lots now. It's the distant future.
-(setq gc-cons-threshold 20000000)
+(setq gc-cons-threshold 200000000)
 
 ;; Sentences do not need double spaces to end. Period.
 (set-default 'sentence-end-double-space nil)
