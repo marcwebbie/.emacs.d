@@ -110,7 +110,7 @@
 
 (use-package company
   :init
-  (add-hook 'prog-mode-hook 'flyspell-prog-mode))
+  (add-hook 'after-init-hook 'global-company-mode))
 
 
 (use-package cc-mode
@@ -451,11 +451,9 @@
       :init (add-hook 'python-mode-hook 'eldoc-mode))
 
     (use-package anaconda-mode
-      :init (add-hook 'python-mode-hook '(lambda () (anaconda-mode))))
-
-    (use-package abl-mode
-      :disabled t
-      :init (add-hook 'python-mode-hook 'abl-mode))
+      :init
+      (add-hook 'python-mode-hook '(lambda () (anaconda-mode)))
+      (add-to-list 'company-backends 'company-anaconda))
 
     (use-package elpy
       :bind (("C-c t" . elpy-test-django-runner)
