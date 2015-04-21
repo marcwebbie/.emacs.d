@@ -1,7 +1,3 @@
-;;; defuns.el --- various functions
-;;; Commentary:
-;;; Code:
-
 ;; shorthand for interactive lambdas
 (defmacro λ (&rest body)
   `(lambda ()
@@ -372,15 +368,6 @@ Otherwise point moves to beginning of line."
   (interactive)
   (insert "import pudb; pudb.set_trace()"))
 
-(defun mw/set-best-font (fonts)
-  (when fonts
-    (let* ((fontname (car (car fonts)))
-           (fontsize (car (last (car fonts))))
-           (fontstring (format "%s-%d" fontname fontsize)))
-      ;; (message fontstring)
-      (if (member fontname (font-family-list)) (set-frame-font fontstring)
-        (mw/set-best-font (cdr fonts)))
-      )))
 
 (defun mw/set-presentation-font ()
   (interactive)
