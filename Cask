@@ -24,6 +24,7 @@
 (depends-on "exec-path-from-shell")
 (depends-on "expand-region")
 (depends-on "f")
+(depends-on "flatui-theme")
 (depends-on "flx-ido")
 (depends-on "flycheck")
 (depends-on "fold-this")
