@@ -420,14 +420,16 @@
 
 
 (use-package projectile
+  :init
+  (projectile-global-mode t)
   :config
   (progn
-    (projectile-global-mode 1)
     (setq projectile-enable-caching t)
     (setq projectile-use-git-grep t)
+    (setq projectile-switch-project-action 'projectile-dired)
     (setq projectile-require-project-root nil)
     ;; (setq projectile-completion-system 'grizzl)
-    (add-to-list 'projectile-globally-ignored-files ".DS_Store")))
+    (add-to-list 'projectile-globally-ignored-files ".DS_Store" "*.pyc")))
 
 
 (use-package puppet-mode
