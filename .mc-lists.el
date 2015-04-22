@@ -6,6 +6,9 @@
         back-to-indentation-or-beginning-of-line
         beginning-of-buffer
         comment-or-uncomment-current-line-or-region
+        dired-back-to-start-of-files
+        dired-toggle-marks
+        dired-toggle-read-only
         drag-stuff-up
         duplicate-current-line-or-region
         end-of-visual-line
@@ -34,6 +37,7 @@
         sp-delete-char
         sp-forward-sexp
         sp-splice-sexp
+        wdired-exit
         yaml-electric-backspace
         yaml-electric-dash-and-dot
         zap-up-to-char
