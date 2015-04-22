@@ -68,6 +68,9 @@
 ;; Sentences do not need double spaces to end. Period.
 (set-default 'sentence-end-double-space nil)
 
+;; Remove text in active region if inserting text
+(delete-selection-mode 1)
+
 ;; Add support to iso key
 (require 'iso-transl)
 
