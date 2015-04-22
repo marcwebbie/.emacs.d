@@ -129,7 +129,8 @@
     (progn
       (setq truncate-lines nil)
       (set (make-local-variable 'truncate-partial-width-windows) nil)))
-  (add-hook 'compilation-mode-hook 'disable-truncate-on-compilation))
+  ;; (add-hook 'compilation-mode-hook 'disable-truncate-on-compilation)
+  )
 
 
 (use-package css-mode
