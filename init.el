@@ -714,7 +714,7 @@
      blink-matching-paren t))
   :config
   (progn
-    (set-face-attribute 'sp-show-pair-match-face nil :underline "Green")
+    (set-face-attribute 'sp-show-pair-match-face nil :background nil :underline "Purple")
     (require 'smartparens-config)
     (sp-with-modes '(markdown-mode gfm-mode rst-mode)
       (sp-local-pair "*" "*" :bind "C-*")
