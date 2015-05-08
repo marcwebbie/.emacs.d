@@ -2,12 +2,15 @@
 ;; (load-theme 'solarized-light :no-confirm)
 ;; (load-theme 'solarized-dark :no-confirm)
 ;; (load-theme 'gruvbox :no-confirm)
-;; (load-theme 'darktooth :no-confirm)
+(load-theme 'darktooth :no-confirm)
+;; (load-theme 'cyberpunk :no-confirm)
 
 ;; (load-theme 'smyx :no-confirm)  ;; dark black/greyish theme
 ;; (load-theme 'twilight-bright :no-confirm)  ;; light theme
-(load-theme 'twilight-anti-bright :no-confirm)  ;; dark theme
+;; (load-theme 'twilight-anti-bright :no-confirm)  ;; dark theme
 ;; (load-theme 'badger :no-confirm)  ;; dark theme based on wombat
+;; (load-theme 'ample :no-confirm)  ;; dark theme based on wombat
+
 
 (setq visible-bell t
       font-lock-maximum-decoration t
@@ -19,9 +22,10 @@
 (tooltip-mode -1)
 
 ;; Configure scrolling
-(setq scroll-error-top-bottom t  ; Move to beg/end of buffer before signalling an error
-      scroll-conservatively 1000 ; Never recenter the screen while scrolling
-      scroll-margin 5)
+(setq scroll-error-top-bottom t   ; Move to beg/end of buffer before signalling an error
+      scroll-conservatively 0 ; Never recenter the screen while scrolling
+      scroll-margin 5
+      auto-window-vscroll nil)
 
 
 (defun mw/set-best-font (fonts)
@@ -40,16 +44,16 @@
   (tooltip-mode -1)
   (blink-cursor-mode -1)
   (mw/set-best-font '(
+                      ("Inconsolata" 18)
+                      ("Ubuntu Mono" 18)
+                      ("Monaco" 16)
                       ("Fira Mono" 14)
-                      ("Inconsolata" 16)
                       ("DejaVu Sans Mono" 14)
                       ("Input Mono" 14)
-                      ("Ubuntu Mono" 16)
                       ("Menlo" 14)
                       ("Input Mono Condensed" 14)
                       ("Input Mono Narrow" 14)
                       ("DejaVu Sans Mono" 14)
-                      ("Monaco" 14)
                       ("monoOne" 14)
                       ("Monospace" 12)
                       ("Source Code Pro" 14)
