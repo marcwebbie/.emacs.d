@@ -368,6 +368,11 @@ Otherwise point moves to beginning of line."
   (interactive)
   (insert "import pudb; pudb.set_trace()"))
 
+(defun mw/add-ipdb-debug ()
+  "Add debug code and move line down"
+  (interactive)
+  (insert "import ipdb; ipdb.set_trace()"))
+
 
 (defun mw/set-presentation-font ()
   (interactive)
