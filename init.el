@@ -83,6 +83,12 @@
           '(ace-jump-word-mode ace-jump-char-mode ace-jump-line-mode))))
 
 
+(use-package aggressive-indent
+  :init
+  (global-aggressive-indent-mode 1)
+  (add-to-list 'aggressive-indent-excluded-modes 'html-mode))
+
+
 (use-package auto-complete
   :disabled t
   :diminish auto-complete-mode
@@ -193,48 +199,6 @@
   :init (exec-path-from-shell-initialize))
 
 
-;; (use-package ido
-;;   :commands (ido-mode ido-everywhere)
-;;   :init
-;;   (ido-mode 1)
-;;   (ido-everywhere 1)
-;;   (flx-ido-mode 1)
-;;   :config
-;;   (progn
-;;     ;; (use-package flx
-;;     ;;   :defer t
-;;     ;;   :ensure flx)
-;;     (use-package flx-ido
-;;       :requires flx
-;;       :commands flx-ido
-;;       :init (flx-ido-mode 1))
-
-;;     (use-package ido-vertical-mode
-;;       :ensure ido-vertical-mode
-;;       :init
-;;       (progn
-;;         (ido-vertical-mode 1)
-;;         (setq ido-use-faces t)
-;;         (set-face-attribute 'ido-vertical-first-match-face nil
-;;                             :background nil
-;;                             :foreground "orange")
-;;         (set-face-attribute 'ido-vertical-only-match-face nil
-;;                             :background nil
-;;                             :foreground nil)
-;;         (set-face-attribute 'ido-vertical-match-face nil
-;;                             :foreground nil)
-;;         ))
-;;     (use-package ido-ubiquitous
-;;       :config (ido-ubiquitous-mode 1)
-;;       :ensure ido-ubiquitous)
-;;     (setq ido-enable-flex-matching t
-;;           ido-use-faces nil
-;;           flx-ido-use-faces t
-;;           ido-create-new-buffer 'always)
-;;     (setq ido-file-extensions-order '(".py" ".rb" ".el" ".js"))
-;;     (add-to-list 'ido-ignore-files '(".DS_Store" ".pyc"))
-;;     (add-to-list 'ido-ignore-directories '("__pycache__"))))
-
 (use-package ido
   :commands ido-mode
   :init
@@ -293,14 +257,10 @@
   :disabled t)
 
 
-(use-package imenu
-  :bind ("M-i" . imenu)
-  :config
-  (progn
-    (defun imenu-elisp-sections ()
-      (setq imenu-prev-index-position-function nil)
-      (add-to-list 'imenu-generic-expression '(nil "^;;;; \\(.+\\)$" 1) t))
-    (add-hook 'emacs-lisp-mode-hook 'imenu-elisp-sections)))
+(use-package imenu-anywhere
+  :bind (("M-i" . imenu-anywhere)
+         ("C-i" . imenu))
+  )
 
 
 (use-package ispell
@@ -341,7 +301,7 @@
     (use-package js2-mode
       :mode (("\\.js$" . js2-mode)
              ("Jakefile$" . js2-mode))
-      :interpreter ("node" . js2-mode)
+      :interpreter "node"
       :config
       (progn
         (add-hook 'js2-mode-hook (lambda () (setq mode-name "js2")))
@@ -439,7 +399,9 @@
 
 (use-package python
   :bind (("<f9>" . mw/add-py-debug)
-         ("C-<f9>" . mw/add-pudb-debug))
+         ("C-<f9>" . mw/add-pudb-debug)
+         ("M-<f9>" . mw/add-ipdb-debug)
+         )
   :init
   (progn
     (add-hook 'python-mode-hook '(lambda () (setq python-indent 4)))
@@ -482,6 +444,7 @@
       (delete 'elpy-module-highlight-indentation elpy-modules)
       (delete 'elpy-module-flymake elpy-modules)
       (delete 'elpy-module-yasnippet elpy-modules)
+      (setq elpy-rpc-backend "jedi")
       (setq elpy-rpc-backend "rope")
       (elpy-use-ipython))
 
@@ -680,8 +643,13 @@
   (setq sml/no-confirm-load-theme t)
   (sml/setup))
 
+(use-package sublimity
+  :disabled t
+  :init (sublimity-mode 1))
+
 
 (use-package ace-window
+  :disabled t
   :bind (("M-o" . ace-window))
   :config (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
@@ -758,6 +726,7 @@
 
 
 (use-package visual-regexp
+  :disabled t
   ;; :config
   ;; (use-package visual-regexp-steroids)
   :bind (("C-s" . vr/isearch-forward)
@@ -829,6 +798,7 @@
     (bind-key "C-x C-c" (λ (if (y-or-n-p "Quit Emacs? ") (save-buffers-kill-emacs))))
     (bind-key "<f6>" 'linum-mode)
     (bind-key "<f8>" (λ (find-file (f-expand "init.el" user-emacs-directory))))
+    (bind-key "C-<f8>" (λ (find-file (f-expand "appearance.el" user-emacs-directory))))
     (bind-key "<f7>" 'ansi-term)
 
     (bind-key "C-a" 'back-to-indentation-or-beginning-of-line)
