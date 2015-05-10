@@ -96,6 +96,7 @@
 
 
 (use-package ace-jump-buffer
+  :disabled t
   :bind ("C-c b" . ace-jump-buffer)
   :commands ace-jump-buffer)
 
