@@ -257,10 +257,8 @@
   :disabled t)
 
 
-(use-package imenu-anywhere
-  :bind (("M-i" . imenu-anywhere)
-         ("C-i" . imenu))
-  )
+(use-package imenu
+  :bind (("M-i" . imenu-anywhere)))
 
 
 (use-package ispell
