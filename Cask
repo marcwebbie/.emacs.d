@@ -51,6 +51,7 @@
 (depends-on "jedi-direx")
 (depends-on "jinja2-mode")
 (depends-on "js2-mode")
+(depends-on "leuven-theme")
 (depends-on "magit")
 (depends-on "markdown-mode")
 (depends-on "monokai-theme")
