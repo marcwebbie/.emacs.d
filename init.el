@@ -149,7 +149,8 @@
          ("M-n" . drag-stuff-down))
   :diminish drag-stuff-mode
   :init
-  (drag-stuff-global-mode t))
+  (add-hook 'text-mode-hook 'drag-stuff-mode)
+  (add-hook 'prog-mode-hook 'drag-stuff-mode))
 
 
 (use-package dired
