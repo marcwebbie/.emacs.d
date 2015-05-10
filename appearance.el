@@ -1,14 +1,15 @@
 ;; (load-theme 'monokai :no-confirm)
 ;; (load-theme 'solarized-light :no-confirm)
 ;; (load-theme 'solarized-dark :no-confirm)
-;; (load-theme 'gruvbox :no-confirm)
-(load-theme 'darktooth :no-confirm)
 ;; (load-theme 'cyberpunk :no-confirm)
 
+;; (load-theme 'badger :no-confirm)  ;; dark theme based on wombat
 ;; (load-theme 'smyx :no-confirm)  ;; dark black/greyish theme
 ;; (load-theme 'twilight-bright :no-confirm)  ;; light theme
 ;; (load-theme 'twilight-anti-bright :no-confirm)  ;; dark theme
-;; (load-theme 'badger :no-confirm)  ;; dark theme based on wombat
+(load-theme 'gruvbox :no-confirm)
+;; (load-theme 'leuven :no-confirm)
+;; (load-theme 'darktooth :no-confirm)
 ;; (load-theme 'ample :no-confirm)  ;; dark theme based on wombat
 
 
