@@ -41,6 +41,7 @@
 (depends-on "groovy-mode")
 (depends-on "gruvbox-theme")
 (depends-on "haml-mode")
+(depends-on "icicles")
 (depends-on "ido-ubiquitous")
 (depends-on "ido-vertical-mode")
 (depends-on "imenu-anywhere")
