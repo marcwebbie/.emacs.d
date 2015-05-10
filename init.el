@@ -765,8 +765,9 @@
 
 
 (use-package yaml-mode
-  :mode (("\\.yaml\\'" . web-mode)
-          ("\\.yml\\'" . web-mode))
+  :mode (("\\.yaml\\'" . yaml-mode)
+         ("\\.pass\\'" . yaml-mode)
+         ("\\.yml\\'" . yaml-mode))
   :bind ("C-m" . newline-and-indent))
 
 
