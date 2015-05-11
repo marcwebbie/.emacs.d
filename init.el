@@ -504,9 +504,7 @@
     (bind-key "f" 'er/mark-defun region-bindings-mode-map)
     (bind-key "u" 'er/mark-url region-bindings-mode-map)
     (bind-key "c" 'er/mark-python-block region-bindings-mode-map)
-
-    ;; fold-this
-    (bind-key "." 'fold-this region-bindings-mode-map)
+    (bind-key "m" 'er/mark-method-call region-bindings-mode-map)
 
     (setq region-bindings-mode-disabled-modes '(term-mode))
     (setq region-bindings-mode-disable-predicates
