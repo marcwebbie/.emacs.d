@@ -719,6 +719,12 @@
         (backward-word)))))
 
 
+(use-package swiper
+  :bind (("C-s" . swiper))
+  :config
+  (bind-key "C-q" 'swiper-query-replace swiper-map))
+
+
 (use-package text
   :bind (("C-x j" . eval-and-replace))
   :init (add-hook 'text-mode-hook (lambda() (visual-line-mode 1))))

@@ -88,6 +88,7 @@
 (depends-on "solarized-theme")
 (depends-on "sublime-themes")
 (depends-on "sublimity")
+(depends-on "swiper")
 (depends-on "twilight-anti-bright-theme")
 (depends-on "twilight-bright-theme")
 (depends-on "twilight-theme")
