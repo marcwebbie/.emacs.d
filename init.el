@@ -83,6 +83,7 @@
 
 
 (use-package aggressive-indent
+  :disabled t
   :init
   (global-aggressive-indent-mode 1)
   (add-to-list 'aggressive-indent-excluded-modes 'html-mode))
@@ -196,7 +197,6 @@
 
 (use-package exec-path-from-shell
   :if (is-osx)
-  :defer t
   :init (exec-path-from-shell-initialize))
 
 
@@ -425,10 +425,6 @@
              ("C-c C-;" . mw/set-django-settings-module))
       :init
       (elpy-enable)
-      (defalias 'workon 'pyvenv-workon)
-      (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
-      (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart)
-
       ;; (defun mw/set-elpy ()
       ;;   (setq elpy-test-django-runner-command '("./manage.py" "test" "--noinput"))
       ;;   (setq compilation-environment '("PATH=/Users/username/.pyenv/versions/myapp/bin/")))
@@ -453,6 +449,9 @@
 
     (use-package pyvenv
       :init
+      (defalias 'workon 'pyvenv-workon)
+      (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
+      (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart)
       (add-hook 'python-mode-hook 'pyvenv-mode))
 
     (use-package virtualenvwrapper
@@ -481,10 +480,11 @@
   :bind (("C-c f" . recentf-ido-find-file))
   :init
   (recentf-mode 1)
-  (setq recentf-max-saved-items 100))
+  (setq recentf-max-saved-items 1000))
 
 
 (use-package fold-this
+  :disabled t
   :commands fold-this)
 
 
@@ -730,8 +730,6 @@
 
 (use-package visual-regexp
   :disabled t
-  ;; :config
-  ;; (use-package visual-regexp-steroids)
   :bind (("C-s" . vr/isearch-forward)
          ("C-r" . vr/isearch-backward)
          ("C-c r" . vr/replace)
@@ -739,13 +737,12 @@
 
 
 (use-package web-mode
-  :defer t
   :mode (("\\.html\\'" . web-mode)
-          ("\\.html\\.erb\\'" . web-mode)
-          ("\\.html\\.ejs\\'" . web-mode)
-          ("\\.ejs\\'" . web-mode)
-          ("\\.mustache\\'" . web-mode)
-          ("\\.jinja\\'" . web-mode))
+         ("\\.html\\.erb\\'" . web-mode)
+         ("\\.html\\.ejs\\'" . web-mode)
+         ("\\.ejs\\'" . web-mode)
+         ("\\.mustache\\'" . web-mode)
+         ("\\.jinja\\'" . web-mode))
   :config
   (progn
     (setq web-mode-enable-current-element-highlight t)
@@ -802,7 +799,6 @@
     (bind-key "C-x C-c" (λ (if (y-or-n-p "Quit Emacs? ") (save-buffers-kill-emacs))))
     (bind-key "<f6>" 'linum-mode)
     (bind-key "<f8>" (λ (find-file (f-expand "init.el" user-emacs-directory))))
-    (bind-key "C-<f8>" (λ (find-file (f-expand "appearance.el" user-emacs-directory))))
     (bind-key "<f7>" 'ansi-term)
 
     (bind-key "C-a" 'back-to-indentation-or-beginning-of-line)
