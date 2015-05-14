@@ -18,8 +18,6 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
 
-(require 'setup-default)
-
 
 ;;============================================================
 ;; Bootstrap
@@ -35,8 +33,8 @@
 ;; Appearance
 ;;============================================================
 
-(global-hl-line-mode t)
-(global-linum-mode t)
+(global-hl-line-mode -1)
+(global-linum-mode -1)
 (blink-cursor-mode -1)
 
 (setq visible-bell t
@@ -50,27 +48,39 @@
       scroll-margin 10
       auto-window-vscroll nil)
 
+;; Themes
+;; =========================
 ;; (load-theme 'soothe :no-confirm)
-(load-theme 'warm-night :no-confirm)
-(set-frame-font "Droid Sans Mono-14")
+;; (load-theme 'warm-night :no-confirm)
+;; (load-theme 'smyx :no-confirm)
+;; (load-theme 'afternoon :no-confirm)
+(load-theme 'material :no-confirm)
+;; (load-theme 'badger :no-confirm)
+;; (progn (require 'moe-theme) (setq moe-theme-powerline-enable-p t) (moe-dark))
+
+;; Fonts
+;; =========================
+;; (set-frame-font "Droid Sans Mono-14")
+;; (set-frame-font "Inconsolata-16")
+;; (set-frame-font "Ubuntu Mono-16")
+(set-frame-font "Anonymous Pro-16")
 
 
 ;;============================================================
 ;; Loading
 ;;============================================================
 
-;;(setq user-emacs-directory default-directory)
-
 (defun load-local (file)
   (load (expand-file-name file user-emacs-directory)))
 
+(load-local "defaults")
 (load-local "defuns")
+(load-local "vendor/ido-vertical-mode")
 
 
 ;;============================================================
 ;; Packages
 ;;============================================================
-
 (require 'bind-key)
 (require 'diminish)
 (require 'use-package)
@@ -79,23 +89,28 @@
 (require 's)
 
 ;; System
-;;====================
+;; =========================
 (require 'setup-osx)
 (require 'setup-magit)
+(require 'setup-git-gutter)
+
+;; Visual
+;; =========================
+(require 'setup-powerline)
 
 ;; Navigation
-;;====================
+;; =========================
 (require 'setup-ace-jump)
 (require 'setup-ace-window)
 (require 'setup-golden-ratio)
 (require 'setup-ido)
+(require 'setup-smex)
+;; (require 'setup-ivy)
 (require 'setup-projectile)
-;; (require 'setup-smex)
-(require 'setup-ivy)
 (require 'setup-search)
 
 ;; Editing
-;;====================
+;; =========================
 (require 'setup-smartparens)
 (require 'setup-drag-stuff)
 (require 'setup-expand-region)
@@ -103,7 +118,7 @@
 (require 'setup-region-bindings)
 
 ;; Programming languages
-;;====================
+;; =========================
 (require 'setup-python)
 ;; (require 'setup-ruby)
 
@@ -111,11 +126,10 @@
 ;;============================================================
 ;; Keybindings
 ;;============================================================
-
-;; (bind-key "C-x C-c" (λ (if (y-or-n-p "Quit Emacs? ") (save-buffers-kill-emacs))))
 (bind-key "<f6>" 'linum-mode)
 (bind-key "<f8>" (λ (find-file (f-expand "init.el" user-emacs-directory))))
 (bind-key "<f7>" 'ansi-term)
+;; (bind-key "C-x C-c" (λ (if (y-or-n-p "Quit Emacs? ") (save-buffers-kill-emacs))))
 
 (bind-key "C-a" 'back-to-indentation-or-beginning-of-line)
 (bind-key "C-j" 'newline-and-indent)
@@ -140,6 +154,8 @@
 (bind-key "C-c m c" (λ (replace-region-by 's-lower-camel-case)))
 (bind-key "C-c m C" (λ (replace-region-by 's-upper-camel-case)))
 
+(bind-key "C-c R" 'rename-this-buffer-and-file)
+(bind-key "C-c D" 'delete-this-buffer-and-file)
 
 ;;============================================================
 ;; Afterwards configurations
