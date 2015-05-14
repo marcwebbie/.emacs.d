@@ -22,4 +22,4 @@
         (list (lambda () buffer-read-only)))
   )
 
-(provide 'init-region-bindings)
+(provide 'setup-region-bindings)

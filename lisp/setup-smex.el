@@ -2,4 +2,4 @@
   :bind (("M-x" . smex) ("C-x C-m" . smex))
   )
 
-(provide 'init-smex)
+(provide 'setup-smex)

@@ -48,10 +48,10 @@
 (prefer-coding-system 'utf-8) ; with sugar on top
 
 ;; Show active region
-(transient-mark-mode 1)
-(make-variable-buffer-local 'transient-mark-mode)
-(put 'transient-mark-mode 'permanent-local t)
-(setq-default transient-mark-mode t)
+;; (transient-mark-mode 1)
+;; (make-variable-buffer-local 'transient-mark-mode)
+;; (put 'transient-mark-mode 'permanent-local t)
+;; (setq-default transient-mark-mode t)
 
 ;; Lines should be 80 characters wide, not 72
 (setq fill-column 80)
@@ -75,5 +75,5 @@
 (require 'iso-transl)
 
 
-(provide 'init-default)
+(provide 'setup-default)
 ;;;;

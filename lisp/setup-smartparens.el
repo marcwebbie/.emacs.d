@@ -1,4 +1,5 @@
 (use-package smartparens
+  :diminish smartparens-mode
   :bind (("C-M-k" . sp-kill-sexp-with-a-twist-of-lime)
          ("C-M-f" . sp-forward-sexp)
          ("C-M-b" . sp-backward-sexp)
@@ -26,4 +27,4 @@
   :config (require 'smartparens-config)
   )
 
-(provide 'init-smartparens)
+(provide 'setup-smartparens)

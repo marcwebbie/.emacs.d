@@ -1,6 +1,6 @@
-;; ======================
+;;============================================================
 ;; Defaults
-;; ======================
+;;============================================================
 (defconst *is-a-mac* (eq system-type 'darwin))
 
 (setq inhibit-startup-message t)
@@ -13,11 +13,17 @@
 (setq-default indent-tabs-mode nil)
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-(require 'init-default)
+(tooltip-mode -1)
 
-;; ======================
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file)
+
+(require 'setup-default)
+
+
+;;============================================================
 ;; Bootstrap
-;; ======================
+;;============================================================
 
 (if (file-exists-p "~/.cask/cask.el")
     (require 'cask "~/.cask/cask.el")
@@ -25,58 +31,86 @@
 (cask-initialize)
 
 
-;; =======================
+;;============================================================
 ;; Appearance
-;; =======================
+;;============================================================
 
 (global-hl-line-mode t)
-(tooltip-mode -1)
+(global-linum-mode t)
+(blink-cursor-mode -1)
 
 (setq visible-bell t
-      font-lock-maximum-decoration t
+      font-lock-maximum-decoration nil
       color-theme-is-global t
       truncate-partial-width-windows nil)
 
 ;; Scrolling
-(setq scroll-error-top-bottom t   ; Move to beg/end of buffer before signalling an error
-      scroll-conservatively 10000 ; Never recenter the screen while scrolling
+(setq scroll-error-top-bottom t 
+      scroll-conservatively 10000
       scroll-margin 10
       auto-window-vscroll nil)
 
-(blink-cursor-mode -1)
-
-;; (load-theme 'zonokai :no-confirm)
+;; (load-theme 'soothe :no-confirm)
+(load-theme 'warm-night :no-confirm)
 (set-frame-font "Droid Sans Mono-14")
 
 
-;; =======================
-;; Packages
-;; =======================
+;;============================================================
+;; Loading
+;;============================================================
 
-;; default
+;;(setq user-emacs-directory default-directory)
+
+(defun load-local (file)
+  (load (expand-file-name file user-emacs-directory)))
+
+(load-local "defuns")
+
+
+;;============================================================
+;; Packages
+;;============================================================
+
 (require 'bind-key)
 (require 'diminish)
 (require 'use-package)
+(require 'pallet)
 (require 'f)
 (require 's)
 
-(require 'init-defuns)
+;; System
+;;====================
+(require 'setup-osx)
+(require 'setup-magit)
 
-(require 'init-ido)
-(require 'init-smex)
-(require 'init-osx)
+;; Navigation
+;;====================
+(require 'setup-ace-jump)
+(require 'setup-ace-window)
+(require 'setup-golden-ratio)
+(require 'setup-ido)
+(require 'setup-projectile)
+;; (require 'setup-smex)
+(require 'setup-ivy)
+(require 'setup-search)
 
-(require 'init-smartparens)
-(require 'init-drag-stuff)
-(require 'init-expand-region)
-(require 'init-multiple-cursors)
-(require 'init-region-bindings)
-(require 'init-python)
+;; Editing
+;;====================
+(require 'setup-smartparens)
+(require 'setup-drag-stuff)
+(require 'setup-expand-region)
+(require 'setup-multiple-cursors)
+(require 'setup-region-bindings)
+
+;; Programming languages
+;;====================
+(require 'setup-python)
+;; (require 'setup-ruby)
 
 
-;; =======================
+;;============================================================
 ;; Keybindings
-;; =======================
+;;============================================================
 
 ;; (bind-key "C-x C-c" (λ (if (y-or-n-p "Quit Emacs? ") (save-buffers-kill-emacs))))
 (bind-key "<f6>" 'linum-mode)
@@ -100,3 +134,14 @@
 (bind-key "M-j" (λ (join-line -1)))
 (bind-key "M-<up>" 'open-line-above)
 (bind-key "M-<down>" 'open-line-below)
+
+(bind-key "C-c m -" (λ (replace-region-by 's-dashed-words)))
+(bind-key "C-c m _" (λ (replace-region-by 's-snake-case)))
+(bind-key "C-c m c" (λ (replace-region-by 's-lower-camel-case)))
+(bind-key "C-c m C" (λ (replace-region-by 's-upper-camel-case)))
+
+
+;;============================================================
+;; Afterwards configurations
+;;============================================================
+

@@ -8,4 +8,4 @@
                                     ((control))))
   )
 
-(provide 'init-osx)
+(provide 'setup-osx)

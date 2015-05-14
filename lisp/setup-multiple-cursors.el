@@ -3,4 +3,4 @@
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C-w" . mc/mark-all-words-like-this)))
 
-(provide 'init-multiple-cursors)
+(provide 'setup-multiple-cursors)

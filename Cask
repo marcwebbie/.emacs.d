@@ -86,8 +86,6 @@
 (depends-on "smex")
 (depends-on "smyx-theme")
 (depends-on "solarized-theme")
-(depends-on "sublime-themes")
-(depends-on "sublimity")
 (depends-on "swiper")
 (depends-on "twilight-anti-bright-theme")
 (depends-on "twilight-bright-theme")
@@ -100,4 +98,3 @@
 (depends-on "writegood-mode")
 (depends-on "yaml-mode")
 (depends-on "zenburn-theme")
-(depends-on "zonokai-theme")

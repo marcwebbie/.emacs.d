@@ -3,4 +3,4 @@
          ("M-n" . drag-stuff-down))
   )
 
-(provide 'init-drag-stuff)
+(provide 'setup-drag-stuff)

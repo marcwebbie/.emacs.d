@@ -4,4 +4,4 @@
          ("C-+" . er/contract-region))
   )
 
-(provide 'init-expand-region)
+(provide 'setup-expand-region)
