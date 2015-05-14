@@ -385,4 +385,4 @@ Otherwise point moves to beginning of line."
     (setenv "DJANGO_SETTINGS_MODULE" django-settings-module)
     (message "DJANGO_SETTINGS_MODULE=%s" django-settings-module)))
 
-;;;; end
+(provide 'init-defuns)

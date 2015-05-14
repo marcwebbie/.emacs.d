@@ -74,4 +74,6 @@
 ;; Add support to iso key
 (require 'iso-transl)
 
+
+(provide 'init-default)
 ;;;;

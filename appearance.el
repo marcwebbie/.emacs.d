@@ -9,7 +9,7 @@
 ;; (load-theme 'twilight-anti-bright :no-confirm)  ;; dark theme
 ;; (load-theme 'gruvbox :no-confirm)
 ;; (load-theme 'leuven :no-confirm)
-;; (load-theme 'darktooth :no-confirm)
+(load-theme 'darktooth :no-confirm)
 ;; (load-theme 'ample :no-confirm)  ;; dark theme based on wombat
 
 
