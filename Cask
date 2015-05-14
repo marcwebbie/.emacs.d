@@ -54,6 +54,7 @@
 (depends-on "leuven-theme")
 (depends-on "magit")
 (depends-on "markdown-mode")
+(depends-on "moe-theme")
 (depends-on "monokai-theme")
 (depends-on "multiple-cursors")
 (depends-on "noctilux-theme")
