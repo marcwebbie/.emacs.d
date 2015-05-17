@@ -14,10 +14,12 @@
     :init (add-hook 'python-mode-hook 'eldoc-mode))
 
   (use-package anaconda-mode
+    :defer 15
     :diminish anaconda-mode
     :init
-    (add-to-list 'company-backends 'company-anaconda)
-    (add-hook 'python-mode-hook '(lambda () (anaconda-mode))))
+    (add-hook 'python-mode-hook '(lambda () (anaconda-mode)))
+    ;; (add-hook 'company-mode-hook 'company-anaconda)
+    )
 
   (use-package pip-requirements
     :mode "\\requirements.txt\\'"
