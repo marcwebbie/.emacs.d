@@ -45,22 +45,38 @@
 (defcustom ido-vertical-prospect-char "->"
   "Character to point to current matched element in the list")
 
-(defcustom ido-vertical-decorations
-      (list
-       (format "\n %s " ido-vertical-prospect-char) ; left bracket around prospect list
-       ""                                          ; right bracket around prospect list
-       "\n   "                                     ; separator between prospects, depends on `ido-separator`
-       "\n   ..."                                  ; inserted at the end of a truncated list of prospects
-       "["                                         ; left bracket around common match string
-       "]"                                         ; right bracket around common match string
-       " [No match]"
-       " [Matched]"
-       " [Not readable]"
-       " [Too big]"
-       " [Confirm]"
-       (format "\n%s" ido-vertical-prospect-char) ; left bracket around the sole remaining completion
-       ""                                          ; right bracket around the sole remaining completion
-       )
+;; (defcustom ido-vertical-decorations
+;;       (list
+;;        (format "\n %s " ido-vertical-prospect-char) ; left bracket around prospect list
+;;        ""                                          ; right bracket around prospect list
+;;        "\n   "                                     ; separator between prospects, depends on `ido-separator`
+;;        "\n   ..."                                  ; inserted at the end of a truncated list of prospects
+;;        "["                                         ; left bracket around common match string
+;;        "]"                                         ; right bracket around common match string
+;;        " [No match]"
+;;        " [Matched]"
+;;        " [Not readable]"
+;;        " [Too big]"
+;;        " [Confirm]"
+;;        (format "\n%s" ido-vertical-prospect-char) ; left bracket around the sole remaining completion
+;;        ""                                          ; right bracket around the sole remaining completion
+;;        )
+
+(defcustom ido-vertical-decorations (list
+                                     "\n"    
+                                     ""      
+                                     "\n"    
+                                     "\n..." 
+                                     "["     
+                                     "]"     
+                                     " [No match]"
+                                     " [Matched]"
+                                     " [Not readable]"
+                                     " [Too big]"
+                                     " [Confirm]"
+                                     "\n"    
+                                     ""      
+                                     )
 
   "Changing the decorations does most of the work for ido-vertical
 This sets up newlines and arrows before, between, and after the
