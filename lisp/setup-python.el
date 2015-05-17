@@ -9,9 +9,12 @@
   (bind-key "C-<f9>" 'mw/add-pudb-debug python-mode-map)
 
   (use-package eldoc-mode
-    :diminish eldoc-mode
     :commands (eldoc-mode)
-    :init (add-hook 'python-mode-hook 'eldoc-mode))
+    :init (add-hook 'python-mode-hook 'eldoc-mode)
+    :config
+    (eval-after-load "eldoc"
+      '(diminish 'eldoc-mode))
+    )
 
   (use-package anaconda-mode
     :defer 15
