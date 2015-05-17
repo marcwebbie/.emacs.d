@@ -43,7 +43,7 @@
       truncate-partial-width-windows nil)
 
 ;; Scrolling
-(setq scroll-error-top-bottom t 
+(setq scroll-error-top-bottom t
       scroll-conservatively 10000
       scroll-margin 10
       auto-window-vscroll nil)
@@ -56,14 +56,14 @@
 ;; (load-theme 'afternoon :no-confirm)
 (load-theme 'material :no-confirm)
 ;; (load-theme 'badger :no-confirm)
-;; (progn (require 'moe-theme) (setq moe-theme-powerline-enable-p t) (moe-dark))
+;; (progn (require 'moe-theme) (moe-dark))
 
 ;; Fonts
 ;; =========================
-;; (set-frame-font "Droid Sans Mono-14")
+(set-frame-font "Droid Sans Mono Dotted-14")
 ;; (set-frame-font "Inconsolata-16")
 ;; (set-frame-font "Ubuntu Mono-16")
-(set-frame-font "Anonymous Pro-16")
+;; (set-frame-font "Anonymous Pro-16")
 
 
 ;;============================================================
