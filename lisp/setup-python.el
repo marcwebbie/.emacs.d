@@ -16,7 +16,7 @@
   (use-package anaconda-mode
     :diminish anaconda-mode
     :init
-    ;; (add-to-list 'company-backends 'company-anaconda)
+    (add-to-list 'company-backends 'company-anaconda)
     (add-hook 'python-mode-hook '(lambda () (anaconda-mode))))
 
   (use-package pip-requirements
