@@ -33,7 +33,7 @@
     ;; (delete 'elpy-module-flymake elpy-modules)
     (delete 'elpy-module-yasnippet elpy-modules)
     (elpy-enable)
-    
+
     (defun mw/set-elpy ()
       (let ((python (executable-find "python")))
         (setq
