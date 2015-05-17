@@ -28,17 +28,17 @@
     :bind (("C-c t" . elpy-test-django-runner)
            ("C-c C-f" . elpy-find-file)
            ("C-c C-;" . mw/set-django-settings-module))
-    :init
+    :config
+    (delete 'elpy-module-highlight-indentation elpy-modules)
+    ;; (delete 'elpy-module-flymake elpy-modules)
+    (delete 'elpy-module-yasnippet elpy-modules)
     (elpy-enable)
+    
     (defun mw/set-elpy ()
       (let ((python (executable-find "python")))
         (setq
          elpy-test-discover-runner-command (list python "-m" "unittest")
          elpy-test-django-runner-command (list python "manage.py" "test" "--noinput"))))
-    :config
-    (delete 'elpy-module-highlight-indentation elpy-modules)
-    (delete 'elpy-module-flymake elpy-modules)
-    (delete 'elpy-module-yasnippet elpy-modules)
     (setq elpy-rpc-backend "jedi")
     )
 
