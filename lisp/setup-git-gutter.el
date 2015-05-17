@@ -1,14 +1,16 @@
 (require 'use-package)
 
 (use-package git-gutter
+  :defer 5
   :bind (("C-c v =" . git-gutter:popup-hunk) ;; show hunk diff
          ("C-c v p" . git-gutter:previous-hunk)
          ("C-c v n" . git-gutter:next-hunk)
          ("C-c v s" . git-gutter:stage-hunk)
          ("C-c v r" . git-gutter:revert-hunk))
   :diminish git-gutter-mode
-  :config
+  :init
   (global-git-gutter-mode +1)
+  :config
   (custom-set-variables
    '(git-gutter:window-width 2)
    '(git-gutter:modified-sign " ") ;; two space
