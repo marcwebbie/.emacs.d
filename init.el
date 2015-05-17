@@ -94,7 +94,7 @@
 (require 'setup-magit)
 (require 'setup-git-gutter)
 (require 'setup-buffers)
-(require 'setup-auto-complete)
+;; (require 'setup-auto-complete)
 (require 'setup-company)
 
 ;; Visual
