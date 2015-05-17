@@ -93,6 +93,7 @@
 (require 'setup-osx)
 (require 'setup-magit)
 (require 'setup-git-gutter)
+(require 'setup-buffers)
 
 ;; Visual
 ;; =========================
@@ -108,6 +109,7 @@
 ;; (require 'setup-ivy)
 (require 'setup-projectile)
 (require 'setup-search)
+(require 'setup-recentf)
 
 ;; Editing
 ;; =========================
@@ -116,6 +118,7 @@
 (require 'setup-expand-region)
 (require 'setup-multiple-cursors)
 (require 'setup-region-bindings)
+(require 'setup-subword)
 
 ;; Programming languages
 ;; =========================
@@ -160,4 +163,3 @@
 ;;============================================================
 ;; Afterwards configurations
 ;;============================================================
-
