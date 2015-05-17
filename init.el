@@ -54,9 +54,9 @@
 ;; (load-theme 'warm-night :no-confirm)
 ;; (load-theme 'smyx :no-confirm)
 ;; (load-theme 'afternoon :no-confirm)
-(load-theme 'material :no-confirm)
+;; (load-theme 'material :no-confirm)
 ;; (load-theme 'badger :no-confirm)
-;; (progn (require 'moe-theme) (moe-dark))
+(progn (require 'moe-theme) (moe-dark))
 
 ;; Fonts
 ;; =========================
