@@ -17,9 +17,9 @@
    '(git-gutter:added-sign "  ")    ;; multiple character is OK
    '(git-gutter:deleted-sign "  "))
 
-  (set-face-background 'git-gutter:modified "purple") ;; background color
-  (set-face-background 'git-gutter:added "green")
-  (set-face-background 'git-gutter:deleted "red")
+  ;; (set-face-background 'git-gutter:modified "purple") ;; background color
+  ;; (set-face-background 'git-gutter:added "green")
+  ;; (set-face-background 'git-gutter:deleted "red")
   )
 
 (provide 'setup-git-gutter)

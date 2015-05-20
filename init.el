@@ -96,6 +96,8 @@
 (require 'setup-buffers)
 ;; (require 'setup-auto-complete)
 (require 'setup-company)
+(require 'setup-conf-mode)
+(require 'setup-shell-mode)
 
 ;; Visual
 ;; =========================

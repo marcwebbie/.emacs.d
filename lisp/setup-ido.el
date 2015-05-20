@@ -7,6 +7,7 @@
   (ido-mode t)
   :config
   (setq ido-case-fold t)
+  (setq ido-show-dot-for-dired nil)
   (setq ido-file-extensions-order '(".py" ".rb" ".el" ".js"))
   (add-to-list 'ido-ignore-files '(".DS_Store" ".pyc"))
   (add-to-list 'ido-ignore-directories '("__pycache__", ".git"))

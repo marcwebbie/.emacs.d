@@ -45,14 +45,14 @@
          elpy-test-discover-runner-command (list python "-m" "unittest")
          elpy-test-django-runner-command (list python "manage.py" "test" "--noinput"))))
     (setq elpy-rpc-backend "jedi")
+    (add-hook 'pyvenv-post-activate-hooks 'mw/set-elpy)
+    (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart)
     )
 
   (use-package pyvenv
     :init
     (defalias 'workon 'pyvenv-workon)
     (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
-    (add-hook 'pyvenv-post-activate-hooks 'mw/set-elpy)
-    (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart)
     (add-hook 'python-mode-hook 'pyvenv-mode)
     :config
     (let ((workon-home (expand-file-name "~/.pyenv/versions")))
