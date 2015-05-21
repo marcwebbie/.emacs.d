@@ -51,18 +51,33 @@
 ;; Themes
 ;; =========================
 ;; (load-theme 'soothe :no-confirm)
+;; (load-theme 'cyberpunk :no-confirm)
 ;; (load-theme 'warm-night :no-confirm)
 ;; (load-theme 'smyx :no-confirm)
 ;; (load-theme 'afternoon :no-confirm)
 ;; (load-theme 'material :no-confirm)
 ;; (load-theme 'badger :no-confirm)
-(progn (require 'moe-theme) (moe-dark))
+(load-theme 'gruvbox :no-confirm)
+;; (load-theme 'ample :no-confirm)
+;; (progn
+;;   (require 'moe-theme)
+;;   (setq moe-theme-highlight-buffer-id t)
+;;     ;; (show-paren-mode t)
+;;     ;; (setq show-paren-style 'expression)
+;;   ;; (setq moe-theme-highlight-buffer-id nil)
+;;   (moe-dark)
+;;   ;; (powerline-moe-theme)
+;;   ;; (moe-theme-set-color 'purple)
+;;   )
+
+;; (show-paren-mode nil)
+;; (setq show-paren-style 'expression)
 
 ;; Fonts
 ;; =========================
-(set-frame-font "Droid Sans Mono Dotted-14")
-;; (set-frame-font "Inconsolata-16")
-;; (set-frame-font "Ubuntu Mono-16")
+(set-frame-font "Droid Sans Mono Dotted-15")
+;; (set-frame-font "Inconsolata-18")
+;; (set-frame-font "Ubuntu Mono-18")
 ;; (set-frame-font "Anonymous Pro-16")
 
 
@@ -101,7 +116,14 @@
 
 ;; Visual
 ;; =========================
-(require 'setup-powerline)
+;; (require 'setup-powerline)
+;; (require 'setup-smart-modeline)
+(use-package smart-mode-line
+  :init
+  (setq sml/no-confirm-load-theme t)
+  (sml/setup)
+  ;; (sml/apply-theme 'powerline)
+  )
 
 ;; Navigation
 ;; =========================
