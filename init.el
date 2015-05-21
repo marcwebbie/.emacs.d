@@ -33,6 +33,8 @@
 
 (auto-compression-mode t)
 
+(defalias 'yes-or-no-p 'y-or-n-p)
+
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 ;; Set custom file
@@ -92,12 +94,13 @@
 ;; (load-theme 'material :no-confirm)
 ;; (load-theme 'badger :no-confirm)
 ;; (load-theme 'gruvbox :no-confirm)
+(load-theme 'material :no-confirm)
 ;; (load-theme 'ample :no-confirm)
-(progn
-  (require 'moe-theme)
-  (moe-dark)
-  (moe-theme-set-color 'cyan)
-  )
+;; (progn
+;;   (require 'moe-theme)
+;;   (moe-dark)
+;;   (moe-theme-set-color 'cyan)
+;;   )
 
 ;; (show-paren-mode nil)
 ;; (setq show-paren-style 'expression)
@@ -206,6 +209,7 @@
   ;; (set-face-background 'git-gutter:modified "purple") ;; background color
   ;; (set-face-background 'git-gutter:added "green")
   ;; (set-face-background 'git-gutter:deleted "red")
+  (set-face-foreground 'git-gutter:modified "yellow")
   )
 
 
@@ -412,19 +416,19 @@
 ;; Modeline
 ;;#############################
 (use-package smart-mode-line
-  :disabled t
   :init
   (setq sml/no-confirm-load-theme t)
   (sml/setup))
 
 (use-package powerline
+  :disabled t
   :init
-  ;; (powerline-default-theme)
-  (powerline-center-theme)
+  (powerline-default-theme)
+  ;; (powerline-center-theme)
   :config
-  (setq powerline-display-hud nil)
+  ;; (setq powerline-display-hud nil)
   (setq powerline-default-separator 'zigzag)
-  (setq powerline-text-scale-factor 1.1)
+  ;; (setq powerline-text-scale-factor 1.1)
   )
 
 
