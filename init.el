@@ -27,6 +27,7 @@
 
 (setq echo-keystrokes 0.1)
 (setq delete-by-moving-to-trash t)
+(set-default 'sentence-end-double-space nil)
 
 ;; Real emacs knights don't use shift to mark things
 (setq shift-select-mode nil)
@@ -108,12 +109,12 @@
 ;; Fonts
 ;; =========================
 ;; (set-frame-font "Droid Sans Mono Dotted-15")
-;; (set-frame-font "Inconsolata-17")
+(set-frame-font "Inconsolata-18")
 ;; (set-frame-font "Ubuntu Mono-18")
 ;; (set-frame-font "Anonymous Pro-16")
 ;; (set-frame-font "Source Code Pro-16")
 ;; (set-frame-font "Menlo-16")
-(set-frame-font "DejaVu Sans Mono-16")
+;; (set-frame-font "DejaVu Sans Mono-16")
 
 
 
@@ -125,6 +126,7 @@
   (load (expand-file-name file user-emacs-directory)))
 
 (load-local "defuns")
+(load-local "vendor/tdd")
 ;; (load-local "defaults")
 ;; (load-local "vendor/ido-vertical-mode")
 
@@ -151,6 +153,11 @@
       (exec-path-from-shell-copy-env "PYTHONPATH")))
   )
 
+(use-package dired-x
+  :init
+  (setq-default dired-omit-files-p t) ; Buffer-local variable
+  (setq dired-omit-files "^\\.?#\\|^\\.$\\|^__pycache__$\\|\\.git"))
+
 
 ;;#############################
 ;; Ace
@@ -158,12 +165,10 @@
 (use-package ace-jump-mode
   :defer 3
   :bind (("C-c SPC" . ace-jump-mode)
-         ("C-." . ace-jump-mode)
          ("C-c C-SPC" . ace-jump-mode-pop-mark))
   :config
   (setq ace-jump-mode-case-fold t)
   )
-
 
 (use-package ace-window
   :defer 3
@@ -188,7 +193,6 @@
     (delete-other-windows))
   :config
   (bind-key "q" 'magit-quit-session magit-status-mode-map))
-
 
 (use-package git-gutter
   :bind (("C-c v =" . git-gutter:popup-hunk) ;; show hunk diff
@@ -267,28 +271,27 @@
   (add-to-list 'projectile-globally-ignored-directories "*__pycache__*")
   )
 
-
 (use-package recentf
+  :commands recentf-mode
   :bind ("C-x C-r" . recentf-grizzl-find-file)
   :init
-  (recentf-mode)
+  (recentf-mode 1)
+  :config
   (defun recentf-grizzl-find-file ()
     "Find a recent file using Ido."
     (interactive)
     (let ((file (grizzl-completing-read "Choose recent file: " recentf-list)))
       (when file
-        (find-file file)))))
-
+        (find-file file))))
+  (setq recentf-max-saved-items 1000))
 
 (use-package smex
   :bind (("M-x" . smex)
          ("C-x C-m" . smex)))
 
-
 (use-package helm
   :disabled t
   :init (helm-mode))
-
 
 (use-package golden-ratio
   :diminish golden-ratio-mode
@@ -297,6 +300,10 @@
   :config
   (add-to-list 'golden-ratio-extra-commands 'ace-window)
   )
+
+(use-package rainbow-delimiters
+  :init
+  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
 
 ;;#############################
@@ -310,13 +317,24 @@
 
 
 ;;#############################
+;; Completion
+;;#############################
+(use-package guide-key
+  :init (guide-key-mode +1)
+  :config
+  (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c p" "C-c m")))
+
+
+;;#############################
 ;; Editing
 ;;#############################
+(use-package hippie
+  :bind ("C-." . hippie-expand))
+
 (use-package drag-stuff
   :defer 5
   :bind (("M-p" . drag-stuff-up)
          ("M-n" . drag-stuff-down)))
-
 
 (use-package multiple-cursors
   :defer 3
@@ -324,14 +342,12 @@
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C-w" . mc/mark-all-words-like-this)))
 
-
 (use-package expand-region
   :defer 3
   :bind (("C-=" . er/expand-region)
          ("C-M-SPC" . er/expand-region)
          ("C-+" . er/contract-region))
   )
-
 
 (use-package smartparens
   :defer 3
@@ -389,7 +405,6 @@
         (list (lambda () buffer-read-only)))
   )
 
-
 (use-package subword
   :defer 5
   :diminish subword-mode
@@ -406,7 +421,6 @@
   (defadvice subword-capitalize (before capitalize-word-advice activate)
     (unless (looking-back "\\b")
       (backward-word))))
-
 
 (use-package imenu
   :bind ("M-i" . imenu))
@@ -515,6 +529,10 @@
   )
 
 
+(use-package tdd-mode
+  :bind ("C-<f5>" . tdd-mode))
+
+
 ;;============================================================
 ;; Keybindings
 ;;============================================================
@@ -538,6 +556,7 @@
 (bind-key "C-c R" 'rename-this-buffer-and-file)
 (bind-key "C-c D" 'delete-this-buffer-and-file)
 (bind-key "<f8>" (λ (find-file (f-expand "init.el" user-emacs-directory))))
+(bind-key "<f5>" 'recompile)
 ;; (bind-key "C-x C-c" (λ (if (y-or-n-p "Quit Emacs? ") (save-buffers-kill-emacs))))
 
 ;; Search
