@@ -74,47 +74,45 @@
 (global-linum-mode -1)
 (blink-cursor-mode -1)
 
-(setq visible-bell t
-      font-lock-maximum-decoration nil
-      color-theme-is-global t
+(setq font-lock-maximum-decoration nil
       truncate-partial-width-windows nil)
 
 ;; Scrolling
+;; =========================
 (setq scroll-error-top-bottom t
+      visible-bell t
       scroll-conservatively 10000
       scroll-margin 10
       auto-window-vscroll nil)
 
 ;; Themes
 ;; =========================
+(setq color-theme-is-global t)
+
 ;; (load-theme 'soothe :no-confirm)
-(load-theme 'cyberpunk :no-confirm)
+;; (load-theme 'cyberpunk :no-confirm)
 ;; (load-theme 'warm-night :no-confirm)
 ;; (load-theme 'smyx :no-confirm)
 ;; (load-theme 'afternoon :no-confirm)
 ;; (load-theme 'material :no-confirm)
 ;; (load-theme 'badger :no-confirm)
 ;; (load-theme 'gruvbox :no-confirm)
-(load-theme 'material :no-confirm)
-;; (load-theme 'ample :no-confirm)
+(load-theme 'ample :no-confirm)
 ;; (progn
 ;;   (require 'moe-theme)
 ;;   (moe-dark)
 ;;   (moe-theme-set-color 'cyan)
 ;;   )
 
-;; (show-paren-mode nil)
-;; (setq show-paren-style 'expression)
-
 ;; Fonts
 ;; =========================
 ;; (set-frame-font "Droid Sans Mono Dotted-15")
-(set-frame-font "Inconsolata-18")
+;; (set-frame-font "Inconsolata-16")
 ;; (set-frame-font "Ubuntu Mono-18")
-;; (set-frame-font "Anonymous Pro-16")
+(set-frame-font "Anonymous Pro-16")
 ;; (set-frame-font "Source Code Pro-16")
 ;; (set-frame-font "Menlo-16")
-;; (set-frame-font "DejaVu Sans Mono-16")
+;; (set-frame-font "DejaVu Sans Mono-15")
 
 
 
@@ -255,6 +253,12 @@
     :config
     (flx-ido-mode t)))
 
+(use-package visual-regexp
+  :bind (("C-s" . vr/isearch-forward)
+         ("C-r" . vr/isearch-backward)
+         ("C-q" . vr/query-replace))
+  )
+
 (use-package projectile
   :defer 1
   :init
@@ -344,8 +348,7 @@
 
 (use-package expand-region
   :defer 3
-  :bind (("C-=" . er/expand-region)
-         ("C-M-SPC" . er/expand-region)
+  :bind (("C-M-SPC" . er/expand-region)
          ("C-+" . er/contract-region))
   )
 
@@ -442,7 +445,7 @@
   :config
   ;; (setq powerline-display-hud nil)
   (setq powerline-default-separator 'zigzag)
-  ;; (setq powerline-text-scale-factor 1.1)
+  (setq powerline-text-scale-factor 1.1)
   )
 
 
