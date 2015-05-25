@@ -38,6 +38,7 @@
 (depends-on "grizzl")
 (depends-on "groovy-mode")
 (depends-on "gruvbox-theme")
+(depends-on "guide-key")
 (depends-on "haml-mode")
 (depends-on "icicles")
 (depends-on "ido-ubiquitous")
