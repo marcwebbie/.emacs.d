@@ -347,7 +347,6 @@
          ("C-c C-w" . mc/mark-all-words-like-this)))
 
 (use-package expand-region
-  :defer 3
   :bind (("C-M-SPC" . er/expand-region)
          ("C-+" . er/contract-region))
   )
