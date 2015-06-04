@@ -584,5 +584,3 @@
 (bind-key "C-c m _" (λ (replace-region-by 's-snake-case)))
 (bind-key "C-c m c" (λ (replace-region-by 's-lower-camel-case)))
 (bind-key "C-c m C" (λ (replace-region-by 's-upper-camel-case)))
-(bind-key "C-x |" 'split-window-horizontally-instead)
-(bind-key "C-x _" 'split-window-vertically-instead)
