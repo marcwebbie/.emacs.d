@@ -93,10 +93,12 @@
 ;; (load-theme 'cyberpunk :no-confirm)
 ;; (load-theme 'warm-night :no-confirm)
 ;; (load-theme 'smyx :no-confirm)
-;; (load-theme 'afternoon :no-confirm)
+;; (load-theme 'noctilux :no-confirm)
 ;; (load-theme 'material :no-confirm)
 ;; (load-theme 'badger :no-confirm)
+;; (load-theme 'darktooth :no-confirm)
 ;; (load-theme 'gruvbox :no-confirm)
+;; (load-theme 'flatui :no-confirm)
 (load-theme 'ample :no-confirm)
 ;; (progn
 ;;   (require 'moe-theme)
@@ -106,14 +108,14 @@
 
 ;; Fonts
 ;; =========================
-;; (set-frame-font "Droid Sans Mono Dotted-15")
+(set-frame-font "Droid Sans Mono Dotted-15")
 ;; (set-frame-font "Inconsolata-16")
 ;; (set-frame-font "Ubuntu Mono-18")
-(set-frame-font "Anonymous Pro-16")
+;; (set-frame-font "Anonymous Pro-16")
+;; (set-frame-font "Roboto Mono-14")
 ;; (set-frame-font "Source Code Pro-16")
 ;; (set-frame-font "Menlo-16")
 ;; (set-frame-font "DejaVu Sans Mono-15")
-
 
 
 ;;============================================================
@@ -218,6 +220,9 @@
 ;;#############################
 ;; Navigation
 ;;#############################
+(use-package saveplace
+  :config (setq-default save-place t))
+
 (use-package ido
   :defer 3
   :init
@@ -303,6 +308,7 @@
   (golden-ratio-mode t)
   :config
   (add-to-list 'golden-ratio-extra-commands 'ace-window)
+  (add-to-list 'golden-ratio-extra-commands 'swtich-window)
   )
 
 (use-package rainbow-delimiters
@@ -466,12 +472,16 @@
 (use-package ibuffer
   :bind ("C-x C-b" . ibuffer))
 
+(use-package switch-window
+  :bind ("C-x o" . switch-window)
+  :config
+  (setq switch-window-shortcut-style 'alphabet))
+
 
 ;;#############################
 ;; Languages
 ;;#############################
 (use-package python
-  :defer 3
   :config
   (add-hook 'python-mode-hook '(lambda () (setq python-indent 4)))
   (bind-key "<f9>" 'mw/add-py-debug python-mode-map)
@@ -497,27 +507,6 @@
     :mode "\\requirements.txt\\'"
     :config (pip-requirements-mode))
 
-  (use-package elpy
-    :diminish elpy-mode
-    :bind (("C-c t" . elpy-test-django-runner)
-           ("C-c C-f" . elpy-find-file)
-           ("C-c C-;" . mw/set-django-settings-module))
-    :config
-    (delete 'elpy-module-highlight-indentation elpy-modules)
-    ;; (delete 'elpy-module-flymake elpy-modules)
-    (delete 'elpy-module-yasnippet elpy-modules)
-    (elpy-enable)
-
-    (defun mw/set-elpy ()
-      (let ((python (executable-find "python")))
-        (setq
-         elpy-test-discover-runner-command (list python "-m" "unittest")
-         elpy-test-django-runner-command (list python "manage.py" "test" "--noinput"))))
-    (setq elpy-rpc-backend "jedi")
-    (add-hook 'pyvenv-post-activate-hooks 'mw/set-elpy)
-    (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart)
-    )
-
   (use-package pyvenv
     :init
     (defalias 'workon 'pyvenv-workon)
@@ -530,9 +519,34 @@
     )
   )
 
+(use-package elpy
+  ;; :diminish elpy-mode
+  :bind (("C-c t" . elpy-test-django-runner)
+         ("C-c C-f" . elpy-find-file)
+         ("C-c C-;" . mw/set-django-settings-module))
+  :init
+  ;; (delete 'elpy-module-highlight-indentation elpy-modules)
+  ;; (delete 'elpy-module-flymake elpy-modules)
+  ;; (delete 'elpy-module-yasnippet elpy-modules)
+  (elpy-enable)
+  :config
+  (defun mw/set-elpy ()
+    (let ((python (executable-find "python")))
+      (setq
+       elpy-test-discover-runner-command (list python "-m" "unittest")
+       elpy-test-django-runner-command (list python "manage.py" "test" "--noinput"))))
+  ;; (setq elpy-rpc-backend "jedi")
+  (add-hook 'pyvenv-post-activate-hooks 'mw/set-elpy)
+  (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart)
+  )
 
 (use-package tdd-mode
   :bind ("C-<f5>" . tdd-mode))
+
+(use-package yaml-mode
+  :mode (("\\.pass" . yaml-mode)
+         ("\\.passpierc" . yaml-mode))
+  )
 
 
 ;;============================================================
@@ -570,3 +584,5 @@
 (bind-key "C-c m _" (λ (replace-region-by 's-snake-case)))
 (bind-key "C-c m c" (λ (replace-region-by 's-lower-camel-case)))
 (bind-key "C-c m C" (λ (replace-region-by 's-upper-camel-case)))
+(bind-key "C-x |" 'split-window-horizontally-instead)
+(bind-key "C-x _" 'split-window-vertically-instead)
