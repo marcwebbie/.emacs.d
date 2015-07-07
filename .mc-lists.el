@@ -12,6 +12,7 @@
         drag-stuff-up
         duplicate-current-line-or-region
         emmet-expand-line
+        end-of-buffer
         end-of-visual-line
         eval-print-last-sexp
         hippie-expand-no-case-fold
