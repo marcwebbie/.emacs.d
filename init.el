@@ -94,12 +94,14 @@
 ;; (load-theme 'warm-night :no-confirm)
 ;; (load-theme 'smyx :no-confirm)
 ;; (load-theme 'noctilux :no-confirm)
-;; (load-theme 'material :no-confirm)
+;; (load-theme 'monokai :no-confirm)
+(load-theme 'material :no-confirm)
 ;; (load-theme 'badger :no-confirm)
 ;; (load-theme 'darktooth :no-confirm)
 ;; (load-theme 'gruvbox :no-confirm)
 ;; (load-theme 'flatui :no-confirm)
-(load-theme 'ample :no-confirm)
+;; (load-theme 'flatland-black :no-confirm)
+;; (load-theme 'ample :no-confirm)
 ;; (progn
 ;;   (require 'moe-theme)
 ;;   (moe-dark)
@@ -108,13 +110,14 @@
 
 ;; Fonts
 ;; =========================
-(set-frame-font "Droid Sans Mono Dotted-15")
+;; (set-frame-font "Droid Sans Mono Dotted-15")
+;; (set-frame-font "Cousine-15")
 ;; (set-frame-font "Inconsolata-16")
-;; (set-frame-font "Ubuntu Mono-18")
+(set-frame-font "Ubuntu Mono-18")
 ;; (set-frame-font "Anonymous Pro-16")
 ;; (set-frame-font "Roboto Mono-14")
 ;; (set-frame-font "Source Code Pro-16")
-;; (set-frame-font "Menlo-16")
+;; (set-frame-font "Menlo-14")
 ;; (set-frame-font "DejaVu Sans Mono-15")
 
 
@@ -215,6 +218,9 @@
   ;; (set-face-background 'git-gutter:deleted "red")
   (set-face-foreground 'git-gutter:modified "yellow")
   )
+
+(use-package git-timemachine
+  :bind ("C-c v t" . git-timemachine))
 
 
 ;;#############################
@@ -463,7 +469,7 @@
   :config
   (progn
     (setq auto-save-default nil)
-    (global-auto-revert-mode 1)
+    ;; (global-auto-revert-mode 1)
     (setq make-backup-files nil) ; stop creating those backup~ files
     (setq auto-save-default nil) ; stop creating those #autosave# files
     (add-hook 'after-save-hook 'whitespace-cleanup)
@@ -481,6 +487,28 @@
 ;;#############################
 ;; Languages
 ;;#############################
+(use-package web-mode
+  :mode (("\\.html\\'" . web-mode)
+         ("\\.html\\.erb\\'" . web-mode)
+         ("\\.html\\.ejs\\'" . web-mode)
+         ("\\.ejs\\'" . web-mode)
+         ("\\.mustache\\'" . web-mode)
+         ("\\.jinja\\'" . web-mode))
+  :config
+  (progn
+    (setq web-mode-enable-current-element-highlight t)
+    (setq web-mode-enable-auto-pairing t)
+    (setq web-mode-engines-alist
+          '(("django" . "\\.djhtml")
+            ;; ("django" . my-current-buffer-django-p)) ;; set engine to django on django buffer
+            ("django" . "templates/.*\\.html")))
+    (add-hook 'web-mode-hook
+              (lambda ()
+                (setq web-mode-style-padding 2)
+                (setq web-mode-script-padding 2)
+                (setq web-mode-markup-indent-offset 2)
+                (define-key web-mode-map [(return)] 'newline-and-indent)))))
+
 (use-package python
   :config
   (add-hook 'python-mode-hook '(lambda () (setq python-indent 4)))
@@ -573,7 +601,7 @@
 (bind-key "C-c D" 'delete-this-buffer-and-file)
 (bind-key "<f8>" (λ (find-file (f-expand "init.el" user-emacs-directory))))
 (bind-key "<f5>" 'recompile)
-;; (bind-key "C-x C-c" (λ (if (y-or-n-p "Quit Emacs? ") (save-buffers-kill-emacs))))
+(bind-key "C-x C-c" (λ (if (y-or-n-p "Quit Emacs? ") (save-buffers-kill-emacs))))
 
 ;; Search
 (bind-key "C-c g" 'google)
