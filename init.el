@@ -88,14 +88,15 @@
 ;; Themes
 ;; =========================
 (setq color-theme-is-global t)
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
-;; (load-theme 'soothe :no-confirm)
 ;; (load-theme 'cyberpunk :no-confirm)
 ;; (load-theme 'warm-night :no-confirm)
 ;; (load-theme 'smyx :no-confirm)
 ;; (load-theme 'noctilux :no-confirm)
 ;; (load-theme 'monokai :no-confirm)
-(load-theme 'material :no-confirm)
+(load-theme 'molokai :no-confirm)
+;; (load-theme 'material :no-confirm)
 ;; (load-theme 'badger :no-confirm)
 ;; (load-theme 'darktooth :no-confirm)
 ;; (load-theme 'gruvbox :no-confirm)
@@ -110,14 +111,15 @@
 
 ;; Fonts
 ;; =========================
-;; (set-frame-font "Droid Sans Mono Dotted-15")
+(set-frame-font "Droid Sans Mono Dotted-14")
 ;; (set-frame-font "Cousine-15")
 ;; (set-frame-font "Inconsolata-16")
-(set-frame-font "Ubuntu Mono-18")
+;; (set-frame-font "Monaco-14")
+;; (set-frame-font "Ubuntu Mono-16")
 ;; (set-frame-font "Anonymous Pro-16")
-;; (set-frame-font "Roboto Mono-14")
+;; (set-frame-font "Roboto Mono-15")
 ;; (set-frame-font "Source Code Pro-16")
-;; (set-frame-font "Menlo-14")
+;; (set-frame-font "Menlo-15")
 ;; (set-frame-font "DejaVu Sans Mono-15")
 
 
@@ -185,7 +187,6 @@
 ;; Git
 ;;#############################
 (use-package magit
-  :diminish magit-auto-revert-mode
   :bind ("C-x g" . magit-status)
   :commands magit-status
   :init
@@ -279,12 +280,14 @@
   (setq projectile-use-git-grep t)
   (setq projectile-switch-project-action 'projectile-dired)
   (setq projectile-require-project-root t)
-  (setq projectile-completion-system 'grizzl)
+  ;; (setq projectile-completion-system 'grizzl)
   ;; (setq projectile-completion-system 'helm)
   ;; (setq projectile-completion-system 'ivy)
+  (setq projectile-completion-system 'ido)
   (add-to-list 'projectile-globally-ignored-files ".DS_Store" "*.pyc")
   (add-to-list 'projectile-globally-ignored-directories "*__pycache__*")
   )
+
 
 (use-package recentf
   :commands recentf-mode
@@ -439,6 +442,9 @@
 (use-package imenu
   :bind ("M-i" . imenu))
 
+(use-package imenu-anywhere
+  :bind ("C-M-i" . imenu-anywhere))
+
 
 ;;#############################
 ;; Modeline
@@ -459,6 +465,11 @@
   (setq powerline-text-scale-factor 1.1)
   )
 
+(use-package re-builder
+  :config
+  (setq reb-re-syntax 'string)
+  )
+
 
 ;;#############################
 ;; Buffers/Files
@@ -477,11 +488,6 @@
 
 (use-package ibuffer
   :bind ("C-x C-b" . ibuffer))
-
-(use-package switch-window
-  :bind ("C-x o" . switch-window)
-  :config
-  (setq switch-window-shortcut-style 'alphabet))
 
 
 ;;#############################
@@ -504,10 +510,34 @@
             ("django" . "templates/.*\\.html")))
     (add-hook 'web-mode-hook
               (lambda ()
+                (emmet-mode)))
+    (add-hook 'web-mode-hook
+              (lambda ()
                 (setq web-mode-style-padding 2)
                 (setq web-mode-script-padding 2)
                 (setq web-mode-markup-indent-offset 2)
                 (define-key web-mode-map [(return)] 'newline-and-indent)))))
+
+(use-package jinja2-mode
+  :mode (("app/views/.*\\.html" . jinja2-mode)
+         (".*\\.jinja" . jinja2-mode)
+         (".*\\.jinja2" . jinja2-mode)))
+
+(use-package jade-mode
+  :mode ".*\\.jade")
+
+(use-package js2-mode
+  :mode "\\.js\\'"
+  :interpreter "node"
+  :bind (("C-a" . back-to-indentation-or-beginning-of-line)
+         ("C-M-h" . backward-kill-word))
+  :init
+  (progn
+    (add-hook 'js2-mode-hook 'smartparens-mode))
+  :config
+  (progn
+    (setq js2-basic-offset 2)
+    (bind-key "M-j" 'join-line-or-lines-in-region js2-mode-map)))
 
 (use-package python
   :config
