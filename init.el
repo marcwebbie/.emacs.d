@@ -213,8 +213,8 @@
 ;; Git
 ;;#############################
 (use-package magit
-  :bind ("C-x g" . magit-status)
   :commands magit-status
+  :bind ("C-x g" . magit-status)
   :config
   (setq magit-last-seen-setup-instructions "1.4.0")
   (defun magit-just-amend ()
@@ -387,7 +387,7 @@
 (use-package guide-key
   :init (guide-key-mode +1)
   :config
-  (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c p" "C-c m")))
+  (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c p" "C-c m" "C-c C-r")))
 
 
 ;;#############################
@@ -395,6 +395,11 @@
 ;;#############################
 (use-package hippie
   :bind ("C-." . hippie-expand))
+
+(use-package swiper
+  :disabled t
+  :bind (("C-r" . swiper)
+         ("C-s" . swiper)))
 
 (use-package drag-stuff
   :defer 5
@@ -405,7 +410,8 @@
   :defer 3
   :bind (("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
-         ("C-c C-w" . mc/mark-all-words-like-this)))
+         ("C-c C-w" . mc/mark-all-words-like-this))
+  )
 
 (use-package expand-region
   :bind (("C-M-SPC" . er/expand-region)
@@ -515,6 +521,7 @@
   :config
   (setq reb-re-syntax 'string)
   )
+
 
 
 ;;#############################
@@ -629,7 +636,6 @@
   (defun mw/set-elpy-test-runners ()
     "Set elpy test runners"
     (let ((python (executable-find "python")))
-      (print "settings test runners")
       (setq
        elpy-test-discover-runner-command (list python "-m" "unittest")
        elpy-test-django-runner-command (list python "manage.py" "test" "--noinput"))))
