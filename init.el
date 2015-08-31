@@ -580,9 +580,8 @@
 
 (use-package python
   :config
-  (add-hook 'python-mode-hook '(lambda () (setq python-indent 4)))
-  (bind-key "<f9>" 'mw/add-py-debug python-mode-map)
   (bind-key "C-<f9>" 'mw/add-pudb-debug python-mode-map)
+  (bind-key "<f9>" 'mw/add-py-debug python-mode-map)
   (add-hook 'python-mode-hook
                (lambda ()
                 (font-lock-add-keywords nil
@@ -602,50 +601,53 @@
     :diminish anaconda-mode
     :init
     (add-hook 'python-mode-hook '(lambda () (anaconda-mode)))
-    ;; (add-hook 'company-mode-hook 'company-anaconda)
     )
 
   (use-package pip-requirements
     :mode "\\requirements.txt\\'"
     :config (pip-requirements-mode))
 
-  (use-package pyvenv
-    :init
-    (defalias 'workon 'pyvenv-workon)
-    (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
-    (add-hook 'python-mode-hook 'pyvenv-mode)
-    (add-hook 'pyenv-mode-hooks 'mw/auto-activate-virtualenv)
-    )
   )
 
 
 (use-package elpy
-  :bind (
-         ;; ("C-c t" . elpy-test-django-runner)
+  :bind (("C-c t" . elpy-test-django-runner)
          ("C-c C-f" . elpy-find-file)
          ("C-c C-;" . mw/set-django-settings-module))
   :init
+  (elpy-enable)
+  :config
+  (setq elpy-test-runner 'elpy-test-pytest-runner)
+  ;; (setq elpy-rpc-backend "jedi")
   ;; (delete 'elpy-module-highlight-indentation elpy-modules)
   ;; (delete 'elpy-module-yasnippet elpy-modules)
   ;; (delete 'elpy-module-flymake elpy-modules)
-  (elpy-enable)
-  :config
-  ;; (setq elpy-rpc-backend "jedi")
-  (setq elpy-test-runner 'elpy-test-pytest-runner)
   (defun mw/set-elpy-test-runners ()
+    "Set elpy test runners"
     (let ((python (executable-find "python")))
+      (print "settings test runners")
       (setq
        elpy-test-discover-runner-command (list python "-m" "unittest")
        elpy-test-django-runner-command (list python "manage.py" "test" "--noinput"))))
   (defun mw/auto-activate-virtualenv ()
+    "Set auto-activate virtualenv"
+    (interactive)
     (let ((virtualenvs (directory-files (getenv "WORKON_HOME"))))
+      (message "activating virtualenv")
       (if (member (projectile-project-name) virtualenvs)
-          (pyenv-workon (projectile-project-name)))
-      (message "activated virtualenv")
-      )
-    )
-  (add-hook 'pyvenv-post-activate-hooks 'mw/set-elpy-test-runners)
-  (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart)
+          (progn
+            (pyvenv-mode)
+            (pyvenv-workon (projectile-project-name))
+            (message "activated virtualenv"))
+        (message "virtualenv not found"))))
+  (use-package pyvenv
+    :config
+    (defalias 'workon 'pyvenv-workon)
+    (add-hook 'python-mode-hook 'pyvenv-mode)
+    (add-hook 'python-mode-hook 'mw/auto-activate-virtualenv)
+    (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
+    (add-hook 'pyvenv-post-activate-hooks 'mw/set-elpy-test-runners)
+    (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart))
   )
 
 
