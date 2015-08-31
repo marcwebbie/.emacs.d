@@ -619,8 +619,6 @@
   )
 
 
-
-
 (use-package elpy
   :bind (
          ;; ("C-c t" . elpy-test-django-runner)
