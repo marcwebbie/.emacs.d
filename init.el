@@ -183,7 +183,9 @@
   )
 
 (use-package dired-x
-  :init
+  :config
+  (setq global-auto-revert-non-file-buffers t)
+  (setq auto-revert-verbose nil)
   (setq-default dired-omit-files-p t) ; Buffer-local variable
   (setq dired-omit-files "^\\.?#\\|^\\.$\\|^__pycache__$\\|\\.git"))
 
@@ -213,14 +215,16 @@
 (use-package magit
   :bind ("C-x g" . magit-status)
   :commands magit-status
-  :init
-  (setq magit-last-seen-setup-instructions "1.4.0")
-  (defadvice magit-status (around magit-fullscreen activate)
-    (window-configuration-to-register :magit-fullscreen)
-    ad-do-it
-    (delete-other-windows))
   :config
+  (setq magit-last-seen-setup-instructions "1.4.0")
+  (defun magit-just-amend ()
+    (interactive)
+    (save-window-excursion
+      (magit-with-refresh
+       (shell-command "git --no-pager commit --amend --reuse-message=HEAD"))))
   (setq magit-revert-buffers t)
+  (add-hook 'magit-status-mode-hook 'delete-other-windows)
+  (bind-key "C-c C-a" 'magit-quit-session magit-status-mode-map)
   (bind-key "q" 'magit-quit-session magit-status-mode-map))
 
 (use-package git-gutter
@@ -254,6 +258,9 @@
 ;;#############################
 (use-package saveplace
   :config (setq-default save-place t))
+
+(use-package tdd-mode
+  :bind ("C-<f5>" . tdd-mode))
 
 (use-package ido
   :defer 3
@@ -537,8 +544,7 @@
          ("\\.html\\.erb\\'" . web-mode)
          ("\\.html\\.ejs\\'" . web-mode)
          ("\\.ejs\\'" . web-mode)
-         ("\\.mustache\\'" . web-mode)
-         ("\\.jinja\\'" . web-mode))
+         ("\\.mustache\\'" . web-mode))
   :config
   (progn
     (setq web-mode-enable-current-element-highlight t)
@@ -606,9 +612,7 @@
   (use-package pip-requirements
     :mode "\\requirements.txt\\'"
     :config (pip-requirements-mode))
-
   )
-
 
 (use-package elpy
   :bind (("C-c t" . elpy-test-django-runner)
@@ -650,13 +654,8 @@
     (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart))
   )
 
-
-
-(use-package tdd-mode
-  :bind ("C-<f5>" . tdd-mode))
-
 (use-package yaml-mode
-  :mode (("\\.pass" . yaml-mode)
+  :mode ((".*\\.pass" . yaml-mode)
          ("\\.passpierc" . yaml-mode))
   )
 
