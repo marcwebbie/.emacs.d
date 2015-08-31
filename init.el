@@ -42,6 +42,9 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (if (file-exists-p custom-file) (load custom-file))
 
+(setenv "WORKON_HOME" (expand-file-name "~/.pyenv/versions"))
+(setenv "VIRTUALENVWRAPPER_HOOK_DIR" (expand-file-name "~/.pyenv/versions"))
+
 
 ;;============================================================
 ;; System
@@ -92,38 +95,57 @@
 (setq color-theme-is-global t)
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
+;; (load-theme 'solarized-dark :no-confirm)
+(load-theme 'solarized-light :no-confirm)
 ;; (load-theme 'cyberpunk :no-confirm)
 ;; (load-theme 'warm-night :no-confirm)
 ;; (load-theme 'smyx :no-confirm)
 ;; (load-theme 'noctilux :no-confirm)
 ;; (load-theme 'monokai :no-confirm)
-(load-theme 'molokai :no-confirm)
+;; (load-theme 'molokai :no-confirm)
+;; (load-theme 'cherry-blossom :no-confirm)
+;; (load-theme 'hemisu-dark :no-confirm)
+;; (load-theme 'hemisu-ligth :no-confirm)
 ;; (load-theme 'material :no-confirm)
+;; (load-theme 'material-light :no-confirm)
 ;; (load-theme 'badger :no-confirm)
 ;; (load-theme 'darktooth :no-confirm)
 ;; (load-theme 'gruvbox :no-confirm)
 ;; (load-theme 'flatui :no-confirm)
+;; (load-theme 'tango-plus :no-confirm)
 ;; (load-theme 'flatland-black :no-confirm)
 ;; (load-theme 'ample :no-confirm)
 ;; (progn
 ;;   (require 'moe-theme)
 ;;   (moe-dark)
-;;   (moe-theme-set-color 'cyan)
+;;   (moe-theme-set-color 'green)
 ;;   )
 
 ;; Fonts
 ;; =========================
-(set-frame-font "Droid Sans Mono Dotted-14")
+;; (set-frame-font "Droid Sans Mono Dotted-14")
 ;; (set-frame-font "Cousine-15")
 ;; (set-frame-font "Inconsolata-16")
 ;; (set-frame-font "Monaco-14")
 ;; (set-frame-font "Ubuntu Mono-16")
-;; (set-frame-font "Anonymous Pro-16")
+(set-frame-font "Anonymous Pro-16")
 ;; (set-frame-font "Roboto Mono-15")
-;; (set-frame-font "Source Code Pro-16")
-;; (set-frame-font "Menlo-15")
-;; (set-frame-font "DejaVu Sans Mono-15")
-
+;; (set-frame-font "Source Code Pro-14")
+;; (set-frame-font "Menlo-14")
+;; (set-frame-font "Fantasque Sans Mono-18")
+;; (set-face-attribute 'default nil
+;;                     :family "Fantasque Sans Mono"
+;;                     :height 180
+;;                     :weight 'normal
+;;                     :width 'normal)
+;; (set-face-attribute 'default nil
+;;                     :family "Droid Sans Mono"
+;;                     :height 140
+;;                     :weight 'normal
+;;                     :width 'normal)
+;; (set-frame-font "Liberation Sans Mono-14:antialias=1")
+;; (set-frame-font "Fantasque Sans Mono-16:antialias=1")
+;; (set-frame-font "Ubuntu Mono-16:antialias=1")
 
 ;;============================================================
 ;; Loading
@@ -198,6 +220,7 @@
     ad-do-it
     (delete-other-windows))
   :config
+  (setq magit-revert-buffers t)
   (bind-key "q" 'magit-quit-session magit-status-mode-map))
 
 (use-package git-gutter
@@ -219,7 +242,7 @@
   ;; (set-face-background 'git-gutter:modified "purple") ;; background color
   ;; (set-face-background 'git-gutter:added "green")
   ;; (set-face-background 'git-gutter:deleted "red")
-  (set-face-foreground 'git-gutter:modified "yellow")
+  ;; (set-face-foreground 'git-gutter:modified "yellow")
   )
 
 (use-package git-timemachine
@@ -243,6 +266,7 @@
   (add-to-list 'ido-ignore-files '(".DS_Store" ".pyc"))
   (add-to-list 'ido-ignore-directories '("__pycache__", ".git"))
   (use-package ido-vertical-mode
+    :disabled t
     :config
     (setq ido-vertical-decorations (list
                                     "\n"
@@ -283,13 +307,19 @@
   (setq projectile-switch-project-action 'projectile-dired)
   (setq projectile-require-project-root t)
   ;; (setq projectile-completion-system 'grizzl)
+  (setq projectile-completion-system 'ido)
   ;; (setq projectile-completion-system 'helm)
   ;; (setq projectile-completion-system 'ivy)
-  (setq projectile-completion-system 'ido)
   (add-to-list 'projectile-globally-ignored-files ".DS_Store" "*.pyc")
   (add-to-list 'projectile-globally-ignored-directories "*__pycache__*")
   )
 
+(use-package swiper
+  :disabled t
+  :config
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t)
+  )
 
 (use-package recentf
   :commands recentf-mode
@@ -318,6 +348,9 @@
   :init
   (golden-ratio-mode t)
   :config
+  ;; (setq golden-ratio-auto-scale t)
+  ;; (setq golden-ratio-adjust-factor .2
+  ;;     golden-ratio-wide-adjust-factor .2)
   (add-to-list 'golden-ratio-extra-commands 'ace-window)
   (add-to-list 'golden-ratio-extra-commands 'swtich-window)
   )
@@ -330,6 +363,13 @@
 ;;#############################
 ;; Completion
 ;;#############################
+(use-package restclient
+  :mode (("\\.rest" . restclient-mode)))
+
+
+;;#############################
+;; Completion
+;;#############################
 (use-package company
   :diminish company-mode
   :defer 10
@@ -337,9 +377,6 @@
   (global-company-mode))
 
 
-;;#############################
-;; Completion
-;;#############################
 (use-package guide-key
   :init (guide-key-mode +1)
   :config
@@ -452,6 +489,7 @@
 ;; Modeline
 ;;#############################
 (use-package smart-mode-line
+  ;; :disabled t
   :init
   (setq sml/no-confirm-load-theme t)
   (sml/setup))
@@ -463,8 +501,7 @@
   ;; (powerline-center-theme)
   :config
   ;; (setq powerline-display-hud nil)
-  (setq powerline-default-separator 'zigzag)
-  (setq powerline-text-scale-factor 1.1)
+  (setq powerline-default-separator 'curve)
   )
 
 (use-package re-builder
@@ -546,6 +583,10 @@
   (add-hook 'python-mode-hook '(lambda () (setq python-indent 4)))
   (bind-key "<f9>" 'mw/add-py-debug python-mode-map)
   (bind-key "C-<f9>" 'mw/add-pudb-debug python-mode-map)
+  (add-hook 'python-mode-hook
+               (lambda ()
+                (font-lock-add-keywords nil
+                 '(("\\<\\(FIXME\\|TODO\\|BUG\\):" 1 font-lock-warning-face t)))))
 
   (use-package eldoc-mode
     :commands (eldoc-mode)
@@ -556,6 +597,7 @@
     )
 
   (use-package anaconda-mode
+    :disabled t
     :defer 15
     :diminish anaconda-mode
     :init
@@ -572,33 +614,43 @@
     (defalias 'workon 'pyvenv-workon)
     (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
     (add-hook 'python-mode-hook 'pyvenv-mode)
-    :config
-    (let ((workon-home (expand-file-name "~/.pyenv/versions")))
-      (setenv "WORKON_HOME" workon-home)
-      (setenv "VIRTUALENVWRAPPER_HOOK_DIR" workon-home))
+    (add-hook 'pyenv-mode-hooks 'mw/auto-activate-virtualenv)
     )
   )
 
+
+
+
 (use-package elpy
-  ;; :diminish elpy-mode
-  :bind (("C-c t" . elpy-test-django-runner)
+  :bind (
+         ;; ("C-c t" . elpy-test-django-runner)
          ("C-c C-f" . elpy-find-file)
          ("C-c C-;" . mw/set-django-settings-module))
   :init
   ;; (delete 'elpy-module-highlight-indentation elpy-modules)
-  ;; (delete 'elpy-module-flymake elpy-modules)
   ;; (delete 'elpy-module-yasnippet elpy-modules)
+  ;; (delete 'elpy-module-flymake elpy-modules)
   (elpy-enable)
   :config
-  (defun mw/set-elpy ()
+  ;; (setq elpy-rpc-backend "jedi")
+  (setq elpy-test-runner 'elpy-test-pytest-runner)
+  (defun mw/set-elpy-test-runners ()
     (let ((python (executable-find "python")))
       (setq
        elpy-test-discover-runner-command (list python "-m" "unittest")
        elpy-test-django-runner-command (list python "manage.py" "test" "--noinput"))))
-  ;; (setq elpy-rpc-backend "jedi")
-  (add-hook 'pyvenv-post-activate-hooks 'mw/set-elpy)
+  (defun mw/auto-activate-virtualenv ()
+    (let ((virtualenvs (directory-files (getenv "WORKON_HOME"))))
+      (if (member (projectile-project-name) virtualenvs)
+          (pyenv-workon (projectile-project-name)))
+      (message "activated virtualenv")
+      )
+    )
+  (add-hook 'pyvenv-post-activate-hooks 'mw/set-elpy-test-runners)
   (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart)
   )
+
+
 
 (use-package tdd-mode
   :bind ("C-<f5>" . tdd-mode))
