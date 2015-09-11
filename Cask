@@ -34,6 +34,7 @@
 (depends-on "fold-this")
 (depends-on "gist")
 (depends-on "git-gutter")
+(depends-on "git-gutter-fringe")
 (depends-on "git-timemachine")
 (depends-on "gitignore-mode")
 (depends-on "golden-ratio")
