@@ -12,10 +12,7 @@
  '(markdown-header-face-3 ((t (:inherit org-level-3))))
  '(markdown-header-face-4 ((t (:inherit org-level-4))))
  '(markdown-header-face-5 ((t (:inherit org-level-5))))
- '(git-gutter:added-sign "++")
- '(git-gutter:deleted-sign "--")
- '(git-gutter:modified-sign "~~")
- '(git-gutter:window-width 1))
+ '(package-selected-packages (quote (package-build shut-up epl git commander f dash s))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
