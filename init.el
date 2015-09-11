@@ -45,6 +45,8 @@
 (setenv "WORKON_HOME" (expand-file-name "~/.pyenv/versions"))
 (setenv "VIRTUALENVWRAPPER_HOOK_DIR" (expand-file-name "~/.pyenv/versions"))
 
+(defalias 'which 'executable-find)
+
 
 ;;============================================================
 ;; System
@@ -95,8 +97,8 @@
 (setq color-theme-is-global t)
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
-;; (load-theme 'solarized-dark :no-confirm)
-(load-theme 'solarized-light :no-confirm)
+(load-theme 'solarized-dark :no-confirm)
+;; (load-theme 'solarized-light :no-confirm)
 ;; (load-theme 'cyberpunk :no-confirm)
 ;; (load-theme 'warm-night :no-confirm)
 ;; (load-theme 'smyx :no-confirm)
@@ -123,12 +125,12 @@
 
 ;; Fonts
 ;; =========================
-;; (set-frame-font "Droid Sans Mono Dotted-14")
+(set-frame-font "Droid Sans Mono Dotted-14")
 ;; (set-frame-font "Cousine-15")
 ;; (set-frame-font "Inconsolata-16")
 ;; (set-frame-font "Monaco-14")
 ;; (set-frame-font "Ubuntu Mono-16")
-(set-frame-font "Anonymous Pro-16")
+;; (set-frame-font "Anonymous Pro-16")
 ;; (set-frame-font "Roboto Mono-15")
 ;; (set-frame-font "Source Code Pro-14")
 ;; (set-frame-font "Menlo-14")
@@ -239,15 +241,19 @@
   :config
   (custom-set-variables
    '(git-gutter:window-width 1)
-   '(git-gutter:modified-sign "~~") ;; two space
-   '(git-gutter:added-sign "++")    ;; multiple character is OK
-   '(git-gutter:deleted-sign "--"))
+   '(git-gutter:modified-sign "█") ;; two space
+   '(git-gutter:added-sign "█")    ;; multiple character is OK
+   '(git-gutter:deleted-sign "█"))
 
   ;; (set-face-background 'git-gutter:modified "purple") ;; background color
   ;; (set-face-background 'git-gutter:added "green")
   ;; (set-face-background 'git-gutter:deleted "red")
   ;; (set-face-foreground 'git-gutter:modified "yellow")
   )
+
+;; (use-package git-gutter-fringe
+;;   :init
+;;   (git-gutter-mode))
 
 (use-package git-timemachine
   :bind ("C-c v t" . git-timemachine))
@@ -260,7 +266,10 @@
   :config (setq-default save-place t))
 
 (use-package tdd-mode
-  :bind ("C-<f5>" . tdd-mode))
+  :bind ("C-<f5>" . tdd-mode)
+  :config
+  (shell-command "terminal-notifier -message 'Hello, this is my message' -title 'Message Title'")
+  )
 
 (use-package ido
   :defer 3
@@ -273,23 +282,22 @@
   (add-to-list 'ido-ignore-files '(".DS_Store" ".pyc"))
   (add-to-list 'ido-ignore-directories '("__pycache__", ".git"))
   (use-package ido-vertical-mode
-    :disabled t
     :config
-    (setq ido-vertical-decorations (list
-                                    "\n"
-                                    ""
-                                    "\n"
-                                    "\n..."
-                                    "["
-                                    "]"
-                                    " [No match]"
-                                    " [Matched]"
-                                    " [Not readable]"
-                                    " [Too big]"
-                                    " [Confirm]"
-                                    "\n"
-                                    ""
-                                    ))
+    ;; (setq ido-vertical-decorations (list
+    ;;                                 "\n"
+    ;;                                 ""
+    ;;                                 "\n"
+    ;;                                 "\n..."
+    ;;                                 "["
+    ;;                                 "]"
+    ;;                                 " [No match]"
+    ;;                                 " [Matched]"
+    ;;                                 " [Not readable]"
+    ;;                                 " [Too big]"
+    ;;                                 " [Confirm]"
+    ;;                                 "\n"
+    ;;                                 ""
+    ;;                                 ))
     (ido-vertical-mode 1))
   (use-package ido-ubiquitous
     :config
@@ -385,6 +393,7 @@
 
 
 (use-package guide-key
+  :diminish guide-key-mode
   :init (guide-key-mode +1)
   :config
   (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c p" "C-c m" "C-c C-r")))
@@ -609,8 +618,6 @@
     )
 
   (use-package anaconda-mode
-    :disabled t
-    :defer 15
     :diminish anaconda-mode
     :init
     (add-hook 'python-mode-hook '(lambda () (anaconda-mode)))
@@ -629,7 +636,7 @@
   (elpy-enable)
   :config
   (setq elpy-test-runner 'elpy-test-pytest-runner)
-  ;; (setq elpy-rpc-backend "jedi")
+  (setq elpy-rpc-backend "jedi")
   ;; (delete 'elpy-module-highlight-indentation elpy-modules)
   ;; (delete 'elpy-module-yasnippet elpy-modules)
   ;; (delete 'elpy-module-flymake elpy-modules)
@@ -644,20 +651,33 @@
     (interactive)
     (let ((virtualenvs (directory-files (getenv "WORKON_HOME"))))
       (message "activating virtualenv")
-      (if (member (projectile-project-name) virtualenvs)
+      (if (and (member (projectile-project-name) virtualenvs) (not (equal (projectile-project-name) pyvenv-virtual-env-name)))
           (progn
-            (pyvenv-mode)
+            (pyenv-mode t)
             (pyvenv-workon (projectile-project-name))
-            (message "activated virtualenv"))
-        (message "virtualenv not found"))))
+            (message (format "activated virtualenv: %s" (projectile-project-name))))
+        (message "virtualenv not activated"))))
   (use-package pyvenv
     :config
     (defalias 'workon 'pyvenv-workon)
     (add-hook 'python-mode-hook 'pyvenv-mode)
+    (add-hook 'projectile-switch-project-hook 'mw/auto-activate-virtualenv)
     (add-hook 'python-mode-hook 'mw/auto-activate-virtualenv)
-    (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
-    (add-hook 'pyvenv-post-activate-hooks 'mw/set-elpy-test-runners)
-    (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart))
+    ;; (add-hook 'pyvenv-post-activate-hook 'elpy-rpc-restart)
+    (add-hook 'pyvenv-post-activate-hooks 'mw/set-elpy-test-runners))
+
+  (defun mw/clean-python-file-hook ()
+    "Clean python buffer before saving"
+    (interactive)
+    (progn
+      (if (and (which "autopep8") (symbolp 'elpy-autopep8-fix-code))
+          (elpy-autopep8-fix-code))
+      ;; (if (symbolp 'elpy-importmagic-fixup)
+      ;;     (elpy-importmagic-fixup))
+    ))
+  (add-hook 'python-mode-hook
+          (lambda ()
+             (add-hook 'before-save-hook 'mw/clean-python-file-hook nil 'make-it-local)))
   )
 
 (use-package yaml-mode
