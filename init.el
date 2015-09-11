@@ -88,8 +88,8 @@
 (global-linum-mode -1)
 (blink-cursor-mode -1)
 
-(setq font-lock-maximum-decoration nil
-      truncate-partial-width-windows nil)
+;; (setq font-lock-maximum-decoration nil
+;;       truncate-partial-width-windows nil)
 
 ;; Scrolling
 ;; =========================
