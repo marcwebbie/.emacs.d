@@ -270,7 +270,10 @@
 ;; Navigation
 ;;#############################
 (use-package saveplace
-  :config (setq-default save-place t))
+  :init
+  (if (fboundp #'save-place-mode)
+      (save-place-mode +1)
+    (setq-default save-place t)))
 
 (use-package tdd-mode
   :bind ("C-<f5>" . tdd-mode)
@@ -371,9 +374,6 @@
   :init
   (golden-ratio-mode t)
   :config
-  ;; (setq golden-ratio-auto-scale t)
-  ;; (setq golden-ratio-adjust-factor .2
-  ;;     golden-ratio-wide-adjust-factor .2)
   (add-to-list 'golden-ratio-extra-commands 'ace-window)
   (add-to-list 'golden-ratio-extra-commands 'swtich-window)
   )
@@ -519,10 +519,10 @@
 ;; Modeline
 ;;#############################
 (use-package smart-mode-line
-  ;; :disabled t
   :init
   (setq sml/no-confirm-load-theme t)
-  (sml/setup))
+  (sml/setup)
+  )
 
 (use-package powerline
   :disabled t
@@ -550,10 +550,9 @@
   :config
   (progn
     (setq auto-save-default nil)
-    ;; (global-auto-revert-mode 1)
     (setq make-backup-files nil) ; stop creating those backup~ files
     (setq auto-save-default nil) ; stop creating those #autosave# files
-    (add-hook 'after-save-hook 'whitespace-cleanup)
+    (add-hook 'before-save-hook 'whitespace-cleanup)
     (add-hook 'before-save-hook 'delete-trailing-whitespace)))
 
 (use-package ibuffer
@@ -671,7 +670,6 @@
     (add-hook 'python-mode-hook 'pyvenv-mode)
     (add-hook 'projectile-switch-project-hook 'mw/auto-activate-virtualenv)
     (add-hook 'python-mode-hook 'mw/auto-activate-virtualenv)
-    ;; (add-hook 'pyvenv-post-activate-hook 'elpy-rpc-restart)
     (add-hook 'pyvenv-post-activate-hooks 'mw/set-elpy-test-runners))
 
   (defun mw/clean-python-file-hook ()
@@ -683,9 +681,9 @@
       ;; (if (symbolp 'elpy-importmagic-fixup)
       ;;     (elpy-importmagic-fixup))
     ))
-  (add-hook 'python-mode-hook
-          (lambda ()
-             (add-hook 'before-save-hook 'mw/clean-python-file-hook nil 'make-it-local)))
+  ;; (add-hook 'python-mode-hook
+  ;;         (lambda ()
+  ;;            (add-hook 'before-save-hook 'mw/clean-python-file-hook nil 'make-it-local)))
   )
 
 (use-package yaml-mode
