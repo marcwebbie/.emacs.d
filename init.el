@@ -133,15 +133,22 @@
 ;; Fonts
 ;; =========================
 (set-frame-font "Droid Sans Mono Dotted-14")
+;; (set-frame-font "Code New Roman-14")
 ;; (set-frame-font "Cousine-15")
 ;; (set-frame-font "Inconsolata-16")
 ;; (set-frame-font "Monaco-14")
 ;; (set-frame-font "Ubuntu Mono-16")
+;; (set-frame-font "Liberation Mono-14")
 ;; (set-frame-font "Anonymous Pro-16")
 ;; (set-frame-font "Roboto Mono-15")
-;; (set-frame-font "Source Code Pro-14")
+;; (set-frame-font "Source Code Pro-15")
 ;; (set-frame-font "Menlo-14")
 ;; (set-frame-font "Fantasque Sans Mono-18")
+;; (set-face-attribute 'default nil
+;;                     :family "Liberation Mono"
+;;                     :height 140
+;;                     :weight 'normal
+;;                     :width 'normal)
 ;; (set-face-attribute 'default nil
 ;;                     :family "Fantasque Sans Mono"
 ;;                     :height 180
@@ -152,7 +159,6 @@
 ;;                     :height 140
 ;;                     :weight 'normal
 ;;                     :width 'normal)
-;; (set-frame-font "Liberation Sans Mono-14:antialias=1")
 ;; (set-frame-font "Fantasque Sans Mono-16:antialias=1")
 ;; (set-frame-font "Ubuntu Mono-16:antialias=1")
 
