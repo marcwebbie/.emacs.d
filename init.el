@@ -275,6 +275,16 @@
       (save-place-mode +1)
     (setq-default save-place t)))
 
+(use-package sublimity
+  :config
+  (sublimity-mode +1)
+  (use-package sublimity-map
+    :disabled t
+    :config
+    (setq sublimity-map-size 20)
+    (setq sublimity-map-fraction 0.3)
+    (setq sublimity-map-text-scale -7)))
+
 (use-package tdd-mode
   :bind ("C-<f5>" . tdd-mode)
   :config

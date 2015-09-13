@@ -91,6 +91,7 @@
 (depends-on "smex")
 (depends-on "smyx-theme")
 (depends-on "solarized-theme")
+(depends-on "sublimity")
 (depends-on "swiper")
 (depends-on "tango-plus-theme")
 (depends-on "twilight-anti-bright-theme")
