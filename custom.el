@@ -18,7 +18,8 @@
  '(markdown-header-face-5 ((t (:inherit org-level-5))))
  '(package-selected-packages
    (quote
-    (sublimity package-build shut-up epl git commander f dash s))))
+    (idomenu helm bm realgud sublimity package-build shut-up epl git commander f dash s)))
+ '(paradox-github-token t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
