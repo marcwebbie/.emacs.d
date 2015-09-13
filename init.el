@@ -537,19 +537,16 @@
     (unless (looking-back "\\b")
       (backward-word))))
 
-(use-package imenu
-  :disabled t
-  :bind ("M-i" . imenu))
-
 (use-package imenu-anywhere
-  :bind ("M-i" . ido-imenu)
-  :config
-  (setq imenu-anywhere-buffer-list-function (λ(list (current-buffer))))
+  :bind ("M-i" . ido-imenu-anywhere)
+  :init
   (defun jcs-use-package ()
     (add-to-list 'imenu-generic-expression
-                 '("Used Packages"
+                 '("use-package"
                    "\\(^\\s-*(use-package +\\)\\(\\_<.+\\_>\\)" 2)))
-  (add-hook 'emacs-lisp-mode-hook #'jcs-use-package))
+  (add-hook 'emacs-lisp-mode-hook #'jcs-use-package)
+  :config
+  (setq imenu-anywhere-delimiter-ido " @ "))
 
 
 ;;#############################
