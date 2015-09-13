@@ -177,6 +177,16 @@
 
 
 ;;#############################
+;; System
+;;#############################
+;; automagically tail log files
+(add-to-list 'auto-mode-alist '("\\.log\\'" . auto-revert-tail-mode))
+(add-hook 'auto-revert-tail-mode-hook 'etc-log-tail-handler)
+
+
+
+
+;;#############################
 ;; Shell
 ;;#############################
 (use-package shell
@@ -197,6 +207,8 @@
   (setq auto-revert-verbose nil)
   (setq-default dired-omit-files-p t) ; Buffer-local variable
   (setq dired-omit-files "^\\.?#\\|^\\.$\\|^__pycache__$\\|\\.git"))
+
+(use-package realgud)
 
 
 ;;#############################
@@ -275,6 +287,8 @@
       (save-place-mode +1)
     (setq-default save-place t)))
 
+(use-package bm)
+
 (use-package sublimity
   :config
   (sublimity-mode +1)
@@ -296,6 +310,8 @@
   :init
   (ido-mode t)
   :config
+  (setq ido-use-filename-at-point 'guess)
+  (setq ido-create-new-buffer 'always)
   (setq ido-case-fold t)
   (setq ido-show-dot-for-dired nil)
   (setq ido-file-extensions-order '(".py" ".rb" ".el" ".js"))
@@ -342,9 +358,8 @@
   (setq projectile-use-git-grep t)
   (setq projectile-switch-project-action 'projectile-dired)
   (setq projectile-require-project-root t)
-  ;; (setq projectile-completion-system 'grizzl)
-  (setq projectile-completion-system 'ido)
   ;; (setq projectile-completion-system 'helm)
+  ;; (setq projectile-completion-system 'grizzl)
   ;; (setq projectile-completion-system 'ivy)
   (add-to-list 'projectile-globally-ignored-files ".DS_Store" "*.pyc")
   (add-to-list 'projectile-globally-ignored-directories "*__pycache__*")
@@ -359,7 +374,8 @@
 
 (use-package recentf
   :commands recentf-mode
-  :bind ("C-x C-r" . recentf-grizzl-find-file)
+  ;; :bind (("C-x C-r" . recentf-grizzl-find-file))
+  :bind (("C-x C-r" . recentf-ido-find-file))
   :init
   (recentf-mode 1)
   :config
@@ -412,7 +428,7 @@
   :diminish guide-key-mode
   :init (guide-key-mode +1)
   :config
-  (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c p" "C-c m" "C-c C-r")))
+  (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c p" "C-c m" "C-c C-r" "C-c C-p")))
 
 
 ;;#############################
@@ -517,10 +533,18 @@
       (backward-word))))
 
 (use-package imenu
+  :disabled t
   :bind ("M-i" . imenu))
 
 (use-package imenu-anywhere
-  :bind ("C-M-i" . imenu-anywhere))
+  :bind ("M-i" . ido-imenu)
+  :config
+  (setq imenu-anywhere-buffer-list-function (λ(list (current-buffer))))
+  (defun jcs-use-package ()
+    (add-to-list 'imenu-generic-expression
+                 '("Used Packages"
+                   "\\(^\\s-*(use-package +\\)\\(\\_<.+\\_>\\)" 2)))
+  (add-hook 'emacs-lisp-mode-hook #'jcs-use-package))
 
 
 ;;#############################
@@ -644,15 +668,20 @@
     :config (pip-requirements-mode))
   )
 
+(defun mw/elpy-pdb-runner
+    "Run tests on a pdb gud interface")
+
 (use-package elpy
   :bind (("C-c t" . elpy-test-django-runner)
          ("C-c C-f" . elpy-find-file)
-         ("C-c C-;" . mw/set-django-settings-module))
+         ("C-c C-;" . mw/set-django-settings-module)
+         ("C-c e p" . mw/))
   :init
   (elpy-enable)
   :config
   (setq elpy-test-runner 'elpy-test-pytest-runner)
-  (setq elpy-rpc-backend "rope") ;; (setq elpy-rpc-backend "jedi")
+  (setq elpy-rpc-backend "rope")
+  ;; (setq elpy-rpc-backend "jedi")
   (use-package pyvenv
     :config
     (defalias 'workon 'pyvenv-workon)
