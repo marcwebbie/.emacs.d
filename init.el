@@ -378,9 +378,9 @@
   )
 
 (use-package recentf
-  :commands recentf-mode
   ;; :bind (("C-x C-r" . recentf-grizzl-find-file))
-  :bind (("C-x C-r" . recentf-ido-find-file))
+  :bind (("C-x f" . recentf-ido-find-file)
+         ("C-c f" . recentf-ido-find-file))
   :init
   (recentf-mode 1)
   :config
@@ -433,7 +433,7 @@
   :diminish guide-key-mode
   :init (guide-key-mode +1)
   :config
-  (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c p" "C-c m" "C-c C-r" "C-c C-p")))
+  (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c p" "C-c p 4" "C-c p s" "C-c m" "C-c C-r" "C-c C-p")))
 
 
 ;;#############################
