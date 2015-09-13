@@ -316,7 +316,6 @@
   :init
   (ido-mode t)
   :config
-  (setq ido-use-filename-at-point 'guess)
   (setq ido-create-new-buffer 'always)
   (setq ido-case-fold t)
   (setq ido-show-dot-for-dired nil)
