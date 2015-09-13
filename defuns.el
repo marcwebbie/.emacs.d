@@ -417,3 +417,35 @@ Otherwise point moves to beginning of line."
   (progn
     (setenv "DJANGO_SETTINGS_MODULE" django-settings-module)
     (message "DJANGO_SETTINGS_MODULE=%s" django-settings-module)))
+
+
+(defun mw/set-elpy-test-runners ()
+  "Set elpy test runners"
+  (let ((python (executable-find "python")))
+    (setq
+     elpy-test-discover-runner-command (list python "-m" "unittest")
+     elpy-test-django-runner-command (list python "manage.py" "test" "--noinput"))))
+
+
+(defun mw/auto-activate-virtualenv ()
+  "Set auto-activate virtualenv"
+  (interactive)
+  (let ((virtualenvs (directory-files (getenv "WORKON_HOME"))))
+    (if (member (projectile-project-name) virtualenvs)
+        (if (equal (projectile-project-name) pyvenv-virtual-env-name)
+            (format "already activated virtualenv %s" (projectile-project-name))
+          (progn
+            (pyenv-mode t)
+            (pyvenv-workon (projectile-project-name))
+            (message (format "activated virtualenv: %s" (projectile-project-name))))))))
+
+
+(defun mw/clean-python-file-hook ()
+  "Clean python buffer before saving"
+  (interactive)
+  (progn
+    (if (and (which "autopep8") (symbolp 'elpy-autopep8-fix-code))
+        (elpy-autopep8-fix-code))
+    (if (symbolp 'elpy-importmagic-fixup)
+        (elpy-importmagic-fixup))
+    ))

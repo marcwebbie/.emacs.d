@@ -404,8 +404,6 @@
 ;; Completion
 ;;#############################
 (use-package company
-  :diminish company-mode
-  :defer 10
   :config
   (global-company-mode))
 
@@ -635,6 +633,7 @@
     )
 
   (use-package anaconda-mode
+    :disabled t
     :diminish anaconda-mode
     :init
     (add-hook 'python-mode-hook '(lambda () (anaconda-mode)))
@@ -653,27 +652,7 @@
   (elpy-enable)
   :config
   (setq elpy-test-runner 'elpy-test-pytest-runner)
-  (setq elpy-rpc-backend "jedi")
-  ;; (delete 'elpy-module-highlight-indentation elpy-modules)
-  ;; (delete 'elpy-module-yasnippet elpy-modules)
-  ;; (delete 'elpy-module-flymake elpy-modules)
-  (defun mw/set-elpy-test-runners ()
-    "Set elpy test runners"
-    (let ((python (executable-find "python")))
-      (setq
-       elpy-test-discover-runner-command (list python "-m" "unittest")
-       elpy-test-django-runner-command (list python "manage.py" "test" "--noinput"))))
-  (defun mw/auto-activate-virtualenv ()
-    "Set auto-activate virtualenv"
-    (interactive)
-    (let ((virtualenvs (directory-files (getenv "WORKON_HOME"))))
-      (message "activating virtualenv")
-      (if (and (member (projectile-project-name) virtualenvs) (not (equal (projectile-project-name) pyvenv-virtual-env-name)))
-          (progn
-            (pyenv-mode t)
-            (pyvenv-workon (projectile-project-name))
-            (message (format "activated virtualenv: %s" (projectile-project-name))))
-        (message "virtualenv not activated"))))
+  (setq elpy-rpc-backend "rope") ;; (setq elpy-rpc-backend "jedi")
   (use-package pyvenv
     :config
     (defalias 'workon 'pyvenv-workon)
@@ -681,16 +660,6 @@
     (add-hook 'projectile-switch-project-hook 'mw/auto-activate-virtualenv)
     (add-hook 'python-mode-hook 'mw/auto-activate-virtualenv)
     (add-hook 'pyvenv-post-activate-hooks 'mw/set-elpy-test-runners))
-
-  (defun mw/clean-python-file-hook ()
-    "Clean python buffer before saving"
-    (interactive)
-    (progn
-      (if (and (which "autopep8") (symbolp 'elpy-autopep8-fix-code))
-          (elpy-autopep8-fix-code))
-      ;; (if (symbolp 'elpy-importmagic-fixup)
-      ;;     (elpy-importmagic-fixup))
-    ))
   ;; (add-hook 'python-mode-hook
   ;;         (lambda ()
   ;;            (add-hook 'before-save-hook 'mw/clean-python-file-hook nil 'make-it-local)))
