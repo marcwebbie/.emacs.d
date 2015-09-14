@@ -300,47 +300,38 @@
     (setq sublimity-map-text-scale -7)))
 
 (use-package tdd-mode
-  :bind ("C-<f5>" . tdd-mode)
-  :config
-  (shell-command "terminal-notifier -message 'Hello, this is my message' -title 'Message Title'")
-  )
+  :bind ("C-<f5>" . tdd-mode))
 
 (use-package ido
-  :defer 3
   :init
   (ido-mode t)
   :config
-  (setq ido-create-new-buffer 'always)
-  (setq ido-case-fold t)
-  (setq ido-show-dot-for-dired nil)
-  (setq ido-file-extensions-order '(".py" ".rb" ".el" ".js"))
+  (setq ido-enable-prefix nil
+        ido-enable-flex-matching t
+        ido-create-new-buffer 'always
+        ido-use-filename-at-point 'guess
+        ido-max-prospects 10
+        ;; ido-save-directory-list-file (expand-file-name "ido.hist" user-emacs-directory)
+        ido-default-file-method 'selected-window
+        ido-file-extensions-order '(".py" ".rb" ".el" ".js")
+        ido-auto-merge-work-directories-length -1)
   (add-to-list 'ido-ignore-files '(".DS_Store" ".pyc"))
   (add-to-list 'ido-ignore-directories '("__pycache__", ".git"))
+
   (use-package ido-vertical-mode
     :config
-    (setq ido-vertical-decorations (list
-                                    "\n➜ "
-                                    ""
-                                    "\n"
-                                    "\n..."
-                                    "["
-                                    "]"
-                                    " [No match]"
-                                    " [Matched]"
-                                    " [Not readable]"
-                                    " [Too big]"
-                                    " [Confirm]"
-                                    "\n"
-                                    ""
-                                    ))
+    (setq ido-vertical-decorations (list "\n➜ " "" "\n" "\n..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]" "\n" ""))
     (ido-vertical-mode 1)
     (setq ido-vertical-define-keys 'C-n-C-p-up-and-down))
+
   (use-package ido-ubiquitous
     :config
-    (ido-ubiquitous-mode t))
+    (ido-ubiquitous-mode +1))
+
   (use-package flx-ido
     :config
-    (flx-ido-mode t)))
+    (flx-ido-mode +1))
+  )
 
 (use-package visual-regexp
   :bind (("C-s" . vr/isearch-forward)
