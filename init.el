@@ -171,8 +171,6 @@
 
 (load-local "defuns")
 (load-local "vendor/tdd")
-;; (load-local "defaults")
-;; (load-local "vendor/ido-vertical-mode")
 
 
 ;;============================================================
