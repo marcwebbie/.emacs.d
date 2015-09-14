@@ -105,7 +105,7 @@
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
 ;; (load-theme 'solarized-dark :no-confirm)
-(load-theme 'solarized-light :no-confirm)
+;; (load-theme 'solarized-light :no-confirm)
 ;; (load-theme 'cyberpunk :no-confirm)
 ;; (load-theme 'warm-night :no-confirm)
 ;; (load-theme 'smyx :no-confirm)
@@ -115,7 +115,7 @@
 ;; (load-theme 'cherry-blossom :no-confirm)
 ;; (load-theme 'hemisu-dark :no-confirm)
 ;; (load-theme 'hemisu-ligth :no-confirm)
-;; (load-theme 'material :no-confirm)
+(load-theme 'material :no-confirm)
 ;; (load-theme 'material-light :no-confirm)
 ;; (load-theme 'badger :no-confirm)
 ;; (load-theme 'darktooth :no-confirm)
