@@ -144,21 +144,6 @@
 ;; (set-frame-font "Source Code Pro-15")
 ;; (set-frame-font "Menlo-14")
 ;; (set-frame-font "Fantasque Sans Mono-18")
-;; (set-face-attribute 'default nil
-;;                     :family "Liberation Mono"
-;;                     :height 140
-;;                     :weight 'normal
-;;                     :width 'normal)
-;; (set-face-attribute 'default nil
-;;                     :family "Fantasque Sans Mono"
-;;                     :height 180
-;;                     :weight 'normal
-;;                     :width 'normal)
-;; (set-face-attribute 'default nil
-;;                     :family "Droid Sans Mono"
-;;                     :height 140
-;;                     :weight 'normal
-;;                     :width 'normal)
 ;; (set-frame-font "Fantasque Sans Mono-16:antialias=1")
 ;; (set-frame-font "Ubuntu Mono-16:antialias=1")
 
