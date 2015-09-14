@@ -75,30 +75,35 @@
 (defun load-local (file)
   (load (expand-file-name file user-emacs-directory)))
 
-;; Cask
+(defun dotemacs-file (file)
+  (expand-file-name file user-emacs-directory))
+
+;; cask
 (if (file-exists-p "~/.cask/cask.el")
     (require 'cask "~/.cask/cask.el")
   (require 'cask "/usr/local/share/emacs/site-lisp/cask.el"))
+;; (require 'cask (dotemacs-file "vendor/cask"))
 (cask-initialize)
 
-;; Pallet
-(require 'pallet)
+;; pallet
+(require 'pallet (dotemacs-file "vendor/pallet"))
 (pallet-mode t)
 
+;; bind-key
+(require 'bind-key (dotemacs-file "vendor/bind-key"))
+
 ;; use-package
+(require 'use-package (dotemacs-file "vendor/use-package"))
+
 
 
 
 ;;============================================================
 ;; Appearance
 ;;============================================================
-
 (global-hl-line-mode -1)
 (global-linum-mode -1)
 (blink-cursor-mode -1)
-
-;; (setq font-lock-maximum-decoration nil
-;;       truncate-partial-width-windows nil)
 
 ;; Scrolling
 ;; =========================
@@ -113,62 +118,64 @@
 (setq color-theme-is-global t)
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
-;; (load-theme 'solarized-dark :no-confirm)
-;; (load-theme 'solarized-light :no-confirm)
-;; (load-theme 'cyberpunk :no-confirm)
-;; (load-theme 'warm-night :no-confirm)
-;; (load-theme 'smyx :no-confirm)
-;; (load-theme 'noctilux :no-confirm)
-;; (load-theme 'monokai :no-confirm)
-;; (load-theme 'molokai :no-confirm)
-;; (load-theme 'cherry-blossom :no-confirm)
-;; (load-theme 'hemisu-dark :no-confirm)
-;; (load-theme 'hemisu-ligth :no-confirm)
-(load-theme 'material :no-confirm)
-;; (load-theme 'material-light :no-confirm)
-;; (load-theme 'badger :no-confirm)
-;; (load-theme 'darktooth :no-confirm)
-;; (load-theme 'gruvbox :no-confirm)
-;; (load-theme 'flatui :no-confirm)
-;; (load-theme 'tango-plus :no-confirm)
-;; (load-theme 'flatland-black :no-confirm)
-;; (load-theme 'ample :no-confirm)
-;; (progn
-;;   (require 'moe-theme)
-;;   (moe-dark)
-;;   (moe-theme-set-color 'green)
-;;   )
+(use-package solarized-theme :ensure t :init (load-theme 'solarized-dark :no-confirm))
+;; (use-package solarized-theme :ensure t :init (load-theme 'solarized-light :no-confirm))
+;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
+;; (use-package cyberpunk-theme :ensure t :init (load-theme 'cyberpunk :no-confirm))
+;; (use-package warm-night-theme :ensure t :init (load-theme 'warm-night :no-confirm))
+;; (use-package smyx-theme :ensure t :init (load-theme 'smyx :no-confirm))
+;; (use-package noctilux-theme :ensure t :init (load-theme 'noctilux :no-confirm))
+;; (use-package monokai-theme :ensure t :init (load-theme 'monokai :no-confirm))
+;; (use-package molokai-theme :ensure t :init (load-theme 'molokai :no-confirm))
+;; (use-package cherry-blossom-theme :ensure t :init (load-theme 'cherry-blossom :no-confirm))
+;; (use-package hemisu-dark-theme :ensure t :init (load-theme 'hemisu-dark :no-confirm))
+;; (use-package hemisu-ligth-theme :ensure t :init (load-theme 'hemisu-ligth :no-confirm))
+;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
+;; (use-package material-light-theme :ensure t :init (load-theme 'material-light :no-confirm))
+;; (use-package badger-theme :ensure t :init (load-theme 'badger :no-confirm))
+;; (use-package darktooth-theme :ensure t :init (load-theme 'darktooth :no-confirm))
+;; (use-package gruvbox-theme :ensure t :init (load-theme 'gruvbox :no-confirm))
+;; (use-package flatui-theme :ensure t :init (load-theme 'flatui :no-confirm))
+;; (use-package tango-plus-theme :ensure t :init (load-theme 'tango-plus :no-confirm))
+;; (use-package flatland-black-theme :ensure t :init (load-theme 'flatland-black :no-confirm))
+;; (use-package ample-theme :ensure t :init (load-theme 'ample :no-confirm))
+
 
 ;; Fonts
 ;; =========================
-(set-frame-font "Droid Sans Mono Dotted-14")
-;; (set-frame-font "Code New Roman-14")
-;; (set-frame-font "Cousine-15")
-;; (set-frame-font "Inconsolata-16")
-;; (set-frame-font "Monaco-14")
-;; (set-frame-font "Ubuntu Mono-16")
-;; (set-frame-font "Liberation Mono-14")
-;; (set-frame-font "Anonymous Pro-16")
-;; (set-frame-font "Roboto Mono-15")
-;; (set-frame-font "Source Code Pro-15")
-;; (set-frame-font "Menlo-14")
-;; (set-frame-font "Fantasque Sans Mono-18")
-;; (set-frame-font "Fantasque Sans Mono-16:antialias=1")
-;; (set-frame-font "Ubuntu Mono-16:antialias=1")
+(defun mw/set-best-font (fonts)
+  (when fonts
+    (let* ((fontname (car (car fonts)))
+           (fontsize (car (last (car fonts))))
+           (fontstring (format "%s-%d" fontname fontsize)))
+      (if (member fontname (font-family-list)) (set-frame-font fontstring)
+        (mw/set-best-font (cdr fonts))))))
+
+(mw/set-best-font '(
+                   ("Liberation Mono" 14)
+                   ("Droid Sans Mono Dotted" 14)
+                   ("Inconsolata" 16)
+                   ("Anonymous Pro" 16)
+                   ("Source Code Pro" 14)
+                   ("Ubuntu Mono" 16)
+                   ("Monaco" 14)
+                   ("Roboto Mono" 15)
+                   ("Code New Roman" 14)
+                   ("Cousine" 15)
+                   ("Ubuntu Mono" 16)
+                   ("Menlo" 14)
+                   ("Fantasque Sans Mono" 18)
+                  ))
 
 ;;============================================================
 ;; Loading
 ;;============================================================
 (load-local "defuns")
-(load-local "vendor/tdd")
 
 
 ;;============================================================
 ;; Packages
 ;;============================================================
-(require 'bind-key)
-(require 'use-package)
-
 
 ;;#############################
 ;; System
@@ -178,18 +185,18 @@
 (add-hook 'auto-revert-tail-mode-hook 'etc-log-tail-handler)
 
 
-
-
 ;;#############################
 ;; Shell
 ;;#############################
 (use-package shell
+  :ensure t
   :mode (("\\.bash" . shell-script-mode)
          ("\\.zsh" . shell-script-mode)
          ("\\.fish" . shell-script-mode))
   :config
   (when *is-a-mac*
     (use-package exec-path-from-shell
+      :ensure t
       :config
       (exec-path-from-shell-initialize)
       (exec-path-from-shell-copy-env "PYTHONPATH")))
@@ -203,6 +210,7 @@
   (setq dired-omit-files "^\\.?#\\|^\\.$\\|^__pycache__$\\|\\.git"))
 
 (use-package realgud
+  :ensure t
   :disabled t)
 
 
@@ -210,6 +218,7 @@
 ;; Ace
 ;;#############################
 (use-package ace-jump-mode
+  :ensure t
   :defer 3
   :bind (("C-c SPC" . ace-jump-mode)
          ("C-c C-SPC" . ace-jump-mode-pop-mark))
@@ -218,6 +227,7 @@
   )
 
 (use-package ace-window
+  :ensure t
   :defer 3
   :bind ("M-o" . ace-window)
   :config
@@ -229,6 +239,7 @@
 ;; Git
 ;;#############################
 (use-package magit
+  :ensure t
   :commands magit-status
   :bind ("C-x g" . magit-status)
   :config
@@ -244,6 +255,7 @@
   (bind-key "q" 'magit-quit-session magit-status-mode-map))
 
 (use-package git-gutter
+  :ensure t
   :bind (("C-c v =" . git-gutter:popup-hunk) ;; show hunk diff
          ("C-c v p" . git-gutter:previous-hunk)
          ("C-c v n" . git-gutter:next-hunk)
@@ -258,18 +270,10 @@
    '(git-gutter:modified-sign "█") ;; two space
    '(git-gutter:added-sign "█")    ;; multiple character is OK
    '(git-gutter:deleted-sign "█"))
-
-  ;; (set-face-background 'git-gutter:modified "purple") ;; background color
-  ;; (set-face-background 'git-gutter:added "green")
-  ;; (set-face-background 'git-gutter:deleted "red")
-  ;; (set-face-foreground 'git-gutter:modified "yellow")
   )
 
-;; (use-package git-gutter-fringe
-;;   :init
-;;   (git-gutter-mode))
-
 (use-package git-timemachine
+  :ensure t
   :bind ("C-c v t" . git-timemachine))
 
 
@@ -277,12 +281,14 @@
 ;; Navigation
 ;;#############################
 (use-package saveplace
+  :ensure t
   :init
   (if (fboundp #'save-place-mode)
       (save-place-mode +1)
     (setq-default save-place t)))
 
 (use-package bm
+  :ensure t
   :bind (
          ("C-c b m" . bm-toggle)
          ("C-c b [" . bm-previous)
@@ -294,12 +300,15 @@
   (bind-key "p" 'bm-show-prev bm-show-mode-map)
   )
 
-(use-package bookmark+)
+(use-package bookmark+
+  :ensure t)
 
 (use-package sublimity
+  :ensure t
   :config
   (sublimity-mode +1)
   (use-package sublimity-map
+    :ensure t
     :disabled t
     :config
     (setq sublimity-map-size 20)
@@ -307,9 +316,11 @@
     (setq sublimity-map-text-scale -7)))
 
 (use-package tdd-mode
+  :load-path "vendor/tdd"
   :bind ("C-<f5>" . tdd-mode))
 
 (use-package ido
+  :ensure t
   :init
   (ido-mode t)
   :config
@@ -326,27 +337,32 @@
   (add-to-list 'ido-ignore-directories '("__pycache__", ".git"))
 
   (use-package ido-vertical-mode
+    :ensure t
     :config
     (setq ido-vertical-decorations (list "\n➜ " "" "\n" "\n..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]" "\n" ""))
     (ido-vertical-mode 1)
     (setq ido-vertical-define-keys 'C-n-C-p-up-and-down))
 
   (use-package ido-ubiquitous
+    :ensure t
     :config
     (ido-ubiquitous-mode +1))
 
   (use-package flx-ido
+    :ensure t
     :config
     (flx-ido-mode +1))
   )
 
 (use-package visual-regexp
+  :ensure t
   :bind (("C-s" . vr/isearch-forward)
          ("C-r" . vr/isearch-backward)
          ("C-q" . vr/query-replace))
   )
 
 (use-package projectile
+  :ensure t
   :init
   (projectile-global-mode t)
   :config
@@ -370,6 +386,7 @@
   )
 
 (use-package swiper
+  :ensure t
   :disabled t
   :config
   (ivy-mode 1)
@@ -377,6 +394,7 @@
   )
 
 (use-package recentf
+  :ensure t
   ;; :bind (("C-x C-r" . recentf-grizzl-find-file))
   :bind (("C-x f" . recentf-ido-find-file)
          ("C-c f" . recentf-ido-find-file))
@@ -392,14 +410,17 @@
   (setq recentf-max-saved-items 1000))
 
 (use-package smex
+  :ensure t
   :bind (("M-x" . smex)
          ("C-x C-m" . smex)))
 
 (use-package helm
+  :ensure t
   :disabled t
   :init (helm-mode))
 
 (use-package golden-ratio
+  :ensure t
   :diminish golden-ratio-mode
   :init
   (golden-ratio-mode t)
@@ -409,6 +430,7 @@
   )
 
 (use-package rainbow-delimiters
+  :ensure t
   :init
   (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
@@ -417,6 +439,7 @@
 ;; Completion
 ;;#############################
 (use-package restclient
+  :ensure t
   :mode (("\\.rest" . restclient-mode)))
 
 
@@ -424,6 +447,7 @@
 ;; Completion
 ;;#############################
 (use-package company
+  :ensure t
   :config
   (global-company-mode)
   (use-package company-tern
@@ -433,6 +457,7 @@
 
 
 (use-package guide-key
+  :ensure t
   :diminish guide-key-mode
   :init
   (guide-key-mode +1)
@@ -445,19 +470,23 @@
 ;; Editing
 ;;#############################
 (use-package hippie
+  :load-path "vendor/hippie"
   :bind ("C-." . hippie-expand))
 
 (use-package swiper
+  :ensure t
   :disabled t
   :bind (("C-r" . swiper)
          ("C-s" . swiper)))
 
 (use-package drag-stuff
+  :ensure t
   :defer 5
   :bind (("M-p" . drag-stuff-up)
          ("M-n" . drag-stuff-down)))
 
 (use-package multiple-cursors
+  :ensure t
   :defer 3
   :bind (("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
@@ -465,11 +494,13 @@
   )
 
 (use-package expand-region
+  :ensure t
   :bind (("C-M-SPC" . er/expand-region)
          ("C-+" . er/contract-region))
   )
 
 (use-package smartparens
+  :ensure t
   :defer 3
   :diminish smartparens-mode
   :bind (("C-M-k" . sp-kill-sexp-with-a-twist-of-lime)
@@ -499,6 +530,7 @@
   )
 
 (use-package region-bindings-mode
+  :ensure t
   :defer 5
   :config
   (region-bindings-mode-enable)
@@ -543,6 +575,8 @@
       (backward-word))))
 
 (use-package imenu-anywhere
+
+  :ensure t
   :bind (("M-i" . ido-imenu-anywhere))
   :init
   (defun jcs-use-package ()
@@ -558,15 +592,17 @@
 ;; Modeline
 ;;#############################
 (use-package smart-mode-line
+  :ensure t
   :init
   (setq sml/no-confirm-load-theme t)
   (sml/setup)
   (use-package nyan-mode
-  :init
-  (nyan-mode))
-  )
+    :ensure t
+    :init
+    (nyan-mode)))
 
 (use-package powerline
+  :ensure t
   :disabled t
   :init
   (powerline-default-theme)
@@ -577,6 +613,7 @@
   )
 
 (use-package re-builder
+  :ensure t
   :config
   (setq reb-re-syntax 'string)
   )
@@ -597,6 +634,7 @@
     (add-hook 'before-save-hook 'delete-trailing-whitespace)))
 
 (use-package ibuffer
+  :ensure t
   :bind ("C-x C-b" . ibuffer))
 
 
@@ -604,6 +642,7 @@
 ;; Languages
 ;;#############################
 (use-package web-mode
+  :ensure t
   :mode (("\\.html\\'" . web-mode)
          ("\\.html\\.erb\\'" . web-mode)
          ("\\.html\\.ejs\\'" . web-mode)
@@ -628,14 +667,17 @@
                 (define-key web-mode-map [(return)] 'newline-and-indent)))))
 
 (use-package jinja2-mode
+  :ensure t
   :mode (("app/views/.*\\.html" . jinja2-mode)
          (".*\\.jinja" . jinja2-mode)
          (".*\\.jinja2" . jinja2-mode)))
 
 (use-package jade-mode
+  :ensure t
   :mode ".*\\.jade")
 
 (use-package js2-mode
+  :ensure t
   :mode ".*\\.js"
   :interpreter "node"
   :bind (("C-a" . back-to-indentation-or-beginning-of-line)
@@ -647,9 +689,11 @@
   )
 
 (use-package json-mode
+  :ensure t
   :mode ".*\\.json")
 
 (use-package python
+  :ensure t
   :config
   (bind-key "C-<f9>" 'mw/add-pudb-debug python-mode-map)
   (bind-key "<f9>" 'mw/add-py-debug python-mode-map)
@@ -667,6 +711,7 @@
     )
 
   (use-package anaconda-mode
+    :ensure t
     :disabled t
     :diminish anaconda-mode
     :init
@@ -674,11 +719,13 @@
     )
 
   (use-package pip-requirements
+    :ensure t
     :mode "\\requirements.txt\\'"
     :config (pip-requirements-mode))
   )
 
 (use-package elpy
+  :ensure t
   :bind (("C-c t" . elpy-test-django-runner)
          ("C-c C-f" . elpy-find-file)
          ("C-c C-;" . mw/set-django-settings-module))
@@ -689,6 +736,7 @@
   ;; (setq elpy-rpc-backend "rope")
   (setq elpy-rpc-backend "jedi")
   (use-package pyvenv
+    :ensure t
     :config
     (defalias 'workon 'pyvenv-workon)
     (add-hook 'python-mode-hook 'pyvenv-mode)
@@ -701,11 +749,13 @@
   )
 
 (use-package yaml-mode
+  :ensure t
   :mode ((".*\\.pass" . yaml-mode)
          ("\\.passpierc" . yaml-mode))
   )
 
 (use-package coffee-mode
+  :ensure t
   :config
   (setq coffee-tab-width 2))
 
