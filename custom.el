@@ -18,7 +18,7 @@
  '(markdown-header-face-5 ((t (:inherit org-level-5))))
  '(package-selected-packages
    (quote
-    (idomenu helm bm realgud sublimity package-build shut-up epl git commander f dash s)))
+    (company-tern color-moccur bookmark+ nyan-mode idomenu helm bm realgud sublimity package-build shut-up epl git commander f dash s)))
  '(paradox-github-token t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

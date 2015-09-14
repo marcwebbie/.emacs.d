@@ -72,12 +72,21 @@
 ;;============================================================
 ;; Bootstrap
 ;;============================================================
+(defun load-local (file)
+  (load (expand-file-name file user-emacs-directory)))
+
+;; Cask
 (if (file-exists-p "~/.cask/cask.el")
     (require 'cask "~/.cask/cask.el")
   (require 'cask "/usr/local/share/emacs/site-lisp/cask.el"))
 (cask-initialize)
+
+;; Pallet
 (require 'pallet)
 (pallet-mode t)
+
+;; use-package
+
 
 
 ;;============================================================
@@ -150,10 +159,6 @@
 ;;============================================================
 ;; Loading
 ;;============================================================
-
-(defun load-local (file)
-  (load (expand-file-name file user-emacs-directory)))
-
 (load-local "defuns")
 (load-local "vendor/tdd")
 
@@ -289,6 +294,8 @@
   (bind-key "p" 'bm-show-prev bm-show-mode-map)
   )
 
+(use-package bookmark+)
+
 (use-package sublimity
   :config
   (sublimity-mode +1)
@@ -340,19 +347,26 @@
   )
 
 (use-package projectile
-  :defer 1
   :init
   (projectile-global-mode t)
   :config
-  (setq projectile-enable-caching t)
-  (setq projectile-use-git-grep t)
-  (setq projectile-switch-project-action 'projectile-dired)
-  (setq projectile-require-project-root t)
-  ;; (setq projectile-completion-system 'helm)
-  ;; (setq projectile-completion-system 'grizzl)
-  ;; (setq projectile-completion-system 'ivy)
-  (add-to-list 'projectile-globally-ignored-files ".DS_Store" "*.pyc")
-  (add-to-list 'projectile-globally-ignored-directories "*__pycache__*")
+  (setq projectile-enable-caching t
+        projectile-use-git-grep t
+        projectile-switch-project-action 'projectile-dired
+        projectile-require-project-root t
+        projectile-mode-line '(:eval (format " P[%s]" (projectile-project-name)))
+        ;; (setq projectile-completion-system 'helm)
+        ;; (setq projectile-completion-system 'grizzl)
+        ;; (setq projectile-completion-system 'ivy)
+        )
+  (add-to-list 'projectile-globally-ignored-files ".DS_Store")
+  (add-to-list 'projectile-globally-ignored-files "*.pyc")
+  (add-to-list 'projectile-globally-ignored-files "*.python-version")
+  (add-to-list 'projectile-globally-ignored-files "*.egg-info")
+  (add-to-list 'projectile-globally-ignored-directories "__pycache__")
+  (add-to-list 'projectile-globally-ignored-directories ".env")
+  (add-to-list 'projectile-globally-ignored-directories ".venv")
+  (add-to-list 'projectile-globally-ignored-directories ".cask")
   )
 
 (use-package swiper
@@ -411,7 +425,11 @@
 ;;#############################
 (use-package company
   :config
-  (global-company-mode))
+  (global-company-mode)
+  (use-package company-tern
+    :ensure t
+    :config
+    (add-to-list 'company-backends 'company-tern)))
 
 
 (use-package guide-key
@@ -543,6 +561,9 @@
   :init
   (setq sml/no-confirm-load-theme t)
   (sml/setup)
+  (use-package nyan-mode
+  :init
+  (nyan-mode))
   )
 
 (use-package powerline
@@ -615,17 +636,18 @@
   :mode ".*\\.jade")
 
 (use-package js2-mode
-  :mode "\\.js\\'"
+  :mode ".*\\.js"
   :interpreter "node"
   :bind (("C-a" . back-to-indentation-or-beginning-of-line)
          ("C-M-h" . backward-kill-word))
-  :init
-  (progn
-    (add-hook 'js2-mode-hook 'smartparens-mode))
   :config
-  (progn
-    (setq js2-basic-offset 2)
-    (bind-key "M-j" 'join-line-or-lines-in-region js2-mode-map)))
+  (setq js2-basic-offset 2)
+  (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
+  (bind-key "M-j" 'join-line-or-lines-in-region js2-mode-map)
+  )
+
+(use-package json-mode
+  :mode ".*\\.json")
 
 (use-package python
   :config
@@ -682,6 +704,10 @@
   :mode ((".*\\.pass" . yaml-mode)
          ("\\.passpierc" . yaml-mode))
   )
+
+(use-package coffee-mode
+  :config
+  (setq coffee-tab-width 2))
 
 
 ;;============================================================
