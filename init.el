@@ -214,7 +214,8 @@
   (setq-default dired-omit-files-p t) ; Buffer-local variable
   (setq dired-omit-files "^\\.?#\\|^\\.$\\|^__pycache__$\\|\\.git"))
 
-(use-package realgud)
+(use-package realgud
+  :disabled t)
 
 
 ;;#############################
