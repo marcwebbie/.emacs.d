@@ -72,11 +72,11 @@
 ;;============================================================
 ;; Bootstrap
 ;;============================================================
-(defun load-local (file)
-  (load (expand-file-name file user-emacs-directory)))
+(defun load-local (filename)
+  (load (expand-file-name filename user-emacs-directory)))
 
-(defun dotemacs-file (file)
-  (expand-file-name file user-emacs-directory))
+(defun dotemacs-file (filename)
+  (expand-file-name filename user-emacs-directory))
 
 ;; cask
 (if (file-exists-p "~/.cask/cask.el")
@@ -86,16 +86,15 @@
 (cask-initialize)
 
 ;; pallet
-(require 'pallet (dotemacs-file "vendor/pallet"))
-(pallet-mode t)
+;; (require 'pallet (dotemacs-file "vendor/pallet"))
+;; (pallet-mode t)
 
 ;; bind-key
 (require 'bind-key (dotemacs-file "vendor/bind-key"))
 
 ;; use-package
 (require 'use-package (dotemacs-file "vendor/use-package"))
-
-
+(setq use-package-verbose t)
 
 
 ;;============================================================
@@ -189,17 +188,17 @@
 ;; Shell
 ;;#############################
 (use-package shell
-  :ensure t
   :mode (("\\.bash" . shell-script-mode)
          ("\\.zsh" . shell-script-mode)
          ("\\.fish" . shell-script-mode))
   :config
-  (when *is-a-mac*
-    (use-package exec-path-from-shell
-      :ensure t
-      :config
-      (exec-path-from-shell-initialize)
-      (exec-path-from-shell-copy-env "PYTHONPATH")))
+  (use-package exec-path-from-shell
+    :ensure t
+    :if *is-a-mac*
+    :defer 5
+    :config
+    (exec-path-from-shell-initialize)
+    (exec-path-from-shell-copy-env "PYTHONPATH"))
   )
 
 (use-package dired-x
@@ -219,7 +218,6 @@
 ;;#############################
 (use-package ace-jump-mode
   :ensure t
-  :defer 3
   :bind (("C-c SPC" . ace-jump-mode)
          ("C-c C-SPC" . ace-jump-mode-pop-mark))
   :config
@@ -228,7 +226,6 @@
 
 (use-package ace-window
   :ensure t
-  :defer 3
   :bind ("M-o" . ace-window)
   :config
   (setq aw-keys '(?q ?w ?e ?r ?a ?s ?d ?f))
@@ -262,9 +259,8 @@
          ("C-c v s" . git-gutter:stage-hunk)
          ("C-c v r" . git-gutter:revert-hunk))
   :diminish git-gutter-mode
-  :init
-  (global-git-gutter-mode t)
   :config
+  (global-git-gutter-mode t)
   (custom-set-variables
    '(git-gutter:window-width 1)
    '(git-gutter:modified-sign "█") ;; two space
@@ -301,6 +297,7 @@
   )
 
 (use-package bookmark+
+  :disabled t
   :ensure t)
 
 (use-package sublimity
@@ -355,6 +352,7 @@
   )
 
 (use-package visual-regexp
+  :disabled t
   :ensure t
   :bind (("C-s" . vr/isearch-forward)
          ("C-r" . vr/isearch-backward)
@@ -394,6 +392,7 @@
   )
 
 (use-package recentf
+  :defer 3
   :ensure t
   ;; :bind (("C-x C-r" . recentf-grizzl-find-file))
   :bind (("C-x f" . recentf-ido-find-file)
@@ -401,13 +400,14 @@
   :init
   (recentf-mode 1)
   :config
+  (setq recentf-keep '(file-remote-p file-readable-p))
   (defun recentf-grizzl-find-file ()
     "Find a recent file using Ido."
     (interactive)
     (let ((file (grizzl-completing-read "Choose recent file: " recentf-list)))
       (when file
         (find-file file))))
-  (setq recentf-max-saved-items 1000))
+  (setq recentf-max-saved-items 100))
 
 (use-package smex
   :ensure t
@@ -448,10 +448,12 @@
 ;;#############################
 (use-package company
   :ensure t
+  :defer 10
   :config
   (global-company-mode)
   (use-package company-tern
     :ensure t
+    :defer 10
     :config
     (add-to-list 'company-backends 'company-tern)))
 
@@ -481,13 +483,11 @@
 
 (use-package drag-stuff
   :ensure t
-  :defer 5
   :bind (("M-p" . drag-stuff-up)
          ("M-n" . drag-stuff-down)))
 
 (use-package multiple-cursors
   :ensure t
-  :defer 3
   :bind (("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C-w" . mc/mark-all-words-like-this))
@@ -501,7 +501,7 @@
 
 (use-package smartparens
   :ensure t
-  :defer 3
+  :defer 5
   :diminish smartparens-mode
   :bind (("C-M-k" . sp-kill-sexp-with-a-twist-of-lime)
          ("C-M-f" . sp-forward-sexp)
@@ -521,12 +521,12 @@
          ("M-J" . sp-join-sexp)
          ("C-M-t" . sp-transpose-sexp))
   :commands (smartparens-mode show-smartparens-mode)
-  :init
+  :config
   (smartparens-global-mode 1)
   (smartparens-strict-mode 1)
   (show-smartparens-global-mode t)
   (setq smartparens-global-strict-mode t)
-  :config (require 'smartparens-config)
+  (require 'smartparens-config)
   )
 
 (use-package region-bindings-mode
@@ -575,16 +575,15 @@
       (backward-word))))
 
 (use-package imenu-anywhere
-
   :ensure t
   :bind (("M-i" . ido-imenu-anywhere))
   :init
+  :config
   (defun jcs-use-package ()
     (add-to-list 'imenu-generic-expression
                  '("use-package"
                    "\\(^\\s-*(use-package +\\)\\(\\_<.+\\_>\\)" 2)))
   (add-hook 'emacs-lisp-mode-hook #'jcs-use-package)
-  :config
   (setq imenu-anywhere-delimiter-ido " @ "))
 
 
@@ -593,21 +592,19 @@
 ;;#############################
 (use-package smart-mode-line
   :ensure t
-  :init
+  :config
   (setq sml/no-confirm-load-theme t)
   (sml/setup)
   (use-package nyan-mode
     :ensure t
-    :init
+    :config
     (nyan-mode)))
 
 (use-package powerline
   :ensure t
   :disabled t
-  :init
-  (powerline-default-theme)
-  ;; (powerline-center-theme)
   :config
+  (powerline-default-theme)
   ;; (setq powerline-display-hud nil)
   (setq powerline-default-separator 'curve)
   )
@@ -694,6 +691,7 @@
 
 (use-package python
   :ensure t
+  :defer 5
   :config
   (bind-key "C-<f9>" 'mw/add-pudb-debug python-mode-map)
   (bind-key "<f9>" 'mw/add-py-debug python-mode-map)
