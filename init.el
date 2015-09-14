@@ -294,7 +294,17 @@
       (save-place-mode +1)
     (setq-default save-place t)))
 
-(use-package bm)
+(use-package bm
+  :bind (
+         ("C-c b m" . bm-toggle)
+         ("C-c b [" . bm-previous)
+         ("C-c b ]" . bm-next)
+         ("C-c b l" . bm-show-all)
+         )
+  :config
+  (bind-key "n" 'bm-show-next bm-show-mode-map)
+  (bind-key "p" 'bm-show-prev bm-show-mode-map)
+  )
 
 (use-package sublimity
   :config
@@ -432,8 +442,11 @@
 
 (use-package guide-key
   :diminish guide-key-mode
-  :init (guide-key-mode +1)
+  :init
+  (guide-key-mode +1)
   :config
+  (setq guide-key/popup-window-position 'bottom)
+  ;; (setq guide-key/text-scale-amount 0)
   (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c p" "C-c p 4" "C-c p s" "C-c m" "C-c C-r" "C-c C-p")))
 
 
@@ -539,7 +552,7 @@
       (backward-word))))
 
 (use-package imenu-anywhere
-  :bind ("M-i" . ido-imenu-anywhere)
+  :bind (("M-i" . ido-imenu-anywhere))
   :init
   (defun jcs-use-package ()
     (add-to-list 'imenu-generic-expression
