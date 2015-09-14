@@ -429,7 +429,6 @@
   (guide-key-mode +1)
   :config
   (setq guide-key/popup-window-position 'bottom)
-  ;; (setq guide-key/text-scale-amount 0)
   (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c p" "C-c p 4" "C-c p s" "C-c m" "C-c C-r" "C-c C-p")))
 
 
@@ -571,7 +570,6 @@
   )
 
 
-
 ;;#############################
 ;; Buffers/Files
 ;;#############################
@@ -667,20 +665,16 @@
     :config (pip-requirements-mode))
   )
 
-(defun mw/elpy-pdb-runner
-    "Run tests on a pdb gud interface")
-
 (use-package elpy
   :bind (("C-c t" . elpy-test-django-runner)
          ("C-c C-f" . elpy-find-file)
-         ("C-c C-;" . mw/set-django-settings-module)
-         ("C-c e p" . mw/))
+         ("C-c C-;" . mw/set-django-settings-module))
   :init
   (elpy-enable)
   :config
   (setq elpy-test-runner 'elpy-test-pytest-runner)
-  (setq elpy-rpc-backend "rope")
-  ;; (setq elpy-rpc-backend "jedi")
+  ;; (setq elpy-rpc-backend "rope")
+  (setq elpy-rpc-backend "jedi")
   (use-package pyvenv
     :config
     (defalias 'workon 'pyvenv-workon)
