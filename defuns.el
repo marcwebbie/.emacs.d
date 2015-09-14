@@ -539,13 +539,3 @@ if breakpoints are present in `python-mode' files"
     (if (symbolp 'elpy-importmagic-fixup)
         (elpy-importmagic-fixup))
     ))
-
-
-(defun mw/set-best-font (fonts)
-  (when fonts
-    (let* ((fontname (car (car fonts)))
-           (fontsize (car (last (car fonts))))
-           (fontstring (format "%s-%d" fontname fontsize)))
-      (if (member fontname (font-family-list)) (set-frame-font fontstring)
-        (mw/set-best-font (cdr fonts)))
-      )))
