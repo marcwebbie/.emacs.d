@@ -453,8 +453,8 @@ if breakpoints are present in `python-mode' files"
   "Switch between language dictionaries."
   (interactive "cChoose:  (1) English | (2) French | (3) Portuguese")
   (let ((lang (cond
-               ((eq choice ?1) "en_GB")
-               ((eq choice ?2) "fr_FR")
+               ((eq choice ?1) "en")
+               ((eq choice ?2) "fr")
                ((eq choice ?3) "pt_BR"))))
     (if lang (progn
                (message (format "Chosen dictionary: %s" lang))
@@ -512,9 +512,8 @@ if breakpoints are present in `python-mode' files"
 (defun mw/set-elpy-test-runners ()
   "Set elpy test runners"
   (let ((python (executable-find "python")))
-    (setq
-     elpy-test-discover-runner-command (list python "-m" "unittest")
-     elpy-test-django-runner-command (list python "manage.py" "test" "--noinput"))))
+    (setq elpy-test-django-runner-command (list python "manage.py" "test" "--noinput"))
+    (setq elpy-test-discover-runner-command (list python "-m" "unittest"))))
 
 
 (defun mw/auto-activate-virtualenv ()
@@ -525,7 +524,7 @@ if breakpoints are present in `python-mode' files"
         (if (equal (projectile-project-name) pyvenv-virtual-env-name)
             (format "already activated virtualenv %s" (projectile-project-name))
           (progn
-            (pyenv-mode t)
+            (pyvenv-mode t)
             (pyvenv-workon (projectile-project-name))
             (message (format "activated virtualenv: %s" (projectile-project-name))))))))
 
