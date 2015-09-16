@@ -33,3 +33,5 @@ autosaves/*
 /ido.last
 /var/
 /bookmarks
+quelpa/
+anaconda-mode/
