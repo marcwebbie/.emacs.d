@@ -3,7 +3,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(bmkp-last-as-first-bookmark-file "~/.emacs.d/bookmarks")
+ '(bmkp-last-as-first-bookmark-file "/Users/marc/.emacs.d/bookmarks")
  '(elpy-modules
    (quote
     (elpy-module-company elpy-module-eldoc elpy-module-flymake elpy-module-pyvenv elpy-module-sane-defaults)))
@@ -19,7 +19,7 @@
  '(markdown-header-face-5 ((t (:inherit org-level-5))))
  '(package-selected-packages
    (quote
-    (solarized-dark-theme zenburn-theme coffee-mode yaml-mode elpy pyvenv pip-requirements eldoc-mode json-mode js2-mode jade-mode jinja2-mode web-mode files smart-mode-line imenu-anywhere region-bindings-mode smartparens expand-region multiple-cursors drag-stuff hippie guide-key restclient rainbow-delimiters golden-ratio smex projectile visual-regexp flx-ido ido-ubiquitous ido-vertical-mode tdd-mode git-timemachine git-gutter magit ace-window ace-jump-mode dired-x exec-path-from-shell company-tern color-moccur bookmark+ nyan-mode idomenu helm bm realgud sublimity package-build shut-up epl git commander f dash s)))
+    (pythonic yasnippet highlight-indentation find-file-in-project company company-anaconda anaconda-mode pyenv-mode pyenv solarized-dark-theme zenburn-theme coffee-mode yaml-mode elpy pyvenv pip-requirements eldoc-mode json-mode js2-mode jade-mode jinja2-mode web-mode files smart-mode-line imenu-anywhere region-bindings-mode smartparens expand-region multiple-cursors drag-stuff hippie guide-key restclient rainbow-delimiters golden-ratio smex projectile visual-regexp flx-ido ido-ubiquitous ido-vertical-mode tdd-mode git-timemachine git-gutter magit ace-window ace-jump-mode dired-x exec-path-from-shell company-tern color-moccur bookmark+ nyan-mode idomenu helm bm realgud sublimity package-build shut-up epl git commander f dash s)))
  '(paradox-github-token t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
