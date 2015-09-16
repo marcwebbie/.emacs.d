@@ -7,6 +7,10 @@
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
 (package-initialize)
+(add-to-list
+ 'package-archives
+ '("melpa" . "http://melpa.org/packages/")
+    t)
 
 (defconst *is-a-mac* (eq system-type 'darwin))
 
@@ -26,6 +30,7 @@
 (setq tab-width 4)
 (setq-default indent-tabs-mode nil)
 
+;; Backup files
 (setq make-backup-files nil)
 (setq global-auto-revert-non-file-buffers t)
 (setq auto-revert-verbose nil)
@@ -54,6 +59,8 @@
 
 (defalias 'which 'executable-find)
 
+(setq *spell-program* (which "aspell"))
+
 
 ;;============================================================
 ;; System
@@ -75,25 +82,33 @@
 (defun load-local (filename)
   (load (expand-file-name filename user-emacs-directory)))
 
-(defun dotemacs-file (filename)
-  (expand-file-name filename user-emacs-directory))
-
 ;; cask
-(if (file-exists-p "~/.cask/cask.el")
-    (require 'cask "~/.cask/cask.el")
-  (require 'cask "/usr/local/share/emacs/site-lisp/cask.el"))
+;; (if (file-exists-p "~/.cask/cask.el")
+;;    (require 'cask "~/.cask/cask.el")
+;;  (require 'cask "/usr/local/share/emacs/site-lisp/cask.el"))
 ;; (require 'cask (dotemacs-file "vendor/cask"))
-(cask-initialize)
+;; (cask-initialize)
 
-;; pallet
-;; (require 'pallet (dotemacs-file "vendor/pallet"))
-;; (pallet-mode t)
+;; install quelpa
+;; (if (require 'quelpa nil t)
+;;     (quelpa-self-upgrade)
+;;   (with-temp-buffer
+;;     (url-insert-file-contents "https://raw.github.com/quelpa/quelpa/master/bootstrap.el")
+;;     (eval-buffer)))
 
-;; bind-key
-(require 'bind-key (dotemacs-file "vendor/bind-key"))
+;; install quelpa without self upgrading
+(unless (require 'quelpa nil t)
+  (with-temp-buffer
+    (url-insert-file-contents "https://raw.github.com/quelpa/quelpa/master/bootstrap.el")
+    (eval-buffer)))
+
+;; install use-package and the quelpa handler
+(quelpa '(quelpa-use-package :fetcher github :repo "quelpa/quelpa-use-package"))
+(require 'quelpa-use-package)
 
 ;; use-package
-(require 'use-package (dotemacs-file "vendor/use-package"))
+(package-install 'use-package)
+(require 'use-package)
 (setq use-package-verbose t)
 
 
@@ -171,10 +186,57 @@
 ;;============================================================
 (load-local "defuns")
 
+;; Major mode abbrevs
+(add-hook 'emacs-lisp-mode-hook (lambda() (setq mode-name "Ⓔ")))
+(add-hook 'python-mode-hook (lambda() (setq mode-name "Ⓟ")))
+(add-hook 'js2-mode-hook (lambda() (setq mode-name "Ⓙ")))
+
+;; Minor Mode diminish
+(eval-after-load "xterm-title" '(diminish 'xterm-title-mode))
+(eval-after-load "hi-lock" '(diminish 'hi-lock-mode))
+(eval-after-load "outline" '(diminish 'outline-minor-mode))
+
 
 ;;============================================================
 ;; Packages
 ;;============================================================
+
+(use-package bind-key
+  :config
+  ;; Editing
+  (bind-key "C-c d" 'duplicate-current-line-or-region)
+  (bind-key "C-j" 'newline-and-indent)
+  (bind-key "C-c n" 'clean-up-buffer-or-region)
+  (bind-key "C-M-;" 'comment-or-uncomment-current-line-or-region)
+  (bind-key "C-a" 'back-to-indentation-or-beginning-of-line)
+  (bind-key "C-z" 'zap-up-to-char)
+  (bind-key "C-|" 'align-regexp)
+
+  (bind-key "M-j" (λ (join-line -1)))
+  (bind-key "M-h" 'kill-to-beginning-of-line)
+  (bind-key "M-g M-g" 'goto-line-with-feedback)
+  (bind-key "M-<up>" 'open-line-above)
+  (bind-key "M-<down>" 'open-line-below)
+
+  ;; Buffer/Files
+  (bind-key "C-c R" 'rename-this-buffer-and-file)
+  (bind-key "C-c D" 'delete-this-buffer-and-file)
+  (bind-key "<f8>" (λ (find-file (f-expand "init.el" user-emacs-directory))))
+  (bind-key "<f5>" 'recompile)
+  (bind-key "C-x C-c" (λ (if (y-or-n-p "Quit Emacs? ") (save-buffers-kill-emacs))))
+
+  ;; Search
+  (bind-key "C-c g" 'google)
+  (bind-key "C-c y" 'youtube)
+
+  ;; Naming
+  (bind-key "C-c m -" (λ (replace-region-by 's-dashed-words)))
+  (bind-key "C-c m _" (λ (replace-region-by 's-snake-case)))
+  (bind-key "C-c m c" (λ (replace-region-by 's-lower-camel-case)))
+  (bind-key "C-c m C" (λ (replace-region-by 's-upper-camel-case)))
+)
+
+(use-package diminish)
 
 ;;#############################
 ;; System
@@ -182,6 +244,19 @@
 ;; automagically tail log files
 (add-to-list 'auto-mode-alist '("\\.log\\'" . auto-revert-tail-mode))
 (add-hook 'auto-revert-tail-mode-hook 'etc-log-tail-handler)
+
+(use-package ispell
+  :bind (("<f6>" . ispell-change-dictionary)
+         ("C-<f6>" . ispell-buffer))
+  :if (which "aspell")
+  :init
+  (setq ispell-program-name (which "aspell"))
+  (setq ispell-extra-args '("--sug-mode=ultra"))
+  (setq ispell-dictionary "fr_FR")
+  )
+
+(use-package paradox
+  :ensure t)
 
 
 ;;#############################
@@ -191,18 +266,18 @@
   :mode (("\\.bash" . shell-script-mode)
          ("\\.zsh" . shell-script-mode)
          ("\\.fish" . shell-script-mode))
-  :config
-  (use-package exec-path-from-shell
-    :ensure t
-    :if *is-a-mac*
-    :defer 5
-    :config
-    (exec-path-from-shell-initialize)
-    (exec-path-from-shell-copy-env "PYTHONPATH"))
+  )
+
+(use-package exec-path-from-shell
+  :ensure t
+  :if *is-a-mac*
+  :init
+  (exec-path-from-shell-initialize)
+  (exec-path-from-shell-copy-env "PYTHONPATH")
   )
 
 (use-package dired-x
-  :config
+  :init
   (setq global-auto-revert-non-file-buffers t)
   (setq auto-revert-verbose nil)
   (setq-default dired-omit-files-p t) ; Buffer-local variable
@@ -210,7 +285,8 @@
 
 (use-package realgud
   :ensure t
-  :disabled t)
+  :disabled t
+  )
 
 
 ;;#############################
@@ -238,7 +314,8 @@
 (use-package magit
   :ensure t
   :commands magit-status
-  :bind ("C-x g" . magit-status)
+  :bind (("C-x g" . magit-status)
+         ("C-c v b" . magit-blame))
   :config
   (setq magit-last-seen-setup-instructions "1.4.0")
   (defun magit-just-amend ()
@@ -301,6 +378,7 @@
   :ensure t)
 
 (use-package sublimity
+  :disabled t
   :ensure t
   :config
   (sublimity-mode +1)
@@ -386,27 +464,19 @@
 (use-package swiper
   :ensure t
   :disabled t
-  :config
+  :init
   (ivy-mode 1)
-  (setq ivy-use-virtual-buffers t)
-  )
+  :config
+  (setq ivy-use-virtual-buffers t))
 
 (use-package recentf
-  :defer 3
   :ensure t
-  ;; :bind (("C-x C-r" . recentf-grizzl-find-file))
   :bind (("C-x f" . recentf-ido-find-file)
          ("C-c f" . recentf-ido-find-file))
   :init
-  (recentf-mode 1)
+  (recentf-mode +1)
   :config
   (setq recentf-keep '(file-remote-p file-readable-p))
-  (defun recentf-grizzl-find-file ()
-    "Find a recent file using Ido."
-    (interactive)
-    (let ((file (grizzl-completing-read "Choose recent file: " recentf-list)))
-      (when file
-        (find-file file))))
   (setq recentf-max-saved-items 100))
 
 (use-package smex
@@ -436,7 +506,7 @@
 
 
 ;;#############################
-;; Completion
+;; Web
 ;;#############################
 (use-package restclient
   :ensure t
@@ -446,17 +516,21 @@
 ;;#############################
 ;; Completion
 ;;#############################
+(use-package eldoc-mode
+  :diminish eldoc-mode
+  :commands eldoc-mode
+  :init
+  (add-hook 'python-mode-hook 'eldoc-mode))
+
 (use-package company
   :ensure t
-  :defer 10
   :config
   (global-company-mode)
   (use-package company-tern
+    :disabled t
     :ensure t
-    :defer 10
     :config
     (add-to-list 'company-backends 'company-tern)))
-
 
 (use-package guide-key
   :ensure t
@@ -501,7 +575,6 @@
 
 (use-package smartparens
   :ensure t
-  :defer 5
   :diminish smartparens-mode
   :bind (("C-M-k" . sp-kill-sexp-with-a-twist-of-lime)
          ("C-M-f" . sp-forward-sexp)
@@ -521,7 +594,7 @@
          ("M-J" . sp-join-sexp)
          ("C-M-t" . sp-transpose-sexp))
   :commands (smartparens-mode show-smartparens-mode)
-  :config
+  :init
   (smartparens-global-mode 1)
   (smartparens-strict-mode 1)
   (show-smartparens-global-mode t)
@@ -555,6 +628,9 @@
   (setq region-bindings-mode-disabled-modes '(term-mode))
   (setq region-bindings-mode-disable-predicates
         (list (lambda () buffer-read-only)))
+
+  ;; ispell
+  (bind-key "s" 'ispell-region region-bindings-mode-map)
   )
 
 (use-package subword
@@ -578,12 +654,12 @@
   :ensure t
   :bind (("M-i" . ido-imenu-anywhere))
   :init
-  :config
   (defun jcs-use-package ()
     (add-to-list 'imenu-generic-expression
                  '("use-package"
                    "\\(^\\s-*(use-package +\\)\\(\\_<.+\\_>\\)" 2)))
   (add-hook 'emacs-lisp-mode-hook #'jcs-use-package)
+  :config
   (setq imenu-anywhere-delimiter-ido " @ "))
 
 
@@ -691,59 +767,81 @@
 
 (use-package python
   :ensure t
-  :defer 5
   :config
   (bind-key "C-<f9>" 'mw/add-pudb-debug python-mode-map)
   (bind-key "<f9>" 'mw/add-py-debug python-mode-map)
+  (add-hook 'python-mode-hook 'eldoc-mode)
   (add-hook 'python-mode-hook
                (lambda ()
                 (font-lock-add-keywords nil
-                 '(("\\<\\(FIXME\\|TODO\\|BUG\\):" 1 font-lock-warning-face t)))))
+                                        '(("\\<\\(FIXME\\|TODO\\|BUG\\):" 1 font-lock-warning-face t)))))
 
-  (use-package eldoc-mode
-    :commands (eldoc-mode)
-    :init (add-hook 'python-mode-hook 'eldoc-mode)
-    :config
-    (eval-after-load "eldoc"
-      '(diminish 'eldoc-mode))
+  (use-package pyenv-mode
+    :ensure t
+    :init
+    (defun auto-set-pyenv ()
+      (progn
+        (message "activating virtualenv")
+        (pyenv-mode-set (projectile-project-name))))
+    (add-hook 'projectile-switch-project-hook 'auto-set-pyenv)
+    (add-hook 'python-mode-hook 'auto-set-pyenv)
     )
 
   (use-package anaconda-mode
-    :ensure t
+  :quelpa (anaconda-mode
+           :fetcher github
+           :repo "proofit404/anaconda-mode"
+           :files ("*.el" "*.py" "vendor/jedi/jedi" ("jsonrpc" "vendor/jsonrpc/jsonrpc/*.py")))
+  :config
+  (add-hook 'python-mode-hook 'anaconda-mode)
+  (add-hook 'python-mode-hook 'eldoc-mode))
+
+  (use-package anaconda-mode
     :disabled t
-    :diminish anaconda-mode
+    :ensure t
+    ;; :diminish anaconda-mode
     :init
-    (add-hook 'python-mode-hook '(lambda () (anaconda-mode)))
+    (add-hook 'python-mode-hook 'anaconda-mode)
+    :config
+    (use-package company-anaconda
+      :ensure t
+      :init
+      (eval-after-load "company"
+        '(progn
+           (add-to-list 'company-backends 'company-anaconda))))
     )
 
   (use-package pip-requirements
     :ensure t
     :mode "\\requirements.txt\\'"
     :config (pip-requirements-mode))
-  )
 
-(use-package elpy
-  :ensure t
-  :bind (("C-c t" . elpy-test-django-runner)
-         ("C-c C-f" . elpy-find-file)
-         ("C-c C-;" . mw/set-django-settings-module))
-  :init
-  (elpy-enable)
-  :config
-  (setq elpy-test-runner 'elpy-test-pytest-runner)
-  ;; (setq elpy-rpc-backend "rope")
-  (setq elpy-rpc-backend "jedi")
-  (use-package pyvenv
+  (use-package elpy
     :ensure t
+    ;; :diminish elpy-mode
+    :quelpa t
+    :bind (("C-c t t" . elpy-test-discover-runner)
+           ("C-c t d" . elpy-test-django-runner)
+           ("C-c t p" . elpy-test-pytest-runner)
+           ("C-c C-f" . elpy-find-file)
+           ("C-c C-;" . mw/set-django-settings-module))
+    :init
+    (elpy-enable)
+    ;; (add-hook 'pyenv-mode-hook 'elpy-enable)
+    ;; (use-package pyvenv
+    ;;   :disabled t
+    ;;   :ensure t
+    ;;   :config
+    ;;   (defalias 'workon 'pyvenv-workon)
+    ;;   (add-hook 'python-mode-hook 'pyvenv-mode)
+    ;;   (add-hook 'python-mode-hook 'mw/auto-activate-virtualenv)
+    ;;   (add-hook 'projectile-switch-project-hook 'mw/auto-activate-virtualenv))
+    ;; (add-hook 'pyvenv-post-activate-hooks 'elpy-enable)
+    ;; (add-hook 'pyvenv-post-activate-hooks 'mw/set-elpy-test-runners)
     :config
-    (defalias 'workon 'pyvenv-workon)
-    (add-hook 'python-mode-hook 'pyvenv-mode)
-    (add-hook 'projectile-switch-project-hook 'mw/auto-activate-virtualenv)
-    (add-hook 'python-mode-hook 'mw/auto-activate-virtualenv)
-    (add-hook 'pyvenv-post-activate-hooks 'mw/set-elpy-test-runners))
-  ;; (add-hook 'python-mode-hook
-  ;;         (lambda ()
-  ;;            (add-hook 'before-save-hook 'mw/clean-python-file-hook nil 'make-it-local)))
+    (setq elpy-test-runner 'elpy-test-pytest-runner)
+    ;; (setq elpy-rpc-backend "rope")
+    (setq elpy-rpc-backend "jedi"))
   )
 
 (use-package yaml-mode
@@ -756,40 +854,3 @@
   :ensure t
   :config
   (setq coffee-tab-width 2))
-
-
-;;============================================================
-;; Keybindings
-;;============================================================
-
-;; Editing
-(bind-key "C-c d" 'duplicate-current-line-or-region)
-(bind-key "C-j" 'newline-and-indent)
-(bind-key "C-c n" 'clean-up-buffer-or-region)
-(bind-key "C-M-;" 'comment-or-uncomment-current-line-or-region)
-(bind-key "C-a" 'back-to-indentation-or-beginning-of-line)
-(bind-key "C-z" 'zap-up-to-char)
-(bind-key "C-|" 'align-regexp)
-
-(bind-key "M-j" (λ (join-line -1)))
-(bind-key "M-h" 'kill-to-beginning-of-line)
-(bind-key "M-g M-g" 'goto-line-with-feedback)
-(bind-key "M-<up>" 'open-line-above)
-(bind-key "M-<down>" 'open-line-below)
-
-;; Buffer/Files
-(bind-key "C-c R" 'rename-this-buffer-and-file)
-(bind-key "C-c D" 'delete-this-buffer-and-file)
-(bind-key "<f8>" (λ (find-file (f-expand "init.el" user-emacs-directory))))
-(bind-key "<f5>" 'recompile)
-(bind-key "C-x C-c" (λ (if (y-or-n-p "Quit Emacs? ") (save-buffers-kill-emacs))))
-
-;; Search
-(bind-key "C-c g" 'google)
-(bind-key "C-c y" 'youtube)
-
-;; Naming
-(bind-key "C-c m -" (λ (replace-region-by 's-dashed-words)))
-(bind-key "C-c m _" (λ (replace-region-by 's-snake-case)))
-(bind-key "C-c m c" (λ (replace-region-by 's-lower-camel-case)))
-(bind-key "C-c m C" (λ (replace-region-by 's-upper-camel-case)))
