@@ -82,33 +82,10 @@
 (defun load-local (filename)
   (load (expand-file-name filename user-emacs-directory)))
 
-;; cask
-;; (if (file-exists-p "~/.cask/cask.el")
-;;    (require 'cask "~/.cask/cask.el")
-;;  (require 'cask "/usr/local/share/emacs/site-lisp/cask.el"))
-;; (require 'cask (dotemacs-file "vendor/cask"))
-;; (cask-initialize)
-
-;; install quelpa
-;; (if (require 'quelpa nil t)
-;;     (quelpa-self-upgrade)
-;;   (with-temp-buffer
-;;     (url-insert-file-contents "https://raw.github.com/quelpa/quelpa/master/bootstrap.el")
-;;     (eval-buffer)))
-
-;; install quelpa without self upgrading
-(unless (require 'quelpa nil t)
-  (with-temp-buffer
-    (url-insert-file-contents "https://raw.github.com/quelpa/quelpa/master/bootstrap.el")
-    (eval-buffer)))
-
-;; install use-package and the quelpa handler
-(quelpa '(quelpa-use-package :fetcher github :repo "quelpa/quelpa-use-package"))
-(require 'quelpa-use-package)
-
 ;; use-package
-(package-install 'use-package)
-(require 'use-package)
+(unless (require 'use-package nil :noerror)
+  (with-temp-buffer
+    (package-install 'use-package)))
 (setq use-package-verbose t)
 
 
@@ -132,8 +109,8 @@
 (setq color-theme-is-global t)
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
-(use-package solarized-theme :ensure t :init (load-theme 'solarized-dark :no-confirm))
-;; (use-package solarized-theme :ensure t :init (load-theme 'solarized-light :no-confirm))
+;; (use-package solarized-theme :ensure t :init (load-theme 'solarized-dark :no-confirm))
+(use-package solarized-theme :ensure t :init (load-theme 'solarized-light :no-confirm))
 ;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
 ;; (use-package cyberpunk-theme :ensure t :init (load-theme 'cyberpunk :no-confirm))
 ;; (use-package warm-night-theme :ensure t :init (load-theme 'warm-night :no-confirm))
@@ -221,7 +198,7 @@
   ;; Buffer/Files
   (bind-key "C-c R" 'rename-this-buffer-and-file)
   (bind-key "C-c D" 'delete-this-buffer-and-file)
-  (bind-key "<f8>" (λ (find-file (f-expand "init.el" user-emacs-directory))))
+  (bind-key "<f8>" (λ (find-file (expand-file-name "init.el" user-emacs-directory))))
   (bind-key "<f5>" 'recompile)
   (bind-key "C-x C-c" (λ (if (y-or-n-p "Quit Emacs? ") (save-buffers-kill-emacs))))
 
@@ -256,7 +233,8 @@
   )
 
 (use-package paradox
-  :ensure t)
+  :ensure t
+  :commands (paradox-list-packages))
 
 
 ;;#############################
@@ -336,13 +314,17 @@
          ("C-c v s" . git-gutter:stage-hunk)
          ("C-c v r" . git-gutter:revert-hunk))
   :diminish git-gutter-mode
-  :config
+  :init
   (global-git-gutter-mode t)
+  :config
   (custom-set-variables
    '(git-gutter:window-width 1)
    '(git-gutter:modified-sign "█") ;; two space
    '(git-gutter:added-sign "█")    ;; multiple character is OK
    '(git-gutter:deleted-sign "█"))
+   ;; '(git-gutter:modified-sign "●") ;; two space
+   ;; '(git-gutter:added-sign "●")    ;; multiple character is OK
+   ;; '(git-gutter:deleted-sign "●"))
   )
 
 (use-package git-timemachine
@@ -360,6 +342,14 @@
       (save-place-mode +1)
     (setq-default save-place t)))
 
+(use-package highlight-symbol
+  :ensure t
+  :diminish highlight-symbol-mode
+  :bind (("M-]" . highlight-symbol-next)
+         ("M-[" . highlight-symbol-prev))
+  :init
+  (add-hook 'prog-mode-hook (λ (highlight-symbol-mode t))))
+
 (use-package bm
   :ensure t
   :bind (
@@ -370,8 +360,7 @@
          )
   :config
   (bind-key "n" 'bm-show-next bm-show-mode-map)
-  (bind-key "p" 'bm-show-prev bm-show-mode-map)
-  )
+  (bind-key "p" 'bm-show-prev bm-show-mode-map))
 
 (use-package bookmark+
   :disabled t
@@ -413,29 +402,27 @@
 
   (use-package ido-vertical-mode
     :ensure t
-    :config
+    :init
     (setq ido-vertical-decorations (list "\n➜ " "" "\n" "\n..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]" "\n" ""))
     (ido-vertical-mode 1)
     (setq ido-vertical-define-keys 'C-n-C-p-up-and-down))
 
   (use-package ido-ubiquitous
     :ensure t
-    :config
+    :init
     (ido-ubiquitous-mode +1))
 
   (use-package flx-ido
     :ensure t
-    :config
-    (flx-ido-mode +1))
-  )
+    :init
+    (flx-ido-mode +1)))
 
 (use-package visual-regexp
   :disabled t
   :ensure t
   :bind (("C-s" . vr/isearch-forward)
          ("C-r" . vr/isearch-backward)
-         ("C-q" . vr/query-replace))
-  )
+         ("C-q" . vr/query-replace)))
 
 (use-package projectile
   :ensure t
@@ -520,12 +507,14 @@
   :diminish eldoc-mode
   :commands eldoc-mode
   :init
-  (add-hook 'python-mode-hook 'eldoc-mode))
+  (add-hook 'prog-mode-hook 'eldoc-mode))
 
 (use-package company
   :ensure t
+  :commands global-company-mode
+  :diminish company-mode
   :config
-  (global-company-mode)
+  (add-hook 'prog-mode-hook 'global-company-mode)
   (use-package company-tern
     :disabled t
     :ensure t
@@ -604,10 +593,10 @@
 
 (use-package region-bindings-mode
   :ensure t
-  :defer 5
-  :config
+  :commands (region-bindings-mode-enable)
+  :init
   (region-bindings-mode-enable)
-
+  :config
   ;; multiple-cursors
   (bind-key "a" 'mc/mark-all-like-this region-bindings-mode-map)
   (bind-key "e" 'mc/edit-lines region-bindings-mode-map)
@@ -634,10 +623,10 @@
   )
 
 (use-package subword
-  :defer 5
   :diminish subword-mode
-  :config
+  :init
   (global-subword-mode 1)
+  :config
   (defadvice subword-upcase (before upcase-word-advice activate)
     (unless (looking-back "\\b")
       (backward-word)))
@@ -654,11 +643,11 @@
   :ensure t
   :bind (("M-i" . ido-imenu-anywhere))
   :init
-  (defun jcs-use-package ()
+  (defun imenu-mark-use-package ()
     (add-to-list 'imenu-generic-expression
                  '("use-package"
                    "\\(^\\s-*(use-package +\\)\\(\\_<.+\\_>\\)" 2)))
-  (add-hook 'emacs-lisp-mode-hook #'jcs-use-package)
+  (add-hook 'emacs-lisp-mode-hook #'imenu-mark-use-package)
   :config
   (setq imenu-anywhere-delimiter-ido " @ "))
 
@@ -682,14 +671,12 @@
   :config
   (powerline-default-theme)
   ;; (setq powerline-display-hud nil)
-  (setq powerline-default-separator 'curve)
-  )
+  (setq powerline-default-separator 'curve))
 
 (use-package re-builder
   :ensure t
   :config
-  (setq reb-re-syntax 'string)
-  )
+  (setq reb-re-syntax 'string))
 
 
 ;;#############################
@@ -699,12 +686,11 @@
   :bind (("C-c R" . rename-this-buffer-and-file)
          ("C-c D" . delete-this-buffer-and-file))
   :config
-  (progn
-    (setq auto-save-default nil)
-    (setq make-backup-files nil) ; stop creating those backup~ files
-    (setq auto-save-default nil) ; stop creating those #autosave# files
-    (add-hook 'before-save-hook 'whitespace-cleanup)
-    (add-hook 'before-save-hook 'delete-trailing-whitespace)))
+  (setq auto-save-default nil)
+  (setq make-backup-files nil) ; stop creating those backup~ files
+  (setq auto-save-default nil) ; stop creating those #autosave# files
+  (add-hook 'before-save-hook 'whitespace-cleanup)
+  (add-hook 'before-save-hook 'delete-trailing-whitespace))
 
 (use-package ibuffer
   :ensure t
@@ -722,22 +708,19 @@
          ("\\.ejs\\'" . web-mode)
          ("\\.mustache\\'" . web-mode))
   :config
-  (progn
-    (setq web-mode-enable-current-element-highlight t)
-    (setq web-mode-enable-auto-pairing t)
-    (setq web-mode-engines-alist
-          '(("django" . "\\.djhtml")
-            ;; ("django" . my-current-buffer-django-p)) ;; set engine to django on django buffer
-            ("django" . "templates/.*\\.html")))
-    (add-hook 'web-mode-hook
-              (lambda ()
-                (emmet-mode)))
-    (add-hook 'web-mode-hook
-              (lambda ()
-                (setq web-mode-style-padding 2)
-                (setq web-mode-script-padding 2)
-                (setq web-mode-markup-indent-offset 2)
-                (define-key web-mode-map [(return)] 'newline-and-indent)))))
+  (setq web-mode-enable-current-element-highlight t)
+  (setq web-mode-enable-auto-pairing t)
+  (setq web-mode-engines-alist
+        '(("django" . "\\.djhtml")
+          ;; ("django" . my-current-buffer-django-p)) ;; set engine to django on django buffer
+          ("django" . "templates/.*\\.html")))
+  (add-hook 'web-mode-hook (lambda () (emmet-mode)))
+  (add-hook 'web-mode-hook
+            (lambda ()
+              (setq web-mode-style-padding 2)
+              (setq web-mode-script-padding 2)
+              (setq web-mode-markup-indent-offset 2)
+              (define-key web-mode-map [(return)] 'newline-and-indent))))
 
 (use-package jinja2-mode
   :ensure t
@@ -758,8 +741,7 @@
   :config
   (setq js2-basic-offset 2)
   (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
-  (bind-key "M-j" 'join-line-or-lines-in-region js2-mode-map)
-  )
+  (bind-key "M-j" 'join-line-or-lines-in-region js2-mode-map))
 
 (use-package json-mode
   :ensure t
@@ -767,6 +749,7 @@
 
 (use-package python
   :ensure t
+  :commands (python-mode)
   :config
   (bind-key "C-<f9>" 'mw/add-pudb-debug python-mode-map)
   (bind-key "<f9>" 'mw/add-py-debug python-mode-map)
@@ -779,31 +762,25 @@
   (use-package pyenv-mode
     :ensure t
     :init
-    (defun auto-set-pyenv ()
+    (defun activate-pyenv-virtualenv ()
       (progn
-        (message "activating virtualenv")
-        (pyenv-mode-set (projectile-project-name))))
-    (add-hook 'projectile-switch-project-hook 'auto-set-pyenv)
-    (add-hook 'python-mode-hook 'auto-set-pyenv)
+        (pyenv-mode t)
+        (pyenv-mode-set (projectile-project-name))
+        (force-mode-line-update))
+      )
+    (add-hook 'python-mode-hook 'activate-pyenv-virtualenv)
+    :config
+    (defun pyenv-mode-version-python ()
+      "Get python to python executable from activated virtualenv"
+      (expand-file-name "bin/python" (pyenv-mode-full-path (pyenv-mode-version))))
     )
 
   (use-package anaconda-mode
-  :quelpa (anaconda-mode
-           :fetcher github
-           :repo "proofit404/anaconda-mode"
-           :files ("*.el" "*.py" "vendor/jedi/jedi" ("jsonrpc" "vendor/jsonrpc/jsonrpc/*.py")))
-  :config
-  (add-hook 'python-mode-hook 'anaconda-mode)
-  (add-hook 'python-mode-hook 'eldoc-mode))
-
-  (use-package anaconda-mode
-    :disabled t
-    :ensure t
-    ;; :diminish anaconda-mode
     :init
     (add-hook 'python-mode-hook 'anaconda-mode)
     :config
     (use-package company-anaconda
+      :disabled t
       :ensure t
       :init
       (eval-after-load "company"
@@ -817,9 +794,10 @@
     :config (pip-requirements-mode))
 
   (use-package elpy
+    :disabled
     :ensure t
     ;; :diminish elpy-mode
-    :quelpa t
+    ;; :quelpa t
     :bind (("C-c t t" . elpy-test-discover-runner)
            ("C-c t d" . elpy-test-django-runner)
            ("C-c t p" . elpy-test-pytest-runner)
@@ -827,21 +805,19 @@
            ("C-c C-;" . mw/set-django-settings-module))
     :init
     (elpy-enable)
-    ;; (add-hook 'pyenv-mode-hook 'elpy-enable)
-    ;; (use-package pyvenv
-    ;;   :disabled t
-    ;;   :ensure t
-    ;;   :config
-    ;;   (defalias 'workon 'pyvenv-workon)
-    ;;   (add-hook 'python-mode-hook 'pyvenv-mode)
-    ;;   (add-hook 'python-mode-hook 'mw/auto-activate-virtualenv)
-    ;;   (add-hook 'projectile-switch-project-hook 'mw/auto-activate-virtualenv))
-    ;; (add-hook 'pyvenv-post-activate-hooks 'elpy-enable)
-    ;; (add-hook 'pyvenv-post-activate-hooks 'mw/set-elpy-test-runners)
     :config
     (setq elpy-test-runner 'elpy-test-pytest-runner)
+    (setq elpy-rpc-backend "jedi")
     ;; (setq elpy-rpc-backend "rope")
-    (setq elpy-rpc-backend "jedi"))
+
+    (defun elpy-set-test-runners ()
+      "Set elpy test runners"
+      (let ((python (pyenv-mode-version-python)))
+        (message (format "settings elpy test runners. python: %s" python))
+        (setq elpy-test-django-runner-command (list python "manage.py" "test" "--noinput"))
+        (setq elpy-test-discover-runner-command (list python "-m" "unittest"))))
+    (add-hook 'elpy-mode-hook 'elpy-set-test-runners)
+    )
   )
 
 (use-package yaml-mode
