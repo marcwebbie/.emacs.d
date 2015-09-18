@@ -167,6 +167,7 @@
 (add-hook 'emacs-lisp-mode-hook (lambda() (setq mode-name "Ⓔ")))
 (add-hook 'python-mode-hook (lambda() (setq mode-name "Ⓟ")))
 (add-hook 'js2-mode-hook (lambda() (setq mode-name "Ⓙ")))
+(add-hook 'web-mode-hook (lambda() (setq mode-name "Ⓦ")))
 
 ;; Minor Mode diminish
 (eval-after-load "xterm-title" '(diminish 'xterm-title-mode))
@@ -321,10 +322,11 @@
    '(git-gutter:window-width 1)
    '(git-gutter:modified-sign "█") ;; two space
    '(git-gutter:added-sign "█")    ;; multiple character is OK
-   '(git-gutter:deleted-sign "█"))
+   '(git-gutter:deleted-sign "█")
    ;; '(git-gutter:modified-sign "●") ;; two space
    ;; '(git-gutter:added-sign "●")    ;; multiple character is OK
-   ;; '(git-gutter:deleted-sign "●"))
+   ;; '(git-gutter:deleted-sign "●")
+   )
   )
 
 (use-package git-timemachine
