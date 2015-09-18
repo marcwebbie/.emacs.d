@@ -54,8 +54,8 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (if (file-exists-p custom-file) (load custom-file))
 
-(setenv "WORKON_HOME" (expand-file-name "~/.pyenv/versions"))
-(setenv "VIRTUALENVWRAPPER_HOOK_DIR" (expand-file-name "~/.pyenv/versions"))
+;; (setenv "WORKON_HOME" (expand-file-name "~/.pyenv/versions"))
+;; (setenv "VIRTUALENVWRAPPER_HOOK_DIR" (expand-file-name "~/.pyenv/versions"))
 
 (defalias 'which 'executable-find)
 
@@ -503,9 +503,9 @@
 ;;#############################
 ;; Completion
 ;;#############################
-(use-package eldoc-mode
+(use-package eldoc
   :diminish eldoc-mode
-  :commands eldoc-mode
+  :commands eldoc
   :init
   (add-hook 'prog-mode-hook 'eldoc-mode))
 
@@ -513,7 +513,7 @@
   :ensure t
   :commands global-company-mode
   :diminish company-mode
-  :config
+  :init
   (add-hook 'prog-mode-hook 'global-company-mode)
   (use-package company-tern
     :disabled t
@@ -700,6 +700,11 @@
 ;;#############################
 ;; Languages
 ;;#############################
+(use-package flycheck
+  :ensure t
+  :init
+  (add-hook 'after-init-hook #'global-flycheck-mode))
+
 (use-package web-mode
   :ensure t
   :mode (("\\.html\\'" . web-mode)
@@ -753,39 +758,46 @@
   :config
   (bind-key "C-<f9>" 'mw/add-pudb-debug python-mode-map)
   (bind-key "<f9>" 'mw/add-py-debug python-mode-map)
-  (add-hook 'python-mode-hook 'eldoc-mode)
   (add-hook 'python-mode-hook
-               (lambda ()
-                (font-lock-add-keywords nil
-                                        '(("\\<\\(FIXME\\|TODO\\|BUG\\):" 1 font-lock-warning-face t)))))
+            (lambda ()
+              (font-lock-add-keywords nil
+                                      '(("\\<\\(FIXME\\|TODO\\|BUG\\):" 1 font-lock-warning-face t)))))
 
-  (use-package pyenv-mode
+  (use-package pyvenv
     :ensure t
+    :commands (pyvenv-mode)
     :init
-    (defun activate-pyenv-virtualenv ()
-      (progn
-        (pyenv-mode t)
-        (pyenv-mode-set (projectile-project-name))
-        (force-mode-line-update))
-      )
-    (add-hook 'python-mode-hook 'activate-pyenv-virtualenv)
+    (add-hook 'python-mode-hook 'pyvenv-mode)
     :config
-    (defun pyenv-mode-version-python ()
-      "Get python to python executable from activated virtualenv"
-      (expand-file-name "bin/python" (pyenv-mode-full-path (pyenv-mode-version))))
+    (setenv "WORKON_HOME" (expand-file-name "~/.pyenv/versions"))
+    (setenv "VIRTUALENVWRAPPER_HOOK_DIR" (getenv "WORKON_HOME"))
+    (setq pyvenv-versions (directory-files (expand-file-name (getenv "WORKON_HOME"))))
+
+    (defun find-virtualenv-name ()
+      (let ((python-version-file (expand-file-name ".python-version" (projectile-project-root))))
+        (cond ((file-exists-p python-version-file)
+               (with-temp-buffer
+                 (insert-file-contents python-version-file)
+                 (s-trim (buffer-string))))
+              ((member (projectile-project-name) pyvenv-versions)
+               (projectile-project-name)))))
+
+    (add-hook 'python-mode-hook (λ
+                                 (let ((virtualenv-name (find-virtualenv-name)))
+                                   (message (format "activating virtualenv: %s" virtualenv-name))
+                                   (pyvenv-workon virtualenv-name))))
     )
 
   (use-package anaconda-mode
+    :ensure t
+    :diminish anaconda-mode
     :init
-    (add-hook 'python-mode-hook 'anaconda-mode)
+    (add-hook 'python-mode-hook #'anaconda-mode)
     :config
     (use-package company-anaconda
-      :disabled t
       :ensure t
-      :init
-      (eval-after-load "company"
-        '(progn
-           (add-to-list 'company-backends 'company-anaconda))))
+      :if (boundp 'company-backends)
+      :init (add-to-list 'company-backends 'company-anaconda))
     )
 
   (use-package pip-requirements
@@ -794,10 +806,8 @@
     :config (pip-requirements-mode))
 
   (use-package elpy
-    :disabled
     :ensure t
-    ;; :diminish elpy-mode
-    ;; :quelpa t
+    :diminish elpy-mode
     :bind (("C-c t t" . elpy-test-discover-runner)
            ("C-c t d" . elpy-test-django-runner)
            ("C-c t p" . elpy-test-pytest-runner)
@@ -812,7 +822,7 @@
 
     (defun elpy-set-test-runners ()
       "Set elpy test runners"
-      (let ((python (pyenv-mode-version-python)))
+      (let ((python (which "python")))
         (message (format "settings elpy test runners. python: %s" python))
         (setq elpy-test-django-runner-command (list python "manage.py" "test" "--noinput"))
         (setq elpy-test-discover-runner-command (list python "-m" "unittest"))))

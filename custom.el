@@ -6,7 +6,7 @@
  '(bmkp-last-as-first-bookmark-file "/Users/marc/.emacs.d/bookmarks")
  '(elpy-modules
    (quote
-    (elpy-module-company elpy-module-eldoc elpy-module-flymake elpy-module-pyvenv elpy-module-sane-defaults)))
+    (elpy-module-company elpy-module-eldoc elpy-module-sane-defaults)))
  '(elpy-test-runner (quote elpy-test-pytest-runner))
  '(git-gutter:added-sign "█")
  '(git-gutter:deleted-sign "█")
