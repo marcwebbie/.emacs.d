@@ -110,23 +110,22 @@
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
 ;; (use-package solarized-theme :ensure t :init (load-theme 'solarized-dark :no-confirm))
-(use-package solarized-theme :ensure t :init (load-theme 'solarized-light :no-confirm))
+;; (use-package solarized-theme :ensure t :init (load-theme 'solarized-light :no-confirm))
 ;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
-;; (use-package cyberpunk-theme :ensure t :init (load-theme 'cyberpunk :no-confirm))
+;; (use-package material-light-theme :ensure t :init (load-theme 'material-light :no-confirm))
+(use-package cyberpunk-theme :ensure t :init (load-theme 'cyberpunk :no-confirm))
 ;; (use-package warm-night-theme :ensure t :init (load-theme 'warm-night :no-confirm))
 ;; (use-package smyx-theme :ensure t :init (load-theme 'smyx :no-confirm))
 ;; (use-package noctilux-theme :ensure t :init (load-theme 'noctilux :no-confirm))
 ;; (use-package monokai-theme :ensure t :init (load-theme 'monokai :no-confirm))
 ;; (use-package molokai-theme :ensure t :init (load-theme 'molokai :no-confirm))
 ;; (use-package cherry-blossom-theme :ensure t :init (load-theme 'cherry-blossom :no-confirm))
-;; (use-package hemisu-dark-theme :ensure t :init (load-theme 'hemisu-dark :no-confirm))
-;; (use-package hemisu-ligth-theme :ensure t :init (load-theme 'hemisu-ligth :no-confirm))
-;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
-;; (use-package material-light-theme :ensure t :init (load-theme 'material-light :no-confirm))
+;; (use-package hemisu-theme :ensure t :init (load-theme 'hemisu-dark :no-confirm))
+;; (use-package hemisu-theme :ensure t :init (load-theme 'hemisu-ligth :no-confirm))
 ;; (use-package badger-theme :ensure t :init (load-theme 'badger :no-confirm))
 ;; (use-package darktooth-theme :ensure t :init (load-theme 'darktooth :no-confirm))
 ;; (use-package gruvbox-theme :ensure t :init (load-theme 'gruvbox :no-confirm))
-;; (use-package flatui-theme :ensure t :init (load-theme 'flatui :no-confirm))
+;; (use-package zenburn-theme :ensure t :init (load-theme 'zenburn :no-confirm))
 ;; (use-package tango-plus-theme :ensure t :init (load-theme 'tango-plus :no-confirm))
 ;; (use-package flatland-black-theme :ensure t :init (load-theme 'flatland-black :no-confirm))
 ;; (use-package ample-theme :ensure t :init (load-theme 'ample :no-confirm))
@@ -143,9 +142,9 @@
         (mw/set-best-font (cdr fonts))))))
 
 (mw/set-best-font '(
-                   ("Liberation Mono" 14)
                    ("Droid Sans Mono Dotted" 14)
                    ("Inconsolata" 16)
+                   ("Liberation Mono" 14)
                    ("Anonymous Pro" 16)
                    ("Source Code Pro" 14)
                    ("Ubuntu Mono" 16)
@@ -434,7 +433,7 @@
   (setq projectile-enable-caching t
         projectile-use-git-grep t
         projectile-switch-project-action 'projectile-dired
-        projectile-require-project-root t
+        projectile-require-project-root nil
         projectile-mode-line '(:eval (format " P[%s]" (projectile-project-name)))
         ;; (setq projectile-completion-system 'helm)
         ;; (setq projectile-completion-system 'grizzl)
@@ -819,8 +818,8 @@
     (elpy-enable)
     :config
     (setq elpy-test-runner 'elpy-test-pytest-runner)
-    (setq elpy-rpc-backend "jedi")
-    ;; (setq elpy-rpc-backend "rope")
+    ;; (setq elpy-rpc-backend "jedi")
+    (setq elpy-rpc-backend "rope")
 
     (defun elpy-set-test-runners ()
       "Set elpy test runners"
