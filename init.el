@@ -1,16 +1,21 @@
 ;;============================================================
+;; Package initialize
+;;============================================================
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+(setq package-enable-at-startup nil)
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+(require 'use-package)
+(setq use-package-verbose t)
+
+
+;;============================================================
 ;; Defaults
 ;;============================================================
-
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
-(add-to-list
- 'package-archives
- '("melpa" . "http://melpa.org/packages/")
-    t)
 
 (defconst *is-a-mac* (eq system-type 'darwin))
 
@@ -82,12 +87,6 @@
 (defun load-local (filename)
   (load (expand-file-name filename user-emacs-directory)))
 
-;; use-package
-(unless (require 'use-package nil :noerror)
-  (with-temp-buffer
-    (package-install 'use-package)))
-(setq use-package-verbose t)
-
 
 ;;============================================================
 ;; Appearance
@@ -105,30 +104,43 @@
       auto-window-vscroll nil)
 
 ;; Themes
-;; =========================
+;; ==================================================
 (setq color-theme-is-global t)
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
+;; Dark Themes
+;; ==================================================
 ;; (use-package solarized-theme :ensure t :init (load-theme 'solarized-dark :no-confirm))
-;; (use-package solarized-theme :ensure t :init (load-theme 'solarized-light :no-confirm))
 ;; (use-package zenburn-theme :ensure t :init (load-theme 'zenburn :no-confirm))
 ;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
 ;; (use-package cyberpunk-theme :ensure t :init (load-theme 'cyberpunk :no-confirm))
 ;; (use-package warm-night-theme :ensure t :init (load-theme 'warm-night :no-confirm))
 ;; (use-package smyx-theme :ensure t :init (load-theme 'smyx :no-confirm))
 ;; (use-package noctilux-theme :ensure t :init (load-theme 'noctilux :no-confirm))
-(use-package monokai-theme :ensure t :init (load-theme 'monokai :no-confirm))
+;; (use-package monokai-theme :ensure t :init (load-theme 'monokai :no-confirm))
 ;; (use-package molokai-theme :ensure t :init (load-theme 'molokai :no-confirm))
 ;; (use-package cherry-blossom-theme :ensure t :init (load-theme 'cherry-blossom :no-confirm))
 ;; (use-package hemisu-theme :ensure t :init (load-theme 'hemisu-dark :no-confirm))
-;; (use-package hemisu-theme :ensure t :init (load-theme 'hemisu-ligth :no-confirm))
 ;; (use-package badger-theme :ensure t :init (load-theme 'badger :no-confirm))
 ;; (use-package darktooth-theme :ensure t :init (load-theme 'darktooth :no-confirm))
 ;; (use-package gruvbox-theme :ensure t :init (load-theme 'gruvbox :no-confirm))
-;; (use-package tango-plus-theme :ensure t :init (load-theme 'tango-plus :no-confirm))
+;; (use-package nadaquah-theme :ensure t :init (load-theme 'nadaquah :no-confirm))
+;; (use-package grandshell-theme :ensure t :init (load-theme 'grandshell :no-confirm))
 ;; (use-package flatland-black-theme :ensure t :init (load-theme 'flatland-black :no-confirm))
 ;; (use-package ample-theme :ensure t :init (load-theme 'ample :no-confirm))
+;; (use-package ample-theme :ensure t :init (load-theme 'ample-flat :no-confirm))
+;; (use-package ample-zen-theme :ensure t :init (load-theme 'ample-zen :no-confirm))
+;; (use-package color-theme-sanityinc-tomorrow :ensure t :init (load-theme 'sanityinc-tomorrow-night :noconfirm))
+;; (use-package tangotango-theme :ensure t :init (load-theme 'tangotango :no-confirm))
 
+;; Light Themes
+;; ==================================================
+(use-package leuven-theme :ensure t :init (load-theme 'leuven :no-confirm))
+;; (use-package solarized-theme :ensure t :init (load-theme 'solarized-light :no-confirm))
+;; (use-package hemisu-theme :ensure t :init (load-theme 'hemisu-ligth :no-confirm))
+;; (use-package tango-plus-theme :ensure t :init (load-theme 'tango-plus :no-confirm))
+;; (use-package color-theme-sanityinc-tomorrow :ensure t :init (load-theme 'sanityinc-tomorrow-day :noconfirm))
+;; (use-package ample-theme :ensure t :init (load-theme 'ample-light :no-confirm))
 
 ;; Fonts
 ;; =========================
@@ -141,11 +153,11 @@
         (mw/set-best-font (cdr fonts))))))
 
 (mw/set-best-font '(
-                   ("Droid Sans Mono Dotted" 14)
                    ("Inconsolata" 16)
-                   ("Liberation Mono" 14)
-                   ("Anonymous Pro" 16)
                    ("Source Code Pro" 14)
+                   ("Anonymous Pro" 14)
+                   ("Droid Sans Mono Dotted" 14)
+                   ("Liberation Mono" 14)
                    ("Ubuntu Mono" 16)
                    ("Monaco" 14)
                    ("Roboto Mono" 15)
@@ -161,16 +173,21 @@
 ;;============================================================
 (load-local "defuns")
 
-;; Major mode abbrevs
+;;; Major mode abbrevs
 (add-hook 'emacs-lisp-mode-hook (lambda() (setq mode-name "Ⓔ")))
 (add-hook 'python-mode-hook (lambda() (setq mode-name "Ⓟ")))
 (add-hook 'js2-mode-hook (lambda() (setq mode-name "Ⓙ")))
 (add-hook 'web-mode-hook (lambda() (setq mode-name "Ⓦ")))
 
-;; Minor Mode diminish
+;;; Minor Mode diminish
 (eval-after-load "xterm-title" '(diminish 'xterm-title-mode))
 (eval-after-load "hi-lock" '(diminish 'hi-lock-mode))
 (eval-after-load "outline" '(diminish 'outline-minor-mode))
+
+;;; auto-mode-alist entries
+(add-to-list 'auto-mode-alist '("\\.m$" . octave-mode))
+(add-to-list 'auto-mode-alist '("\\.mom$" . nroff-mode))
+(add-to-list 'auto-mode-alist '("[Mm]akefile" . makefile-gmake-mode))
 
 
 ;;============================================================
@@ -219,10 +236,15 @@
 ;;#############################
 (use-package indent-guide
   :ensure t
+  :diminish indent-guide-mode
   :init
   (add-hook 'prog-mode-hook 'indent-guide-global-mode)
   :config
   (setq indent-guide-char ":"))
+
+(use-package uniquify
+  :config
+  (setf uniquify-buffer-name-style 'post-forward-angle-brackets))
 
 
 ;;#############################
@@ -341,6 +363,10 @@
 (use-package git-timemachine
   :ensure t
   :bind ("C-c v t" . git-timemachine))
+
+(use-package gitconfig-mode
+  :ensure t
+  :mode ".*\\.gitconfig")
 
 
 ;;#############################
@@ -502,6 +528,11 @@
   :init
   (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
+(use-package fzf
+  :ensure t
+  :commands (fzf fzf-directory)
+  :if (which "fzf"))
+
 
 ;;#############################
 ;; Web
@@ -534,6 +565,7 @@
 
 (use-package guide-key
   :ensure t
+  :disabled t
   :diminish guide-key-mode
   :init
   (guide-key-mode +1)
@@ -541,6 +573,12 @@
   (setq guide-key/popup-window-position 'bottom)
   (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c p" "C-c p 4" "C-c p s" "C-c m" "C-c C-r" "C-c C-p")))
 
+
+(use-package which-key
+  :ensure t
+  :diminish which-key-mode
+  :init
+  (which-key-mode))
 
 ;;#############################
 ;; Editing
@@ -714,7 +752,9 @@
 (use-package flycheck
   :ensure t
   :init
-  (add-hook 'after-init-hook #'global-flycheck-mode))
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+  :config
+  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 
 (use-package web-mode
   :ensure t
