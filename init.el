@@ -124,7 +124,6 @@
 ;; (use-package badger-theme :ensure t :init (load-theme 'badger :no-confirm))
 ;; (use-package darktooth-theme :ensure t :init (load-theme 'darktooth :no-confirm))
 ;; (use-package gruvbox-theme :ensure t :init (load-theme 'gruvbox :no-confirm))
-;; (use-package nadaquah-theme :ensure t :init (load-theme 'nadaquah :no-confirm))
 ;; (use-package grandshell-theme :ensure t :init (load-theme 'grandshell :no-confirm))
 ;; (use-package flatland-black-theme :ensure t :init (load-theme 'flatland-black :no-confirm))
 ;; (use-package ample-theme :ensure t :init (load-theme 'ample :no-confirm))
@@ -153,10 +152,10 @@
         (mw/set-best-font (cdr fonts))))))
 
 (mw/set-best-font '(
+                   ("Droid Sans Mono Dotted" 14)
                    ("Inconsolata" 16)
                    ("Source Code Pro" 14)
                    ("Anonymous Pro" 14)
-                   ("Droid Sans Mono Dotted" 14)
                    ("Liberation Mono" 14)
                    ("Ubuntu Mono" 16)
                    ("Monaco" 14)
