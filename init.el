@@ -415,9 +415,11 @@
     (setq sublimity-map-fraction 0.3)
     (setq sublimity-map-text-scale -7)))
 
-(use-package tdd-mode
+(use-package tdd
   :load-path "vendor/tdd"
-  :bind ("C-<f5>" . tdd-mode))
+  :bind ("C-<f5>" . tdd-mode)
+  :config
+  (require 'tdd))
 
 (use-package ido
   :ensure t

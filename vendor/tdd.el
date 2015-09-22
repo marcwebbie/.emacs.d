@@ -48,7 +48,7 @@
                             map)
   "Keymap used on the mode line indicator.")
 
-(defcustom tdd-success-symbol "✔"
+(defcustom tdd-success-symbol " ✔ "
   "Mode line symbol to show when tests passed."
   :type 'string
   :group 'tdd)
@@ -58,7 +58,7 @@
   :type 'face
   :group 'tdd)
 
-(defcustom tdd-failure-symbol "✖"
+(defcustom tdd-failure-symbol " ✖ "
   "Mode line symbol to show when tests failed."
   :type 'string
   :group 'tdd)
@@ -68,7 +68,7 @@
   :type 'face
   :group 'tdd)
 
-(defcustom tdd-waiting-symbol "✱"
+(defcustom tdd-waiting-symbol " ✱ "
   "Mode line symbol to show when tests are running."
   :type 'string
   :group 'tdd)
