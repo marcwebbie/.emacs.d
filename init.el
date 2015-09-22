@@ -245,6 +245,13 @@
   :config
   (setf uniquify-buffer-name-style 'post-forward-angle-brackets))
 
+(use-package flycheck
+  :ensure t
+  :init
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+  :config
+  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+
 
 ;;#############################
 ;; System
@@ -284,13 +291,6 @@
   (exec-path-from-shell-initialize)
   (exec-path-from-shell-copy-env "PYTHONPATH")
   )
-
-(use-package dired-x
-  :init
-  (setq global-auto-revert-non-file-buffers t)
-  (setq auto-revert-verbose nil)
-  (setq-default dired-omit-files-p t) ; Buffer-local variable
-  (setq dired-omit-files "^\\.?#\\|^\\.$\\|^__pycache__$\\|\\.git"))
 
 (use-package realgud
   :ensure t
@@ -377,6 +377,13 @@
   (if (fboundp #'save-place-mode)
       (save-place-mode +1)
     (setq-default save-place t)))
+
+(use-package dired-x
+  :init
+  (setq global-auto-revert-non-file-buffers t)
+  (setq auto-revert-verbose nil)
+  (setq-default dired-omit-files-p t) ; Buffer-local variable
+  (setq dired-omit-files "^\\.?#\\|^\\.$\\|^__pycache__$\\|\\.git"))
 
 (use-package highlight-symbol
   :ensure t
@@ -750,12 +757,6 @@
 ;;#############################
 ;; Languages
 ;;#############################
-(use-package flycheck
-  :ensure t
-  :init
-  (add-hook 'after-init-hook #'global-flycheck-mode)
-  :config
-  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 
 (use-package web-mode
   :ensure t
