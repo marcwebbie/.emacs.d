@@ -299,25 +299,6 @@
 
 
 ;;#############################
-;; Ace
-;;#############################
-(use-package ace-jump-mode
-  :ensure t
-  :bind (("C-c SPC" . ace-jump-mode)
-         ("C-c C-SPC" . ace-jump-mode-pop-mark))
-  :config
-  (setq ace-jump-mode-case-fold t)
-  )
-
-(use-package ace-window
-  :ensure t
-  :bind ("M-o" . ace-window)
-  :config
-  (setq aw-keys '(?q ?w ?e ?r ?a ?s ?d ?f))
-  )
-
-
-;;#############################
 ;; Git
 ;;#############################
 (use-package magit
@@ -405,10 +386,6 @@
   (bind-key "n" 'bm-show-next bm-show-mode-map)
   (bind-key "p" 'bm-show-prev bm-show-mode-map))
 
-(use-package bookmark+
-  :disabled t
-  :ensure t)
-
 (use-package sublimity
   :disabled t
   :ensure t
@@ -493,14 +470,6 @@
   (add-to-list 'projectile-globally-ignored-directories ".cask")
   )
 
-(use-package swiper
-  :ensure t
-  :disabled t
-  :init
-  (ivy-mode 1)
-  :config
-  (setq ivy-use-virtual-buffers t))
-
 (use-package recentf
   :ensure t
   :bind (("C-x f" . recentf-ido-find-file)
@@ -540,6 +509,21 @@
   :ensure t
   :commands (fzf fzf-directory)
   :if (which "fzf"))
+
+(use-package ace-jump-mode
+  :ensure t
+  :bind (("C-c SPC" . ace-jump-mode)
+         ("C-c C-SPC" . ace-jump-mode-pop-mark))
+  :config
+  (setq ace-jump-mode-case-fold t)
+  )
+
+(use-package ace-window
+  :ensure t
+  :bind ("M-o" . ace-window)
+  :config
+  (setq aw-keys '(?q ?w ?e ?r ?a ?s ?d ?f))
+  )
 
 
 ;;#############################
@@ -809,12 +793,13 @@
   :ensure t
   :commands (python-mode)
   :config
+  ;; Hooks
+  (add-hook 'python-mode-hook 'mw/python--add-todo-fixme-bug-hightlight)
+  (add-hook 'python-mode-hook 'mw/python--add-debug-highlight)
+
+  ;; Bindings
   (bind-key "C-<f9>" 'mw/add-pudb-debug python-mode-map)
   (bind-key "<f9>" 'mw/add-py-debug python-mode-map)
-  (add-hook 'python-mode-hook
-            (lambda ()
-              (font-lock-add-keywords nil
-                                      '(("\\<\\(FIXME\\|TODO\\|BUG\\):" 1 font-lock-warning-face t)))))
 
   (use-package pyvenv
     :ensure t
@@ -824,22 +809,13 @@
     :config
     (setenv "WORKON_HOME" (expand-file-name "~/.pyenv/versions"))
     (setenv "VIRTUALENVWRAPPER_HOOK_DIR" (getenv "WORKON_HOME"))
-    (setq pyvenv-versions (directory-files (expand-file-name (getenv "WORKON_HOME"))))
-
-    (defun find-virtualenv-name ()
-      (let ((python-version-file (expand-file-name ".python-version" (projectile-project-root))))
-        (cond ((file-exists-p python-version-file)
-               (with-temp-buffer
-                 (insert-file-contents python-version-file)
-                 (s-trim (buffer-string))))
-              ((member (projectile-project-name) pyvenv-versions)
-               (projectile-project-name)))))
-
-    (add-hook 'python-mode-hook (λ
-                                 (let ((virtualenv-name (find-virtualenv-name)))
-                                   (message (format "activating virtualenv: %s" virtualenv-name))
-                                   (pyvenv-workon virtualenv-name))))
     )
+
+  (use-package auto-virtualenv
+    :load-path "vendor"
+    :init
+    (add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv)
+    (add-hook 'projectile-switch-project-hook 'auto-virtualenv-set-virtualenv))
 
   (use-package anaconda-mode
     :ensure t
@@ -859,6 +835,7 @@
     :config (pip-requirements-mode))
 
   (use-package elpy
+    :disabled t
     :ensure t
     :diminish elpy-mode
     :bind (("C-c t t" . elpy-test-discover-runner)
