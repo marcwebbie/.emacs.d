@@ -855,13 +855,12 @@
 
   (use-package elpy
     :ensure t
-    ;; :diminish elpy-mode
+    :diminish elpy-mode
     :bind (("C-c t t" . elpy-test-discover-runner)
            ("C-c t d" . elpy-test-django-runner)
            ("C-c C-f" . elpy-find-file)
            ("C-c C-;" . mw/set-django-settings-module))
     :init
-    ;; (elpy-enable)
     (add-hook 'python-mode-hook 'elpy-mode)
     :config
     ;; (setq elpy-test-runner 'elpy-test-pytest-runner)
