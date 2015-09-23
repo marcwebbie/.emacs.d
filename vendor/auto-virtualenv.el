@@ -64,7 +64,7 @@
 
 (defun auto-virtualenv-set-virtualenv ()
   (let ((virtualenv-name (auto-virtualenv-find-virtualenv-name)))
-    (when (and virtualenv-name (not (equal pyvenv-virtual-env-name "e4l")))
+    (when (and virtualenv-name (not (equal pyvenv-virtual-env-name (auto-virtualenv--project-name))))
       (message (format "activating virtualenv: %s" virtualenv-name))
       (pyvenv-mode +1)
       (pyvenv-workon virtualenv-name))))
