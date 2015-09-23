@@ -401,17 +401,6 @@ Symbols matching the text at point are put first in the completion list."
    (get-buffers-matching-mode major-mode)
    (car (occur-read-primary-args))))
 
-(defadvice compile (before ad-compile-smart activate)
-  "Advises `compile' so it sets the argument COMINT to t
-if breakpoints are present in `python-mode' files"
-  (when (derived-mode-p major-mode 'python-mode)
-    (save-excursion
-      (save-match-data
-        (goto-char (point-min))
-        (if (re-search-forward (concat "^\\s-*" python--pdb-breakpoint-string "$")
-                               (point-max) t)
-            ;; set COMINT argument to `t'.
-            (ad-set-arg 1 t))))))
 
 (defun etc-log-tail-handler ()
   "Clean auto-revert-tail mode"

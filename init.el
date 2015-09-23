@@ -234,6 +234,7 @@
 ;; Interface
 ;;#############################
 (use-package indent-guide
+  :disabled t
   :ensure t
   :diminish indent-guide-mode
   :init
@@ -287,7 +288,7 @@
 (use-package exec-path-from-shell
   :ensure t
   :if *is-a-mac*
-  :init
+  :config
   (exec-path-from-shell-initialize)
   (exec-path-from-shell-copy-env "PYTHONPATH")
   )
@@ -541,7 +542,7 @@
   :diminish eldoc-mode
   :commands eldoc
   :init
-  (add-hook 'prog-mode-hook 'eldoc-mode))
+  (add-hook 'emacs-lisp-mode 'eldoc-mode))
 
 (use-package company
   :ensure t
@@ -818,6 +819,7 @@
     (add-hook 'projectile-switch-project-hook 'auto-virtualenv-set-virtualenv))
 
   (use-package anaconda-mode
+    :disabled t
     :ensure t
     :diminish anaconda-mode
     :init
@@ -834,29 +836,38 @@
     :mode "\\requirements.txt\\'"
     :config (pip-requirements-mode))
 
-  (use-package elpy
+  (use-package company-jedi
     :disabled t
     :ensure t
-    :diminish elpy-mode
+    :init
+    (defun mw/setup-company-jedi ()
+      (add-to-list 'company-backends 'company-jedi))
+    (add-hook 'python-mode-hook 'mw/setup-company-jedi))
+
+  (use-package jedi
+    :ensure t
+    :init
+    (add-hook 'python-mode-hook 'jedi:setup)
+    )
+
+  (use-package pytest
+    :bind (("C-c t p" . pytest-one)))
+
+  (use-package elpy
+    :ensure t
+    ;; :diminish elpy-mode
     :bind (("C-c t t" . elpy-test-discover-runner)
            ("C-c t d" . elpy-test-django-runner)
-           ("C-c t p" . elpy-test-pytest-runner)
            ("C-c C-f" . elpy-find-file)
            ("C-c C-;" . mw/set-django-settings-module))
     :init
-    (elpy-enable)
+    ;; (elpy-enable)
+    (add-hook 'python-mode-hook 'elpy-mode)
     :config
-    (setq elpy-test-runner 'elpy-test-pytest-runner)
-    ;; (setq elpy-rpc-backend "jedi")
-    (setq elpy-rpc-backend "rope")
-
-    (defun elpy-set-test-runners ()
-      "Set elpy test runners"
-      (let ((python (which "python")))
-        (message (format "settings elpy test runners. python: %s" python))
-        (setq elpy-test-django-runner-command (list python "manage.py" "test" "--noinput"))
-        (setq elpy-test-discover-runner-command (list python "-m" "unittest"))))
-    (add-hook 'elpy-mode-hook 'elpy-set-test-runners)
+    ;; (setq elpy-test-runner 'elpy-test-pytest-runner)
+    (setq elpy-rpc-backend "jedi")
+    ;; (setq elpy-rpc-backend "rope")
+    (setq elpy-test-django-runner-command '("python" "manage.py" "test" "--noinput"))
     )
   )
 
