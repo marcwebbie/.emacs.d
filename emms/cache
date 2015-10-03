@@ -1,0 +1,2 @@
+;;; .emms-cache -*- mode: emacs-lisp; coding: utf-8; -*-
+(puthash "/Users/marc/Desktop/when_we_get_by.mp3" '(*track* (type . file) (name . "/Users/marc/Desktop/when_we_get_by.mp3") (metadata) (info-mtime 21766 35051 0 0)) emms-cache-db)
