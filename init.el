@@ -110,7 +110,7 @@
 
 ;; Dark Themes
 ;; ==================================================
-;; (use-package solarized-theme :ensure t :init (load-theme 'solarized-dark :no-confirm))
+(use-package solarized-theme :ensure t :init (load-theme 'solarized-dark :no-confirm))
 ;; (use-package zenburn-theme :ensure t :init (load-theme 'zenburn :no-confirm))
 ;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
 ;; (use-package cyberpunk-theme :ensure t :init (load-theme 'cyberpunk :no-confirm))
@@ -134,7 +134,7 @@
 
 ;; Light Themes
 ;; ==================================================
-(use-package leuven-theme :ensure t :init (load-theme 'leuven :no-confirm))
+;; (use-package leuven-theme :ensure t :init (load-theme 'leuven :no-confirm))
 ;; (use-package solarized-theme :ensure t :init (load-theme 'solarized-light :no-confirm))
 ;; (use-package hemisu-theme :ensure t :init (load-theme 'hemisu-ligth :no-confirm))
 ;; (use-package tango-plus-theme :ensure t :init (load-theme 'tango-plus :no-confirm))
@@ -275,6 +275,19 @@
   :ensure t
   :commands (paradox-list-packages))
 
+(use-package emms
+  :ensure t
+  :config
+  (require 'emms-setup)
+  (require 'emms-player-vlc)
+  ;; (require 'emms-player-mplayer)
+  (emms-standard)
+  (emms-default-players)
+  (if *is-a-mac*
+      (setq emms-player-vlc-command-name "/Applications/VLC.app/Contents/MacOS/VLC")
+    (setq emms-player-vlc-command-name (which "vlc"))
+    )
+  )
 
 ;;#############################
 ;; Shell
@@ -332,13 +345,12 @@
   :config
   (custom-set-variables
    '(git-gutter:window-width 1)
-   '(git-gutter:modified-sign "█") ;; two space
-   '(git-gutter:added-sign "█")    ;; multiple character is OK
-   '(git-gutter:deleted-sign "█")
-   ;; '(git-gutter:modified-sign "●") ;; two space
-   ;; '(git-gutter:added-sign "●")    ;; multiple character is OK
-   ;; '(git-gutter:deleted-sign "●")
-   )
+   ;; '(git-gutter:modified-sign "█") ;; two space
+   ;; '(git-gutter:added-sign "█")    ;; multiple character is OK
+   ;; '(git-gutter:deleted-sign "█"))
+   '(git-gutter:modified-sign "●") ;; two space
+   '(git-gutter:added-sign "●")    ;; multiple character is OK
+   '(git-gutter:deleted-sign "●"))
   )
 
 (use-package git-timemachine
@@ -819,7 +831,6 @@
     (add-hook 'projectile-switch-project-hook 'auto-virtualenv-set-virtualenv))
 
   (use-package anaconda-mode
-    :disabled t
     :ensure t
     :diminish anaconda-mode
     :init
@@ -845,7 +856,9 @@
     (add-hook 'python-mode-hook 'mw/setup-company-jedi))
 
   (use-package jedi
+    :disabled t
     :ensure t
+    :diminish (auto-complete-mode)
     :init
     (add-hook 'python-mode-hook 'jedi:setup)
     )
@@ -856,18 +869,27 @@
   (use-package elpy
     :ensure t
     :diminish elpy-mode
-    :bind (("C-c t t" . elpy-test-discover-runner)
-           ("C-c t d" . elpy-test-django-runner)
+    :bind (("C-c t" . elpy-test-django-runner)
            ("C-c C-f" . elpy-find-file)
            ("C-c C-;" . mw/set-django-settings-module))
     :init
-    (add-hook 'python-mode-hook 'elpy-mode)
+    (elpy-enable)
     :config
+    ;; (defun mw/elpy-test-run ()
+    ;;   (interactive)
+    ;;   (when (file-exists-p (expand-file-name "manage.py" (elpy-project-root)))
+    ;;     (elpy-test-django-runner)))
+
     ;; (setq elpy-test-runner 'elpy-test-pytest-runner)
     (setq elpy-rpc-backend "jedi")
-    ;; (setq elpy-rpc-backend "rope")
+    (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart)
+    (setq elpy-rpc-backend "rope")
     (setq elpy-test-django-runner-command '("python" "manage.py" "test" "--noinput"))
     )
+
+  (use-package py-autopep8
+    :ensure t
+    :bind (("C-c C-a" . py-autopep8-buffer)))
   )
 
 (use-package yaml-mode
