@@ -51,5 +51,6 @@
         describe-key
         drag-stuff-down
         help-for-help
+        js2-mode-show-node
         shell-command-on-region
         ))
