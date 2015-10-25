@@ -819,7 +819,8 @@
     :init
     (add-hook 'python-mode-hook 'pyvenv-mode)
     :config
-    (setenv "WORKON_HOME" (expand-file-name "~/.pyenv/versions"))
+    (setenv "WORKON_HOME" (expand-file-name
+                           (if (file-exists-p "~/.pyenv/versions") "~/.pyenv/versions" "~/.virtualenvs")))
     (setenv "VIRTUALENVWRAPPER_HOOK_DIR" (getenv "WORKON_HOME"))
     )
 
