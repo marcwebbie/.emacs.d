@@ -452,7 +452,7 @@
     (flx-ido-mode +1)))
 
 (use-package visual-regexp
-  :disabled
+  :disabled t
   :ensure t
   :bind (("C-s" . vr/isearch-forward)
          ("C-r" . vr/isearch-backward)
