@@ -14,7 +14,7 @@
 (require 'pyvenv)
 
 
-(defcustom virtualenv-dirs (expand-file-name "~/.pyenv/versions")
+(defcustom virtualenv-dirs (if (file-exists-p "~/.pyenv/versions") "~/.pyenv/versions" "~/.virtualenvs")
   "The intended virtualenvs installation directory."
   :type 'directory
   :safe #'stringp
