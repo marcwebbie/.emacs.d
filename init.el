@@ -110,9 +110,9 @@
 
 ;; Dark Themes
 ;; ==================================================
-(use-package solarized-theme :ensure t :init (load-theme 'solarized-dark :no-confirm))
+;; (use-package solarized-theme :ensure t :init (load-theme 'solarized-dark :no-confirm))
 ;; (use-package zenburn-theme :ensure t :init (load-theme 'zenburn :no-confirm))
-;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
+(use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
 ;; (use-package cyberpunk-theme :ensure t :init (load-theme 'cyberpunk :no-confirm))
 ;; (use-package warm-night-theme :ensure t :init (load-theme 'warm-night :no-confirm))
 ;; (use-package smyx-theme :ensure t :init (load-theme 'smyx :no-confirm))
@@ -193,7 +193,11 @@
 ;; Packages
 ;;============================================================
 
+(use-package s
+  :ensure t)
+
 (use-package bind-key
+  :ensure s
   :config
   ;; Editing
   (bind-key "C-c d" 'duplicate-current-line-or-region)
@@ -222,10 +226,10 @@
   (bind-key "C-c y" 'youtube)
 
   ;; Naming
-  (bind-key "C-c m -" (λ (replace-region-by 's-dashed-words)))
-  (bind-key "C-c m _" (λ (replace-region-by 's-snake-case)))
-  (bind-key "C-c m c" (λ (replace-region-by 's-lower-camel-case)))
-  (bind-key "C-c m C" (λ (replace-region-by 's-upper-camel-case)))
+  (bind-key "C-c m -" (lambda () (interactive) (replace-region-by 's-dashed-words)))
+  (bind-key "C-c m _" (lambda () (interactive) (replace-region-by 's-snake-case)))
+  (bind-key "C-c m c" (lambda () (interactive) (replace-region-by 's-lower-camel-case)))
+  (bind-key "C-c m C" (lambda () (interactive) (replace-region-by 's-upper-camel-case)))
 )
 
 (use-package diminish)
@@ -253,6 +257,13 @@
   :config
   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 
+(use-package autorevert
+  :diminish auto-revert-mode
+  :init
+  (global-auto-revert-mode)
+  :config
+  (setq-default auto-revert-interval 1))
+
 
 ;;#############################
 ;; System
@@ -276,6 +287,7 @@
   :commands (paradox-list-packages))
 
 (use-package emms
+  :disabled t
   :ensure t
   :config
   (require 'emms-setup)
@@ -372,7 +384,7 @@
       (save-place-mode +1)
     (setq-default save-place t)))
 
-(use-package dired-x
+(use-package dired
   :init
   (setq global-auto-revert-non-file-buffers t)
   (setq auto-revert-verbose nil)
@@ -398,19 +410,6 @@
   :config
   (bind-key "n" 'bm-show-next bm-show-mode-map)
   (bind-key "p" 'bm-show-prev bm-show-mode-map))
-
-(use-package sublimity
-  :disabled t
-  :ensure t
-  :config
-  (sublimity-mode +1)
-  (use-package sublimity-map
-    :ensure t
-    :disabled t
-    :config
-    (setq sublimity-map-size 20)
-    (setq sublimity-map-fraction 0.3)
-    (setq sublimity-map-text-scale -7)))
 
 (use-package tdd
   :load-path "vendor/tdd"
@@ -453,7 +452,7 @@
     (flx-ido-mode +1)))
 
 (use-package visual-regexp
-  :disabled t
+  :disabled
   :ensure t
   :bind (("C-s" . vr/isearch-forward)
          ("C-r" . vr/isearch-backward)
@@ -875,15 +874,8 @@
     :init
     (elpy-enable)
     :config
-    ;; (defun mw/elpy-test-run ()
-    ;;   (interactive)
-    ;;   (when (file-exists-p (expand-file-name "manage.py" (elpy-project-root)))
-    ;;     (elpy-test-django-runner)))
-
-    ;; (setq elpy-test-runner 'elpy-test-pytest-runner)
     (setq elpy-rpc-backend "jedi")
     (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart)
-    (setq elpy-rpc-backend "rope")
     (setq elpy-test-django-runner-command '("python" "manage.py" "test" "--noinput"))
     )
 
@@ -902,3 +894,9 @@
   :ensure t
   :config
   (setq coffee-tab-width 2))
+
+
+(use-package markdown-mode
+  :mode ((".*\\.md" . markdown-mode)
+         ("\\.markdown" . markdown-mode))
+  :ensure t)
