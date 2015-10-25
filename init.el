@@ -463,14 +463,15 @@
   :init
   (projectile-global-mode t)
   :config
+  (use-package grizzl :ensure t)
   (setq projectile-enable-caching t
         projectile-use-git-grep t
         projectile-switch-project-action 'projectile-dired
         projectile-require-project-root nil
         projectile-mode-line '(:eval (format " P[%s]" (projectile-project-name)))
-        ;; (setq projectile-completion-system 'helm)
-        ;; (setq projectile-completion-system 'grizzl)
-        ;; (setq projectile-completion-system 'ivy)
+        projectile-completion-system 'grizzl
+        ;; projectile-completion-system 'helm
+        ;; projectile-completion-system 'ivy
         )
   (add-to-list 'projectile-globally-ignored-files ".DS_Store")
   (add-to-list 'projectile-globally-ignored-files "*.pyc")
