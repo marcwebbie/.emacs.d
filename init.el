@@ -153,18 +153,19 @@
         (mw/set-best-font (cdr fonts))))))
 
 (mw/set-best-font '(
+                   ("Menlo" 14)
                    ("Droid Sans Mono Dotted" 14)
+                   ("Droid Sans Mono" 14)
                    ("Inconsolata" 16)
+                   ("DejaVu Sans Mono" 16)
+                   ("Roboto Mono" 16)
                    ("Source Code Pro" 14)
                    ("Anonymous Pro" 14)
                    ("Liberation Mono" 14)
                    ("Ubuntu Mono" 16)
                    ("Monaco" 14)
-                   ("Roboto Mono" 15)
                    ("Code New Roman" 14)
-                   ("Cousine" 15)
                    ("Ubuntu Mono" 16)
-                   ("Menlo" 14)
                    ("Fantasque Sans Mono" 18)
                   ))
 
