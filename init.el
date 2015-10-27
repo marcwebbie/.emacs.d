@@ -39,6 +39,7 @@
 (setq make-backup-files nil)
 (setq global-auto-revert-non-file-buffers t)
 (setq auto-revert-verbose nil)
+(setq auto-save-mode  nil)
 ;; Remove text in active region if inserting text
 (delete-selection-mode 1)
 
@@ -832,6 +833,7 @@
     (add-hook 'projectile-switch-project-hook 'auto-virtualenv-set-virtualenv))
 
   (use-package anaconda-mode
+    :disabled t
     :ensure t
     :diminish anaconda-mode
     :init
