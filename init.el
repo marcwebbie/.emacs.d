@@ -905,3 +905,7 @@
   :mode ((".*\\.md" . markdown-mode)
          ("\\.markdown" . markdown-mode))
   :ensure t)
+
+
+(use-package pig-mode
+  :ensure t)
