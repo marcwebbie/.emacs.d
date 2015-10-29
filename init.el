@@ -341,6 +341,20 @@
     (save-window-excursion
       (magit-with-refresh
        (shell-command "git --no-pager commit --amend --reuse-message=HEAD"))))
+  (setq magit-display-buffer-function
+      (lambda (buffer)
+        (if magit-display-buffer-noselect
+            ;; the code that called `magit-display-buffer-function'
+            ;; expects the original window to stay alive, we can't go
+            ;; fullscreen
+            (magit-display-buffer-traditional buffer)
+          (delete-other-windows)
+          ;; make sure the window isn't dedicated, otherwise
+          ;; `set-window-buffer' throws an error
+          (set-window-dedicated-p nil nil)
+          (set-window-buffer nil buffer)
+          ;; return buffer's window
+          (get-buffer-window buffer))))
   (setq magit-revert-buffers t)
   (add-hook 'magit-status-mode-hook 'delete-other-windows)
   (bind-key "C-c C-a" 'magit-quit-session magit-status-mode-map)
@@ -818,20 +832,15 @@
 
   (use-package pyvenv
     :ensure t
-    :commands (pyvenv-mode)
-    :init
-    (add-hook 'python-mode-hook 'pyvenv-mode)
     :config
-    (setenv "WORKON_HOME" (expand-file-name
-                           (if (file-exists-p "~/.pyenv/versions") "~/.pyenv/versions" "~/.virtualenvs")))
+    (setenv "WORKON_HOME" (first-file-exists-p (list "~/.virtualenvs" "~/.pyenv/versions")))
     (setenv "VIRTUALENVWRAPPER_HOOK_DIR" (getenv "WORKON_HOME"))
     )
 
   (use-package auto-virtualenv
     :load-path "vendor"
     :init
-    (add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv)
-    (add-hook 'projectile-switch-project-hook 'auto-virtualenv-set-virtualenv))
+    (add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv))
 
   (use-package anaconda-mode
     :disabled t
@@ -859,14 +868,6 @@
       (add-to-list 'company-backends 'company-jedi))
     (add-hook 'python-mode-hook 'mw/setup-company-jedi))
 
-  (use-package jedi
-    :disabled t
-    :ensure t
-    :diminish (auto-complete-mode)
-    :init
-    (add-hook 'python-mode-hook 'jedi:setup)
-    )
-
   (use-package pytest
     :bind (("C-c t p" . pytest-one)))
 
@@ -882,6 +883,11 @@
     (setq elpy-rpc-backend "jedi")
     (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart)
     (setq elpy-test-django-runner-command '("python" "manage.py" "test" "--noinput"))
+    )
+
+  (use-package jedi
+    :ensure t
+    :bind (("M-." . jedi:goto-definition))
     )
 
   (use-package py-autopep8
