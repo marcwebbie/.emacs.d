@@ -510,3 +510,8 @@ Symbols matching the text at point are put first in the completion list."
         (elpy-autopep8-fix-code))
     (if (symbolp 'elpy-importmagic-fixup)
         (elpy-importmagic-fixup))))
+
+
+(defun first-file-exists-p (filelist)
+  (let ((filename (expand-file-name (car filelist))))
+   (if (file-exists-p filename) filename (first-file-exists-p (cdr filelist)))))
