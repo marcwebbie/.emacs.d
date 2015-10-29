@@ -7,19 +7,20 @@
 
 
 ;;; Code:
-
-(require 'projectile)
 (require 'cl-lib)
 (require 'python)
 (require 'pyvenv)
 
 
-(defcustom virtualenv-dirs (if (file-exists-p "~/.pyenv/versions") "~/.pyenv/versions" "~/.virtualenvs")
+(defun auto-virtualenv-first-file-exists-p (filelist)
+  (let ((filename (expand-file-name (car filelist))))
+   (if (file-exists-p filename) filename (first-file-exists-p (cdr filelist)))))
+
+(defcustom auto-virtualenv-dir  (auto-virtualenv-first-file-exists-p "~/.virtualenvs" "~/.pyenv/versions")
   "The intended virtualenvs installation directory."
   :type 'directory
   :safe #'stringp
   :group 'auto-virtualenv)
-
 
 (defvar auto-virtualenv-project-roots
   '(".git" ".hg" "Rakefile" "Makefile" "README" "build.xml" ".emacs-project" "Gemfile" ".projectile" "manage.py")
@@ -48,12 +49,12 @@
   "Return the project project root name"
   (file-name-nondirectory
    (directory-file-name
-     (file-name-directory (auto-virtualenv--project-root)))))
+    (file-name-directory (auto-virtualenv--project-root)))))
 
 (defun auto-virtualenv--versions ()
   (or auto-virtualenv--versions
-      (setq auto-virtualenv--project-root
-            (directory-files (expand-file-name (getenv "WORKON_HOME"))))))
+      (setq auto-virtualenv--versions
+            (directory-files (expand-file-name auto-virtualenv-dir)))))
 
 (defun auto-virtualenv-find-virtualenv-name ()
   (let ((python-version-file (expand-file-name ".python-version" (auto-virtualenv--project-root))))
@@ -66,7 +67,7 @@
   (let ((virtualenv-name (auto-virtualenv-find-virtualenv-name)))
     (when (and virtualenv-name (not (equal pyvenv-virtual-env-name (auto-virtualenv--project-name))))
       (message (format "activating virtualenv: %s" virtualenv-name))
-      (pyvenv-mode +1)
+      (pyvenv-mode t)
       (pyvenv-workon virtualenv-name))))
 
 (provide 'auto-virtualenv)
