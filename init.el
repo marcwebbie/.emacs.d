@@ -190,6 +190,9 @@
 (add-to-list 'auto-mode-alist '("\\.mom$" . nroff-mode))
 (add-to-list 'auto-mode-alist '("[Mm]akefile" . makefile-gmake-mode))
 
+;;; global hook modes
+(add-hook 'text-mode-hook 'turn-on-visual-line-mode)
+
 
 ;;============================================================
 ;; Packages
