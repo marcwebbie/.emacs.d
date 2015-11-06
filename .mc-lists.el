@@ -21,6 +21,7 @@
         kill-to-beginning-of-line
         kill-visual-line
         kmacro-end-or-call-macro
+        markdown-cycle
         markdown-exdent-or-delete
         org-beginning-of-line
         org-delete-char
