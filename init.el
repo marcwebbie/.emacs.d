@@ -542,6 +542,12 @@
   :commands (fzf fzf-directory)
   :if (which "fzf"))
 
+
+(use-package ag
+  :ensure t
+  :if (which "ag"))
+
+
 (use-package ace-jump-mode
   :ensure t
   :bind (("C-c SPC" . ace-jump-mode)
