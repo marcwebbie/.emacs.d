@@ -287,6 +287,18 @@
   (setq ispell-dictionary "fr_FR")
   )
 
+(use-package super-save
+  :disabled t
+  :ensure t
+  :config
+  (super-save-initialize))
+
+(use-package real-auto-save
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook 'real-auto-save-mode)
+  (setq real-auto-save-interval 10))
+
 (use-package paradox
   :ensure t
   :commands (paradox-list-packages))
