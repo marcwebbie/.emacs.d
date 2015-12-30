@@ -212,6 +212,7 @@
   (bind-key "C-a" 'back-to-indentation-or-beginning-of-line)
   (bind-key "C-z" 'zap-up-to-char)
   (bind-key "C-|" 'align-regexp)
+  (bind-key "C-c c" 'copy-file-name-to-clipboard)
 
   (bind-key "M-j" (λ (join-line -1)))
   (bind-key "M-h" 'kill-to-beginning-of-line)

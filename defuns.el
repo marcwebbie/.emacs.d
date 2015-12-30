@@ -515,3 +515,14 @@ Symbols matching the text at point are put first in the completion list."
 (defun first-file-exists-p (filelist)
   (let ((filename (expand-file-name (car filelist))))
    (if (file-exists-p filename) filename (first-file-exists-p (cdr filelist)))))
+
+
+(defun copy-file-name-to-clipboard ()
+  "Copy the current buffer file name to the clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer file name '%s' to the clipboard." filename))))
