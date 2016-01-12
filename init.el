@@ -102,6 +102,7 @@
 (global-hl-line-mode -1)
 (global-linum-mode -1)
 (blink-cursor-mode -1)
+(setq blink-matching-paren nil)  ;; disable annoying blink-matching-paren
 
 ;; Scrolling
 ;; =========================
@@ -116,28 +117,21 @@
 (setq color-theme-is-global t)
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
+
 ;; Dark Themes
 ;; ==================================================
+;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
 ;; (use-package solarized-theme :ensure t :init (load-theme 'solarized-dark :no-confirm))
-;; (use-package zenburn-theme :ensure t :init (load-theme 'zenburn :no-confirm))
-(use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
-;; (use-package cyberpunk-theme :ensure t :init (load-theme 'cyberpunk :no-confirm))
-;; (use-package warm-night-theme :ensure t :init (load-theme 'warm-night :no-confirm))
-;; (use-package smyx-theme :ensure t :init (load-theme 'smyx :no-confirm))
-;; (use-package noctilux-theme :ensure t :init (load-theme 'noctilux :no-confirm))
 ;; (use-package monokai-theme :ensure t :init (load-theme 'monokai :no-confirm))
-;; (use-package molokai-theme :ensure t :init (load-theme 'molokai :no-confirm))
-;; (use-package cherry-blossom-theme :ensure t :init (load-theme 'cherry-blossom :no-confirm))
-;; (use-package hemisu-theme :ensure t :init (load-theme 'hemisu-dark :no-confirm))
+(use-package molokai-theme :ensure t :init (load-theme 'monokai :no-confirm))
+;; (use-package atom-dark-theme :ensure t :init (load-theme 'atom-dark :no-confirm))
+;; (use-package darkmine-theme :ensure t :init (load-theme 'darkmine :no-confirm))
+;; (use-package cyberpunk-theme :ensure t :init (load-theme 'cyberpunk :no-confirm))
+;; (use-package ample-theme :ensure t :init (load-theme 'ample :no-confirm))
 ;; (use-package badger-theme :ensure t :init (load-theme 'badger :no-confirm))
 ;; (use-package darktooth-theme :ensure t :init (load-theme 'darktooth :no-confirm))
 ;; (use-package gruvbox-theme :ensure t :init (load-theme 'gruvbox :no-confirm))
-;; (use-package grandshell-theme :ensure t :init (load-theme 'grandshell :no-confirm))
-;; (use-package flatland-black-theme :ensure t :init (load-theme 'flatland-black :no-confirm))
-;; (use-package ample-theme :ensure t :init (load-theme 'ample :no-confirm))
-;; (use-package ample-theme :ensure t :init (load-theme 'ample-flat :no-confirm))
-;; (use-package ample-zen-theme :ensure t :init (load-theme 'ample-zen :no-confirm))
-;; (use-package color-theme-sanityinc-tomorrow :ensure t :init (load-theme 'sanityinc-tomorrow-night :noconfirm))
+;; (use-package zenburn-theme :ensure t :init (load-theme 'zenburn :no-confirm))
 ;; (use-package tangotango-theme :ensure t :init (load-theme 'tangotango :no-confirm))
 
 ;; Light Themes
@@ -160,14 +154,14 @@
         (mw/set-best-font (cdr fonts))))))
 
 (mw/set-best-font '(
-                   ("Menlo" 14)
-                   ("Droid Sans Mono Dotted" 14)
-                   ("Droid Sans Mono" 14)
-                   ("Inconsolata" 16)
-                   ("DejaVu Sans Mono" 16)
-                   ("Roboto Mono" 16)
+                   ("Roboto Mono" 14)
                    ("Source Code Pro" 14)
                    ("Anonymous Pro" 14)
+                   ("Droid Sans Mono" 14)
+                   ("Droid Sans Mono Dotted" 14)
+                   ("Menlo" 14)
+                   ("Inconsolata" 16)
+                   ("DejaVu Sans Mono" 16)
                    ("Liberation Mono" 14)
                    ("Ubuntu Mono" 16)
                    ("Monaco" 14)
@@ -314,6 +308,11 @@
     )
   )
 
+(use-package super-save
+  :ensure t
+  :config
+  (super-save-initialize))
+
 ;;#############################
 ;; Shell
 ;;#############################
@@ -381,15 +380,6 @@
   :diminish git-gutter-mode
   :init
   (global-git-gutter-mode t)
-  :config
-  (custom-set-variables
-   '(git-gutter:window-width 1)
-   ;; '(git-gutter:modified-sign "█") ;; two space
-   ;; '(git-gutter:added-sign "█")    ;; multiple character is OK
-   ;; '(git-gutter:deleted-sign "█"))
-   '(git-gutter:modified-sign "●") ;; two space
-   '(git-gutter:added-sign "●")    ;; multiple character is OK
-   '(git-gutter:deleted-sign "●"))
   )
 
 (use-package git-timemachine
@@ -466,7 +456,7 @@
     :init
     (setq ido-vertical-decorations (list "\n➜ " "" "\n" "\n..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]" "\n" ""))
     (ido-vertical-mode 1)
-    (setq ido-vertical-define-keys 'C-n-C-p-up-and-down))
+    )
 
   (use-package ido-ubiquitous
     :ensure t
@@ -476,7 +466,9 @@
   (use-package flx-ido
     :ensure t
     :init
-    (flx-ido-mode +1)))
+    (flx-ido-mode +1)
+    (setq ido-use-faces nil))
+  )
 
 (use-package visual-regexp
   :disabled t
@@ -496,7 +488,7 @@
         projectile-switch-project-action 'projectile-dired
         projectile-require-project-root nil
         projectile-mode-line '(:eval (format " P[%s]" (projectile-project-name)))
-        projectile-completion-system 'grizzl
+        ;; projectile-completion-system 'grizzl
         ;; projectile-completion-system 'helm
         ;; projectile-completion-system 'ivy
         )
@@ -549,7 +541,6 @@
   :ensure t
   :commands (fzf fzf-directory)
   :if (which "fzf"))
-
 
 (use-package ag
   :ensure t
@@ -932,3 +923,22 @@
   :ensure t
   :config
   (add-hook 'sgml-mode-hook 'emmet-mode))
+
+
+(use-package operate-on-number
+  :ensure t
+  :config
+  (use-package smartrep
+    :ensure t)
+  (smartrep-define-key global-map "C-c ."
+                       '(("+" . apply-operation-to-number-at-point)
+                         ("-" . apply-operation-to-number-at-point)
+                         ("*" . apply-operation-to-number-at-point)
+                         ("/" . apply-operation-to-number-at-point)
+                         ("\\" . apply-operation-to-number-at-point)
+                         ("^" . apply-operation-to-number-at-point)
+                         ("<" . apply-operation-to-number-at-point)
+                         (">" . apply-operation-to-number-at-point)
+                         ("#" . apply-operation-to-number-at-point)
+                         ("%" . apply-operation-to-number-at-point)
+                         ("'" . operate-on-number-at-point))))

@@ -11,9 +11,6 @@
    (quote
     (elpy-module-company elpy-module-eldoc elpy-module-sane-defaults)))
  '(elpy-test-runner (quote elpy-test-pytest-runner))
- ;; '(git-gutter:added-sign "●")
- ;; '(git-gutter:deleted-sign "●")
- ;; '(git-gutter:modified-sign "●")
  '(git-gutter:window-width 1)
  '(markdown-header-face-1 ((t (:inherit org-level-1))))
  '(markdown-header-face-2 ((t (:inherit org-level-2))))
