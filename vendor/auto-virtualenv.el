@@ -16,7 +16,7 @@
   (let ((filename (expand-file-name (car filelist))))
    (if (file-exists-p filename) filename (first-file-exists-p (cdr filelist)))))
 
-(defcustom auto-virtualenv-dir (auto-virtualenv-first-file-exists-p '("~/.virtualenvs" "~/.pyenv/versions"))
+(defcustom auto-virtualenv-dir (auto-virtualenv-first-file-exists-p '("~/.pyenv/versions" "~/.virtualenvs"))
   "The intended virtualenvs installation directory."
   :type 'directory
   :safe #'stringp

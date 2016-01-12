@@ -849,7 +849,7 @@
   (use-package pyvenv
     :ensure t
     :config
-    (setenv "WORKON_HOME" (first-file-exists-p (list "~/.virtualenvs" "~/.pyenv/versions")))
+    (setenv "WORKON_HOME" (first-file-exists-p (list "~/.pyenv/versions" "~/.virtualenvs")))
     (setenv "VIRTUALENVWRAPPER_HOOK_DIR" (getenv "WORKON_HOME"))
     )
 
