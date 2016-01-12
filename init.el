@@ -117,13 +117,23 @@
 (setq color-theme-is-global t)
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
-
 ;; Dark Themes
 ;; ==================================================
+(use-package base16-theme
+  :ensure t
+  :init
+  (load-theme 'base16-default-dark :no-confirm)
+  ;; (load-theme 'base16-tomorrow-dark :no-confirm)
+  ;; (load-theme 'base16-bright-dark :no-confirm)
+  ;; (load-theme 'base16-monokai-dark :no-confirm)
+  ;; (load-theme 'base16-3024-dark :no-confirm)
+  ;; (load-theme 'base16-atelierlakeside-dark :no-confirm)
+  ;; (load-theme 'base16-flat-dark :no-confirm)
+  )
 ;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
 ;; (use-package solarized-theme :ensure t :init (load-theme 'solarized-dark :no-confirm))
 ;; (use-package monokai-theme :ensure t :init (load-theme 'monokai :no-confirm))
-(use-package molokai-theme :ensure t :init (load-theme 'monokai :no-confirm))
+;; (use-package molokai-theme :ensure t :init (load-theme 'molokai :no-confirm))
 ;; (use-package atom-dark-theme :ensure t :init (load-theme 'atom-dark :no-confirm))
 ;; (use-package darkmine-theme :ensure t :init (load-theme 'darkmine :no-confirm))
 ;; (use-package cyberpunk-theme :ensure t :init (load-theme 'cyberpunk :no-confirm))
@@ -168,7 +178,9 @@
                    ("Code New Roman" 14)
                    ("Ubuntu Mono" 16)
                    ("Fantasque Sans Mono" 18)
-                  ))
+                   ))
+
+(set-fringe-mode 0)
 
 ;;============================================================
 ;; Loading
