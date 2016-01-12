@@ -122,13 +122,13 @@
 (use-package base16-theme
   :ensure t
   :init
-  ;; (load-theme 'base16-default-dark :no-confirm)
+  (load-theme 'base16-default-dark :no-confirm)
   ;; (load-theme 'base16-tomorrow-dark :no-confirm)
   ;; (load-theme 'base16-bright-dark :no-confirm)
   ;; (load-theme 'base16-monokai-dark :no-confirm)
   ;; (load-theme 'base16-3024-dark :no-confirm)
   ;; (load-theme 'base16-atelierlakeside-dark :no-confirm)
-  (load-theme 'base16-atelierforest-dark :no-confirm)
+  ;; (load-theme 'base16-atelierforest-dark :no-confirm)
   ;; (load-theme 'base16-flat-dark :no-confirm)
   )
 ;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
