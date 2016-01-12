@@ -39,7 +39,7 @@
 (setq make-backup-files nil)
 (setq global-auto-revert-non-file-buffers t)
 (setq auto-revert-verbose nil)
-(setq auto-save-mode  nil)
+
 ;; Remove text in active region if inserting text
 (delete-selection-mode 1)
 
@@ -66,6 +66,13 @@
 (defalias 'which 'executable-find)
 
 (setq *spell-program* (which "aspell"))
+
+;; Auto save buffers
+(setq auto-save-mode  nil)
+(add-hook 'before-save-hook 'whitespace-cleanup)
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'focus-out-hook (lambda () (save-some-buffers t)))
+(run-with-idle-timer 3 t (lambda () (save-some-buffers t)))
 
 
 ;;============================================================
@@ -287,18 +294,6 @@
   (setq ispell-extra-args '("--sug-mode=ultra"))
   (setq ispell-dictionary "fr_FR")
   )
-
-(use-package super-save
-  :disabled t
-  :ensure t
-  :config
-  (super-save-initialize))
-
-(use-package real-auto-save
-  :ensure t
-  :config
-  (add-hook 'prog-mode-hook 'real-auto-save-mode)
-  (setq real-auto-save-interval 10))
 
 (use-package paradox
   :ensure t
@@ -776,13 +771,7 @@
 ;;#############################
 (use-package files
   :bind (("C-c R" . rename-this-buffer-and-file)
-         ("C-c D" . delete-this-buffer-and-file))
-  :config
-  (setq auto-save-default nil)
-  (setq make-backup-files nil) ; stop creating those backup~ files
-  (setq auto-save-default nil) ; stop creating those #autosave# files
-  (add-hook 'before-save-hook 'whitespace-cleanup)
-  (add-hook 'before-save-hook 'delete-trailing-whitespace))
+         ("C-c D" . delete-this-buffer-and-file)))
 
 (use-package ibuffer
   :ensure t
