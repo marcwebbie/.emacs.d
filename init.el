@@ -469,6 +469,7 @@
     :init
     (setq ido-vertical-decorations (list "\n➜ " "" "\n" "\n..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]" "\n" ""))
     (ido-vertical-mode 1)
+    (setq ido-vertical-define-keys 'C-n-C-p-up-and-down)
     )
 
   (use-package ido-ubiquitous
