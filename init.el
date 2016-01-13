@@ -204,6 +204,10 @@
 (add-to-list 'auto-mode-alist '("\\.mom$" . nroff-mode))
 (add-to-list 'auto-mode-alist '("[Mm]akefile" . makefile-gmake-mode))
 
+(add-to-list 'auto-mode-alist '(".gitconfig$" . shell-script-mode))
+(add-to-list 'auto-mode-alist '(".zshrc$" . shell-script-mode))
+(add-to-list 'auto-mode-alist '(".zshenv$" . shell-script-mode))
+
 ;;; global hook modes
 (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
 
