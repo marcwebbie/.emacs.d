@@ -69,7 +69,7 @@
 (add-hook 'before-save-hook 'whitespace-cleanup)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'focus-out-hook (lambda () (save-some-buffers t)))
-(run-with-idle-timer 3 t (lambda () (save-some-buffers t)))
+(run-with-idle-timer 5 t (lambda () (save-some-buffers t)))
 
 
 ;;============================================================
