@@ -490,18 +490,6 @@ Symbols matching the text at point are put first in the completion list."
     (setq elpy-test-django-runner-command (list python "manage.py" "test" "--noinput"))
     (setq elpy-test-discover-runner-command (list python "-m" "unittest"))))
 
-(defun mw/auto-activate-virtualenv ()
-  "Set auto-activate virtualenv"
-  (interactive)
-  (let ((virtualenvs (directory-files (getenv "WORKON_HOME"))))
-    (if (member (projectile-project-name) virtualenvs)
-        (if (equal (projectile-project-name) pyvenv-virtual-env-name)
-            (format "already activated virtualenv %s" (projectile-project-name))
-          (progn
-            (pyvenv-mode t)
-            (pyvenv-workon (projectile-project-name))
-            (message (format "activated virtualenv: %s" (projectile-project-name))))))))
-
 (defun mw/clean-python-file-hook ()
   "Clean python buffer before saving"
   (interactive)

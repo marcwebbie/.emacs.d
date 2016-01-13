@@ -60,9 +60,6 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (if (file-exists-p custom-file) (load custom-file))
 
-;; (setenv "WORKON_HOME" (expand-file-name "~/.pyenv/versions"))
-;; (setenv "VIRTUALENVWRAPPER_HOOK_DIR" (expand-file-name "~/.pyenv/versions"))
-
 (defalias 'which 'executable-find)
 
 (setq *spell-program* (which "aspell"))
@@ -168,15 +165,15 @@
 
 
 (mw/set-best-font '(
-                    ("Ubuntu Mono" 16)
+                    ("Roboto Mono" 14)
+                    ("Inconsolata" 16)
+                    ("Source Code Pro" 14)
                     ("DejaVu Sans Mono" 14)
-                    ("Roboto Mono" 12)
+                    ("Ubuntu Mono" 16)
                     ("Menlo" 14)
                     ("Droid Sans Mono" 14)
-                    ("Inconsolata" 16)
                     ("Monaco" 14)
                     ("Anonymous Pro" 14)
-                    ("Source Code Pro" 14)
                     ("Droid Sans Mono Dotted" 14)
                     ("Liberation Mono" 14)
                     ("Code New Roman" 14)
@@ -190,10 +187,10 @@
 (load-local "defuns")
 
 ;;; Major mode abbrevs
-(add-hook 'emacs-lisp-mode-hook (lambda() (setq mode-name "Ⓔ")))
-(add-hook 'python-mode-hook (lambda() (setq mode-name "Ⓟ")))
-(add-hook 'js2-mode-hook (lambda() (setq mode-name "Ⓙ")))
-(add-hook 'web-mode-hook (lambda() (setq mode-name "Ⓦ")))
+;; (add-hook 'emacs-lisp-mode-hook (lambda() (setq mode-name "Ⓔ")))
+;; (add-hook 'python-mode-hook (lambda() (setq mode-name "Ⓟ")))
+;; (add-hook 'js2-mode-hook (lambda() (setq mode-name "Ⓙ")))
+;; (add-hook 'web-mode-hook (lambda() (setq mode-name "Ⓦ")))
 
 ;;; Minor Mode diminish
 (eval-after-load "xterm-title" '(diminish 'xterm-title-mode))
