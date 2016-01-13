@@ -332,6 +332,7 @@
   :config
   (exec-path-from-shell-initialize)
   (exec-path-from-shell-copy-env "PYTHONPATH")
+  (exec-path-from-shell-copy-env "WORKON_HOME")
   )
 
 
@@ -803,13 +804,14 @@
   (use-package pyvenv
     :ensure t
     :config
-    (setenv "WORKON_HOME" (first-file-exists-p (list "~/.pyenv/versions" "~/.virtualenvs")))
+    (setenv "WORKON_HOME" (first-file-exists-p (list "~/.virtualenvs" "~/.pyenv/versions")))
     (setenv "VIRTUALENVWRAPPER_HOOK_DIR" (getenv "WORKON_HOME"))
     )
 
   (use-package auto-virtualenv
     :load-path "vendor"
-    :init
+    :config
+    (setq auto-virtualenv-dir "~/.virtualenvs")
     (add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv))
 
   (use-package anaconda-mode
