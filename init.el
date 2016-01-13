@@ -204,7 +204,6 @@
 (add-to-list 'auto-mode-alist '("\\.mom$" . nroff-mode))
 (add-to-list 'auto-mode-alist '("[Mm]akefile" . makefile-gmake-mode))
 
-(add-to-list 'auto-mode-alist '(".gitconfig$" . shell-script-mode))
 (add-to-list 'auto-mode-alist '(".zshrc$" . shell-script-mode))
 (add-to-list 'auto-mode-alist '(".zshenv$" . shell-script-mode))
 
@@ -310,25 +309,11 @@
   :ensure t
   :commands (paradox-list-packages))
 
-(use-package emms
-  :disabled t
-  :ensure t
-  :config
-  (require 'emms-setup)
-  (require 'emms-player-vlc)
-  ;; (require 'emms-player-mplayer)
-  (emms-standard)
-  (emms-default-players)
-  (if *is-a-mac*
-      (setq emms-player-vlc-command-name "/Applications/VLC.app/Contents/MacOS/VLC")
-    (setq emms-player-vlc-command-name (which "vlc"))
-    )
-  )
-
 (use-package super-save
   :ensure t
   :config
   (super-save-initialize))
+
 
 ;;#############################
 ;; Shell
@@ -347,11 +332,6 @@
   (exec-path-from-shell-copy-env "PYTHONPATH")
   )
 
-(use-package realgud
-  :ensure t
-  :disabled t
-  )
-
 
 ;;#############################
 ;; Git
@@ -363,28 +343,22 @@
          ("C-c v b" . magit-blame))
   :config
   (setq magit-last-seen-setup-instructions "1.4.0")
-  (defun magit-just-amend ()
-    (interactive)
-    (save-window-excursion
-      (magit-with-refresh
-       (shell-command "git --no-pager commit --amend --reuse-message=HEAD"))))
   (setq magit-display-buffer-function
-      (lambda (buffer)
-        (if magit-display-buffer-noselect
-            ;; the code that called `magit-display-buffer-function'
-            ;; expects the original window to stay alive, we can't go
-            ;; fullscreen
-            (magit-display-buffer-traditional buffer)
-          (delete-other-windows)
-          ;; make sure the window isn't dedicated, otherwise
-          ;; `set-window-buffer' throws an error
-          (set-window-dedicated-p nil nil)
-          (set-window-buffer nil buffer)
-          ;; return buffer's window
-          (get-buffer-window buffer))))
+        (lambda (buffer)
+          (if magit-display-buffer-noselect
+              ;; the code that called `magit-display-buffer-function'
+              ;; expects the original window to stay alive, we can't go
+              ;; fullscreen
+              (magit-display-buffer-traditional buffer)
+            (delete-other-windows)
+            ;; make sure the window isn't dedicated, otherwise
+            ;; `set-window-buffer' throws an error
+            (set-window-dedicated-p nil nil)
+            (set-window-buffer nil buffer)
+            ;; return buffer's window
+            (get-buffer-window buffer))))
   (setq magit-revert-buffers t)
   (add-hook 'magit-status-mode-hook 'delete-other-windows)
-  (bind-key "C-c C-a" 'magit-quit-session magit-status-mode-map)
   (bind-key "q" 'magit-quit-session magit-status-mode-map))
 
 (use-package git-gutter
@@ -488,13 +462,6 @@
     (setq ido-use-faces nil))
   )
 
-(use-package visual-regexp
-  :disabled t
-  :ensure t
-  :bind (("C-s" . vr/isearch-forward)
-         ("C-r" . vr/isearch-backward)
-         ("C-q" . vr/query-replace)))
-
 (use-package projectile
   :ensure t
   :init
@@ -507,7 +474,6 @@
         projectile-require-project-root nil
         projectile-mode-line '(:eval (format " P[%s]" (projectile-project-name)))
         ;; projectile-completion-system 'grizzl
-        ;; projectile-completion-system 'helm
         ;; projectile-completion-system 'ivy
         )
   (add-to-list 'projectile-globally-ignored-files ".DS_Store")
@@ -535,11 +501,6 @@
   :bind (("M-x" . smex)
          ("C-x C-m" . smex)))
 
-(use-package helm
-  :ensure t
-  :disabled t
-  :init (helm-mode))
-
 (use-package golden-ratio
   :ensure t
   :diminish golden-ratio-mode
@@ -554,16 +515,6 @@
   :ensure t
   :init
   (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
-
-(use-package fzf
-  :ensure t
-  :commands (fzf fzf-directory)
-  :if (which "fzf"))
-
-(use-package ag
-  :ensure t
-  :if (which "ag"))
-
 
 (use-package ace-jump-mode
   :ensure t
@@ -610,17 +561,6 @@
     :config
     (add-to-list 'company-backends 'company-tern)))
 
-(use-package guide-key
-  :ensure t
-  :disabled t
-  :diminish guide-key-mode
-  :init
-  (guide-key-mode +1)
-  :config
-  (setq guide-key/popup-window-position 'bottom)
-  (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c p" "C-c p 4" "C-c p s" "C-c m" "C-c C-r" "C-c C-p")))
-
-
 (use-package which-key
   :ensure t
   :diminish which-key-mode
@@ -634,12 +574,6 @@
   :load-path "vendor/hippie"
   :bind ("C-." . hippie-expand))
 
-(use-package swiper
-  :ensure t
-  :disabled t
-  :bind (("C-r" . swiper)
-         ("C-s" . swiper)))
-
 (use-package drag-stuff
   :ensure t
   :bind (("M-p" . drag-stuff-up)
@@ -649,8 +583,7 @@
   :ensure t
   :bind (("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
-         ("C-c C-w" . mc/mark-all-words-like-this))
-  )
+         ("C-c C-w" . mc/mark-all-words-like-this)))
 
 (use-package expand-region
   :ensure t
@@ -704,10 +637,11 @@
   ;; expand-regions
   (bind-key "f" 'er/mark-defun region-bindings-mode-map)
   (bind-key "u" 'er/mark-url region-bindings-mode-map)
-  (bind-key "c" 'er/mark-python-block region-bindings-mode-map)
+  (bind-key "b" 'er/mark-python-block region-bindings-mode-map)
   (bind-key "m" 'er/mark-method-call region-bindings-mode-map)
   (bind-key "-" 'er/contract-region region-bindings-mode-map)
   (bind-key "+" 'er/expand-region region-bindings-mode-map)
+  (bind-key "=" 'er/expand-region region-bindings-mode-map)
   (bind-key "SPC" 'er/expand-region region-bindings-mode-map)
 
   (setq region-bindings-mode-disabled-modes '(term-mode))
@@ -747,6 +681,11 @@
   :config
   (setq imenu-anywhere-delimiter-ido " @ "))
 
+(use-package re-builder
+  :ensure t
+  :config
+  (setq reb-re-syntax 'string))
+
 
 ;;#############################
 ;; Modeline
@@ -760,19 +699,6 @@
     :ensure t
     :config
     (nyan-mode)))
-
-(use-package powerline
-  :ensure t
-  :disabled t
-  :config
-  (powerline-default-theme)
-  ;; (setq powerline-display-hud nil)
-  (setq powerline-default-separator 'curve))
-
-(use-package re-builder
-  :ensure t
-  :config
-  (setq reb-re-syntax 'string))
 
 
 ;;#############################
@@ -790,7 +716,6 @@
 ;;#############################
 ;; Languages
 ;;#############################
-
 (use-package web-mode
   :ensure t
   :mode (("\\.html\\'" . web-mode)
@@ -803,7 +728,7 @@
   (setq web-mode-enable-auto-pairing t)
   (setq web-mode-engines-alist
         '(("django" . "\\.djhtml")
-          ;; ("django" . my-current-buffer-django-p)) ;; set engine to django on django buffer
+          ;;("django" . mw/buffer-django-p) ;; set engine to django on django buffer
           ("django" . "templates/.*\\.html")))
   (add-hook 'web-mode-hook (lambda () (emmet-mode)))
   (add-hook 'web-mode-hook
@@ -880,17 +805,6 @@
     :mode "\\requirements.txt\\'"
     :config (pip-requirements-mode))
 
-  (use-package company-jedi
-    :disabled t
-    :ensure t
-    :init
-    (defun mw/setup-company-jedi ()
-      (add-to-list 'company-backends 'company-jedi))
-    (add-hook 'python-mode-hook 'mw/setup-company-jedi))
-
-  (use-package pytest
-    :bind (("C-c t p" . pytest-one)))
-
   (use-package elpy
     :ensure t
     :diminish elpy-mode
@@ -906,6 +820,7 @@
     )
 
   (use-package jedi
+    :disabled t
     :ensure t
     :bind (("M-." . jedi:goto-definition))
     )
@@ -926,22 +841,18 @@
   :config
   (setq coffee-tab-width 2))
 
-
 (use-package markdown-mode
   :mode ((".*\\.md" . markdown-mode)
          ("\\.markdown" . markdown-mode))
   :ensure t)
 
-
 (use-package pig-mode
   :ensure t)
-
 
 (use-package emmet-mode
   :ensure t
   :config
   (add-hook 'sgml-mode-hook 'emmet-mode))
-
 
 (use-package less-css-mode
   :ensure t)
