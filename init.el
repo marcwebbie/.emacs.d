@@ -587,6 +587,7 @@
 
 (use-package expand-region
   :ensure t
+  :demand t
   :bind (("C-M-SPC" . er/expand-region)
          ("C-+" . er/contract-region))
   )
