@@ -943,20 +943,5 @@
   (add-hook 'sgml-mode-hook 'emmet-mode))
 
 
-(use-package operate-on-number
-  :ensure t
-  :config
-  (use-package smartrep
-    :ensure t)
-  (smartrep-define-key global-map "C-c ."
-                       '(("+" . apply-operation-to-number-at-point)
-                         ("-" . apply-operation-to-number-at-point)
-                         ("*" . apply-operation-to-number-at-point)
-                         ("/" . apply-operation-to-number-at-point)
-                         ("\\" . apply-operation-to-number-at-point)
-                         ("^" . apply-operation-to-number-at-point)
-                         ("<" . apply-operation-to-number-at-point)
-                         (">" . apply-operation-to-number-at-point)
-                         ("#" . apply-operation-to-number-at-point)
-                         ("%" . apply-operation-to-number-at-point)
-                         ("'" . operate-on-number-at-point))))
+(use-package less-css-mode
+  :ensure t)
