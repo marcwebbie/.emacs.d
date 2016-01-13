@@ -254,6 +254,10 @@
   (bind-key "C-c m _" (lambda () (interactive) (replace-region-by 's-snake-case)))
   (bind-key "C-c m c" (lambda () (interactive) (replace-region-by 's-lower-camel-case)))
   (bind-key "C-c m C" (lambda () (interactive) (replace-region-by 's-upper-camel-case)))
+
+  ;; Number
+  (bind-key "C-c . +" 'my-increment-number-at-point)
+  (bind-key "C-c . -" 'my-decrement-number-at-point)
   )
 
 (use-package diminish)

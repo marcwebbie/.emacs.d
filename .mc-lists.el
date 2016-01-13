@@ -23,6 +23,7 @@
         kmacro-end-or-call-macro
         markdown-cycle
         markdown-exdent-or-delete
+        my-increment-number-at-point
         org-beginning-of-line
         org-delete-char
         org-end-of-line

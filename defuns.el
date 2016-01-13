@@ -526,3 +526,26 @@ Symbols matching the text at point are put first in the completion list."
     (when filename
       (kill-new filename)
       (message "Copied buffer file name '%s' to the clipboard." filename))))
+
+
+(defun my-change-number-at-point (change)
+  (let ((number (number-at-point))
+        (point (point)))
+    (when number
+      (progn
+        (forward-word)
+        (search-backward (number-to-string number))
+        (replace-match (number-to-string (funcall change number)))
+        (goto-char point)))))
+
+
+(defun my-increment-number-at-point ()
+  "Increment number at point like vim's C-a"
+  (interactive)
+  (my-change-number-at-point '1+))
+
+
+(defun my-decrement-number-at-point ()
+  "Decrement number at point like vim's C-x"
+  (interactive)
+  (my-change-number-at-point '1-))
