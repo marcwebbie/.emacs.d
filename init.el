@@ -86,6 +86,7 @@
   (setq mouse-wheel-scroll-amount '(1
                                     ((shift) . 5)
                                     ((control))))
+  (setq ns-use-srgb-colorspace nil)
   )
 
 
@@ -125,13 +126,14 @@
   ;; (load-theme 'base16-default-dark :no-confirm)
   ;; (load-theme 'base16-tomorrow-dark :no-confirm)
   ;; (load-theme 'base16-bright-dark :no-confirm)
-  (load-theme 'base16-monokai-dark :no-confirm)
+  ;; (load-theme 'base16-monokai-dark :no-confirm)
   ;; (load-theme 'base16-3024-dark :no-confirm)
   ;; (load-theme 'base16-atelierlakeside-dark :no-confirm)
   ;; (load-theme 'base16-atelierforest-dark :no-confirm)
   ;; (load-theme 'base16-flat-dark :no-confirm)
   )
-;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
+(use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
+;; (use-package spacemacs-theme :ensure t :init (load-theme 'spacemacs-dark :no-confirm))
 ;; (use-package solarized-theme :ensure t :init (load-theme 'solarized-dark :no-confirm))
 ;; (use-package monokai-theme :ensure t :init (load-theme 'monokai :no-confirm))
 ;; (use-package molokai-theme :ensure t :init (load-theme 'molokai :no-confirm))
@@ -164,24 +166,23 @@
       (if (member fontname (font-family-list)) (set-frame-font fontstring)
         (mw/set-best-font (cdr fonts))))))
 
-(mw/set-best-font '(
-                   ("Roboto Mono" 14)
-                   ("Source Code Pro" 14)
-                   ("Anonymous Pro" 14)
-                   ("Droid Sans Mono" 14)
-                   ("Droid Sans Mono Dotted" 14)
-                   ("Menlo" 14)
-                   ("Inconsolata" 16)
-                   ("DejaVu Sans Mono" 16)
-                   ("Liberation Mono" 14)
-                   ("Ubuntu Mono" 16)
-                   ("Monaco" 14)
-                   ("Code New Roman" 14)
-                   ("Ubuntu Mono" 16)
-                   ("Fantasque Sans Mono" 18)
-                   ))
 
-(set-fringe-mode 0)
+(mw/set-best-font '(
+                    ("Ubuntu Mono" 16)
+                    ("DejaVu Sans Mono" 14)
+                    ("Roboto Mono" 12)
+                    ("Menlo" 14)
+                    ("Droid Sans Mono" 14)
+                    ("Inconsolata" 16)
+                    ("Monaco" 14)
+                    ("Anonymous Pro" 14)
+                    ("Source Code Pro" 14)
+                    ("Droid Sans Mono Dotted" 14)
+                    ("Liberation Mono" 14)
+                    ("Code New Roman" 14)
+                    ("Ubuntu Mono" 16)
+                    ("Fantasque Sans Mono" 18)
+                    ))
 
 ;;============================================================
 ;; Loading
@@ -253,7 +254,7 @@
   (bind-key "C-c m _" (lambda () (interactive) (replace-region-by 's-snake-case)))
   (bind-key "C-c m c" (lambda () (interactive) (replace-region-by 's-lower-camel-case)))
   (bind-key "C-c m C" (lambda () (interactive) (replace-region-by 's-upper-camel-case)))
-)
+  )
 
 (use-package diminish)
 
@@ -692,6 +693,7 @@
 ;; Modeline
 ;;#############################
 (use-package smart-mode-line
+  :disabled t
   :ensure t
   :config
   (setq sml/no-confirm-load-theme t)
@@ -700,6 +702,27 @@
     :ensure t
     :config
     (nyan-mode)))
+
+(use-package spaceline-config
+  :ensure spaceline
+  :config
+  ;; (spaceline-spacemacs-theme)
+  (spaceline-emacs-theme)
+  (setq powerline-default-separator 'utf-8)
+  (spaceline-toggle-minor-modes-off)
+  (spaceline-toggle-buffer-encoding-off)
+  (spaceline-toggle-buffer-encoding-abbrev-off)
+  (setq powerline-default-separator 'box)
+  ;; (setq powerline-default-separator 'bar)
+  ;; (setq powerline-default-separator 'arrow-fade)
+  ;; (setq powerline-default-separator 'slant)
+  ;; (setq powerline-default-separator 'wave)
+  ;; (setq powerline-default-separator 'utf-8)
+  ;; (setq powerline-default-separator 'curve)
+  ;; (setq powerline-default-separator 'chamfer)
+  ;; (setq powerline-default-separator 'roundstub)
+  (setq powerline-height '18)
+  )
 
 
 ;;#############################
