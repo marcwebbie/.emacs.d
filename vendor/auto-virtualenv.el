@@ -63,12 +63,16 @@
           ((member (auto-virtualenv--project-name) (auto-virtualenv--versions))
            (auto-virtualenv--project-name)))))
 
+(defun auto-virtualenv-find-virtualenv-path ()
+  (when (auto-virtualenv-find-virtualenv-name)
+    (expand-file-name (auto-virtualenv-find-virtualenv-name) auto-virtualenv-dir)))
+
 (defun auto-virtualenv-set-virtualenv ()
-  (let ((virtualenv-name (auto-virtualenv-find-virtualenv-name)))
-    (when (and virtualenv-name (not (equal pyvenv-virtual-env-name (auto-virtualenv--project-name))))
-      (message (format "activating virtualenv: %s" virtualenv-name))
+  (let ((virtualenv-path (auto-virtualenv-find-virtualenv-path)))
+    (when (and virtualenv-path (not (equal pyvenv-virtual-env-name (auto-virtualenv--project-name))))
+      (message (format "activating virtualenv: %s" virtualenv-path))
       (pyvenv-mode t)
-      (pyvenv-workon virtualenv-name))))
+      (pyvenv-activate virtualenv-path))))
 
 (provide 'auto-virtualenv)
 
