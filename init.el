@@ -550,7 +550,8 @@
   :diminish eldoc-mode
   :commands eldoc
   :init
-  (add-hook 'emacs-lisp-mode 'eldoc-mode))
+  (add-hook 'emacs-lisp-mode 'eldoc-mode)
+  (add-hook 'python-mode-hook 'eldoc-mode))
 
 (use-package company
   :ensure t
@@ -812,15 +813,19 @@
     :load-path "vendor"
     :config
     (setq auto-virtualenv-dir "~/.virtualenvs")
+    ;; (setq auto-virtualenv-dir "~/.pyenv/versions")
     (add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv))
 
   (use-package anaconda-mode
-    :disabled t
     :ensure t
     :diminish anaconda-mode
+    :demand t
+    ;; :bind (
+    ;;        ("M-," . anaconda-mode-find-definitions)
+    ;;        )
     :init
-    (add-hook 'python-mode-hook #'anaconda-mode)
     :config
+    (add-hook 'python-mode-hook #'anaconda-mode)
     (use-package company-anaconda
       :ensure t
       :if (boundp 'company-backends)
@@ -833,17 +838,23 @@
     :config (pip-requirements-mode))
 
   (use-package elpy
+    :disabled t
     :ensure t
     :diminish elpy-mode
     :bind (("C-c t" . elpy-test-django-runner)
            ("C-c C-f" . elpy-find-file)
-           ("C-c C-;" . mw/set-django-settings-module))
+           ("C-c C-;" . mw/set-django-settings-module)
+           ("C-c C-p" . elpy-autopep8-fix-code))
     :init
     (elpy-enable)
     :config
     (setq elpy-rpc-backend "jedi")
     (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart)
     (setq elpy-test-django-runner-command '("python" "manage.py" "test" "--noinput"))
+    (defun elpy-setup ()
+      (interactive)
+      (progn
+        (compile (format "%s install -U jedi flake8 importmagic autopep8 yapf" (executable-find "pip")))))
     )
 
   (use-package jedi
