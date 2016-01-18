@@ -895,3 +895,8 @@
 
 (use-package less-css-mode
   :ensure t)
+
+(use-package ansible-doc
+  :ensure t
+  :config
+  (add-hook 'yaml-mode-hook 'ansible-doc-mode))
