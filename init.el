@@ -429,6 +429,7 @@
   (require 'tdd))
 
 (use-package ido
+  :disabled t
   :ensure t
   :init
   (ido-mode t)
@@ -465,19 +466,69 @@
     (setq ido-use-faces nil))
   )
 
+(use-package counsel
+  :ensure t
+  :demand t
+  :bind (("M-x" . counsel-M-x)                           ; global
+         ("C-c s g" . counsel-git-grep)
+         ("C-c s a" . counsel-ag)
+         ("M-i" . ivy-imenu-goto)
+         ("C-x C-f" . counsel-find-file))
+  :bind (:map help-map                                   ; help-map
+              ("f" . counsel-describe-function)
+              ("v" . counsel-describe-variable)
+              ("C-l" . counsel-info-lookup-symbol))
+  :config
+  (defun ivy-imenu-get-candidates-from (alist  &optional prefix)
+    (cl-loop for elm in alist
+             nconc (if (imenu--subalist-p elm)
+                       (ivy-imenu-get-candidates-from
+                        (cl-loop for (e . v) in (cdr elm) collect
+                                 (cons e (if (integerp v) (copy-marker v) v)))
+                        (concat prefix (if prefix ".") (car elm)))
+                     (and (cdr elm) ; bug in imenu, should not be needed.
+                          (setcdr elm (copy-marker (cdr elm))) ; Same as [1].
+                          (list (cons (concat prefix (if prefix ".") (car elm))
+                                      (copy-marker (cdr elm))))))))
+  (defun ivy-imenu-goto ()
+    "Go to buffer position"
+    (interactive)
+    (let ((imenu-auto-rescan t) items)
+      (unless (featurep 'imenu)
+        (require 'imenu nil t))
+      (setq items (imenu--make-index-alist t))
+      (ivy-read "imenu items:"
+                (ivy-imenu-get-candidates-from (delete (assoc "*Rescan*" items) items))
+                :action (lambda (k) (goto-char k)))))
+
+  (defun imenu-mark-use-package ()
+    (add-to-list 'imenu-generic-expression
+                 '("use-package"
+                   "\\(^\\s-*(use-package +\\)\\(\\_<.+\\_>\\)" 2)))
+  (add-hook 'emacs-lisp-mode-hook #'imenu-mark-use-package)
+  )
+
+(use-package swiper
+  :ensure t
+  :demand t
+  :bind
+  (([remap isearch-forward]  . swiper)
+   ([remap isearch-backward] . swiper))
+  :config
+  (setq ivy-display-style 'fancy)
+  (ivy-mode 1))
+
 (use-package projectile
   :ensure t
   :init
   (projectile-global-mode t)
   :config
-  (use-package grizzl :ensure t)
   (setq projectile-enable-caching t
         projectile-use-git-grep t
         projectile-switch-project-action 'projectile-dired
         projectile-require-project-root nil
         projectile-mode-line '(:eval (format " P[%s]" (projectile-project-name)))
-        ;; projectile-completion-system 'grizzl
-        ;; projectile-completion-system 'ivy
+        projectile-completion-system 'ivy
         )
   (add-to-list 'projectile-globally-ignored-files ".DS_Store")
   (add-to-list 'projectile-globally-ignored-files "*.pyc")
@@ -486,8 +537,7 @@
   (add-to-list 'projectile-globally-ignored-directories "__pycache__")
   (add-to-list 'projectile-globally-ignored-directories ".env")
   (add-to-list 'projectile-globally-ignored-directories ".venv")
-  (add-to-list 'projectile-globally-ignored-directories ".cask")
-  )
+  (add-to-list 'projectile-globally-ignored-directories ".cask"))
 
 (use-package recentf
   :ensure t
@@ -498,11 +548,6 @@
   :config
   (setq recentf-keep '(file-remote-p file-readable-p))
   (setq recentf-max-saved-items 100))
-
-(use-package smex
-  :ensure t
-  :bind (("M-x" . smex)
-         ("C-x C-m" . smex)))
 
 (use-package golden-ratio
   :ensure t
@@ -675,6 +720,7 @@
       (backward-word))))
 
 (use-package imenu-anywhere
+  :disabled t
   :ensure t
   :bind (("M-i" . ido-imenu-anywhere))
   :init
@@ -820,9 +866,6 @@
     :ensure t
     :diminish anaconda-mode
     :demand t
-    ;; :bind (
-    ;;        ("M-," . anaconda-mode-find-definitions)
-    ;;        )
     :init
     :config
     (add-hook 'python-mode-hook #'anaconda-mode)
@@ -838,7 +881,6 @@
     :config (pip-requirements-mode))
 
   (use-package elpy
-    :disabled t
     :ensure t
     :diminish elpy-mode
     :bind (("C-c t" . elpy-test-django-runner)
@@ -848,6 +890,7 @@
     :init
     (elpy-enable)
     :config
+
     (setq elpy-rpc-backend "jedi")
     (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart)
     (setq elpy-test-django-runner-command '("python" "manage.py" "test" "--noinput"))
@@ -855,6 +898,9 @@
       (interactive)
       (progn
         (compile (format "%s install -U jedi flake8 importmagic autopep8 yapf" (executable-find "pip")))))
+    (eval-after-load "elpy"
+      '(cl-dolist (key '("M-," "M-." "M-" "M-*" "M-?"))
+         (define-key elpy-mode-map (kbd key) nil)))
     )
 
   (use-package jedi
