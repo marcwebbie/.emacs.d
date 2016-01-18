@@ -33,6 +33,7 @@
 
 ;; No tabs please
 (setq tab-width 4)
+(setq default-tab-width 4)
 (setq-default indent-tabs-mode nil)
 
 ;; Backup files
