@@ -69,8 +69,6 @@
 (setq auto-save-mode  nil)
 (add-hook 'before-save-hook 'whitespace-cleanup)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-(add-hook 'focus-out-hook (lambda () (save-some-buffers t)))
-(run-with-idle-timer 5 t (lambda () (save-some-buffers t)))
 
 
 ;;============================================================
@@ -316,6 +314,16 @@
   :ensure t
   :config
   (super-save-initialize))
+
+(use-package auto-save+
+  :load-path "vendor"
+  ;; :init
+  ;; (load-file "vendor/auto-save+.el")
+  :config
+  ;; (require 'auto-save+)
+  (run-with-idle-timer 1 t 'auto-save+-save-buffers)
+  (add-hook 'focus-out-hook 'auto-save+-save-buffers)
+  )
 
 
 ;;#############################
@@ -858,16 +866,38 @@
         (compile (format "%s install -U jedi flake8 importmagic autopep8 yapf" (executable-find "pip")))))
     )
 
-  (use-package jedi
-    :disabled t
-    :ensure t
-    :bind (("M-." . jedi:goto-definition))
-    )
-
   (use-package py-autopep8
     :ensure t
     :bind (("C-c C-a" . py-autopep8-buffer)))
-  )
+
+  (use-package pytest
+    :ensure t
+    :bind* (("C-c t p" . pytest-one)
+            ("C-c t a" . pytest-all)
+            ("C-c t m" . pytest-module)
+            ("C-c t d" . pytest-directory)
+            ("C-c t P" . copy-pytest-test-to-clipboard))
+    :config
+    (defun copy-pytest-test-to-clipboard ()
+      (interactive)
+      (let ((testname (pytest-py-testable)))
+        (when testname
+          (kill-new (format "py.test -x -s %s" testname) )
+          (message "Copied '%s' to the clipboard." (pytest-inner-testable))))))
+
+  (use-package nose
+    :ensure t
+    :bind* (("C-c t n" . copy-nosetest-test-to-clipboard)
+            ("C-c t N" . copy-nosetest-test-to-clipboard))
+    :config
+    (defun copy-nosetest-test-to-clipboard ()
+      (interactive)
+      (let ((testname (format "%s:%s" buffer-file-name (nose-py-testable))))
+        (when testname
+          (kill-new (format "nosetest -x -s %s" testname))
+          (message "Copied '%s' to the clipboard." testname)))))
+    )
+
 
 (use-package yaml-mode
   :ensure t
@@ -881,9 +911,11 @@
   (setq coffee-tab-width 2))
 
 (use-package markdown-mode
+  :ensure t
   :mode ((".*\\.md" . markdown-mode)
-         ("\\.markdown" . markdown-mode))
-  :ensure t)
+         ("\\.markdown" . markdown-mode)))
+
+(use-package gist)
 
 (use-package pig-mode
   :ensure t)
