@@ -98,6 +98,7 @@
 ;;============================================================
 (global-hl-line-mode -1)
 (global-linum-mode -1)
+(setq linum-format " %d ")
 (blink-cursor-mode -1)
 (setq blink-matching-paren nil)  ;; disable annoying blink-matching-paren
 
@@ -313,15 +314,15 @@
 (use-package super-save
   :ensure t
   :config
-  (super-save-initialize))
+  (setq super-save-auto-save-when-idle t)
+  (super-save-mode t)
+  )
 
 (use-package auto-save+
+  :disabled t
   :load-path "vendor"
-  ;; :init
-  ;; (load-file "vendor/auto-save+.el")
   :config
-  ;; (require 'auto-save+)
-  (run-with-idle-timer 1 t 'auto-save+-save-buffers)
+  (run-with-idle-timer 3 t 'auto-save+-save-buffers)
   (add-hook 'focus-out-hook 'auto-save+-save-buffers)
   )
 
@@ -374,6 +375,7 @@
   (bind-key "q" 'magit-quit-session magit-status-mode-map))
 
 (use-package git-gutter
+  :disabled t
   :ensure t
   :bind (("C-c v =" . git-gutter:popup-hunk) ;; show hunk diff
          ("C-c v p" . git-gutter:previous-hunk)
@@ -383,6 +385,12 @@
   :diminish git-gutter-mode
   :init
   (global-git-gutter-mode t)
+  )
+
+(use-package diff-hl
+  :config
+  ;; (diff-hl-mode +1)
+  (diff-hl-flydiff-mode +1)
   )
 
 (use-package git-timemachine
@@ -827,12 +835,8 @@
 
   (use-package anaconda-mode
     :ensure t
-    :diminish anaconda-mode
     :demand t
-    ;; :bind (
-    ;;        ("M-," . anaconda-mode-find-definitions)
-    ;;        )
-    :init
+    :diminish anaconda-mode
     :config
     (add-hook 'python-mode-hook #'anaconda-mode)
     (use-package company-anaconda
@@ -872,11 +876,12 @@
 
   (use-package pytest
     :ensure t
+    :demand t
     :bind* (("C-c t p" . pytest-one)
+            ("C-c t P" . copy-pytest-test-to-clipboard)
             ("C-c t a" . pytest-all)
             ("C-c t m" . pytest-module)
-            ("C-c t d" . pytest-directory)
-            ("C-c t P" . copy-pytest-test-to-clipboard))
+            ("C-c t d" . pytest-directory))
     :config
     (defun copy-pytest-test-to-clipboard ()
       (interactive)
@@ -887,14 +892,15 @@
 
   (use-package nose
     :ensure t
-    :bind* (("C-c t n" . copy-nosetest-test-to-clipboard)
+    :demand t
+    :bind* (("C-c t n" . nosetest-one)
             ("C-c t N" . copy-nosetest-test-to-clipboard))
     :config
     (defun copy-nosetest-test-to-clipboard ()
       (interactive)
       (let ((testname (format "%s:%s" buffer-file-name (nose-py-testable))))
         (when testname
-          (kill-new (format "nosetest -x -s %s" testname))
+          (kill-new (format "nosetests -x -s %s" testname))
           (message "Copied '%s' to the clipboard." testname)))))
     )
 
@@ -915,7 +921,9 @@
   :mode ((".*\\.md" . markdown-mode)
          ("\\.markdown" . markdown-mode)))
 
-(use-package gist)
+(use-package gist
+  :ensure t
+  :demand t)
 
 (use-package pig-mode
   :ensure t)
