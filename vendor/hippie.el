@@ -5,7 +5,7 @@
   "Try to expand word \"dynamically\", searching the current buffer.
 The argument OLD has to be nil the first call of this function, and t
 for subsequent calls (for further possible expansions of the same
-string). It returns t if a new expansion is found, nil otherwise."
+string).  It returns t if a new expansion is found, nil otherwise."
   (let (expansion)
     (unless old
       (he-init-string (he-dabbrev-beg) (point))
@@ -74,7 +74,7 @@ string). It returns t if a new expansion is found, nil otherwise."
   "Try to complete the current line to an entire line in the buffer.
 The argument OLD has to be nil the first call of this function, and t
 for subsequent calls (for further possible completions of the same
-string). It returns t if a new completion is found, nil otherwise."
+string).  It returns t if a new completion is found, nil otherwise."
   (let ((expansion ())
         (strip-prompt (and (get-buffer-process (current-buffer))
                            comint-use-prompt-regexp
@@ -161,10 +161,10 @@ string). It returns t if a new completion is found, nil otherwise."
     (end-of-line)
     (hippie-expand nil)))
 
-;; Don't case-fold when expanding with hippie
+;; Don't case-fold when expanding with hippe
 (defun hippie-expand-no-case-fold ()
   (interactive)
   (let ((case-fold-search nil))
     (hippie-expand nil)))
 
-(provide 'hippie)
+(provide 'setup-hippie)

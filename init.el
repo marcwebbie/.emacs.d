@@ -595,8 +595,11 @@
 ;; Editing
 ;;#############################
 (use-package hippie
-  :load-path "vendor/hippie"
-  :bind ("C-." . hippie-expand))
+  :load-path "vendor"
+  :bind (("C-." . hippie-expand-no-case-fold)
+         ("C-," . hippie-expand-lines))
+  :config
+  (require 'hippie))
 
 (use-package drag-stuff
   :ensure t
