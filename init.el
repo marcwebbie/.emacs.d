@@ -344,8 +344,8 @@
   :if *is-a-mac*
   :config
   (exec-path-from-shell-initialize)
-  (exec-path-from-shell-copy-env "PYTHONPATH")
-  (exec-path-from-shell-copy-env "WORKON_HOME")
+  ;; (exec-path-from-shell-copy-env "PYTHONPATH")
+  ;; (exec-path-from-shell-copy-env "WORKON_HOME")
   )
 
 
