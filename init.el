@@ -391,9 +391,10 @@
   )
 
 (use-package diff-hl
+  :ensure t
   :config
-  ;; (diff-hl-mode +1)
-  (diff-hl-flydiff-mode +1)
+  (global-diff-hl-mode +1)
+  ;; (diff-hl-flydiff-mode +1)
   )
 
 (use-package git-timemachine
@@ -941,8 +942,3 @@
 
 (use-package less-css-mode
   :ensure t)
-
-(use-package ansible-doc
-  :ensure t
-  :config
-  (add-hook 'yaml-mode-hook 'ansible-doc-mode))
