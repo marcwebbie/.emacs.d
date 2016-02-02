@@ -97,8 +97,11 @@
 ;; Appearance
 ;;============================================================
 (global-hl-line-mode -1)
+;; Linum mode
 (global-linum-mode -1)
-(setq linum-format " %d ")
+(setq linum-format "%4d ")
+(add-hook 'prog-mode-hook 'linum-mode)
+
 (blink-cursor-mode -1)
 (setq blink-matching-paren nil)  ;; disable annoying blink-matching-paren
 
