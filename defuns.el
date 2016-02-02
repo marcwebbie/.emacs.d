@@ -479,7 +479,7 @@ Symbols matching the text at point are put first in the completion list."
 
 (defun mw/set-django-settings-module (django-settings-module)
   "set django settings module environment variable"
-  (interactive "sDjango settings module: ")
+  (interactive "sDJANGO_SETTINGS_MODULE: ")
   (progn
     (setenv "DJANGO_SETTINGS_MODULE" django-settings-module)
     (message "DJANGO_SETTINGS_MODULE=%s" django-settings-module)))
