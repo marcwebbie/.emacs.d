@@ -265,14 +265,6 @@
 ;;#############################
 ;; Interface
 ;;#############################
-(use-package indent-guide
-  :disabled t
-  :ensure t
-  :diminish indent-guide-mode
-  :init
-  (add-hook 'prog-mode-hook 'indent-guide-global-mode)
-  :config
-  (setq indent-guide-char ":"))
 
 (use-package uniquify
   :config
@@ -290,7 +282,7 @@
   :init
   (global-auto-revert-mode)
   :config
-  (setq-default auto-revert-interval 1))
+  (setq-default auto-revert-interval 3))
 
 
 ;;#############################
@@ -322,11 +314,9 @@
   )
 
 (use-package auto-save+
-  :disabled t
   :load-path "vendor"
   :config
-  (run-with-idle-timer 3 t 'auto-save+-save-buffers)
-  (add-hook 'focus-out-hook 'auto-save+-save-buffers)
+  (run-with-idle-timer 5 t 'auto-save+-save-buffers)
   )
 
 
@@ -344,8 +334,6 @@
   :if *is-a-mac*
   :config
   (exec-path-from-shell-initialize)
-  ;; (exec-path-from-shell-copy-env "PYTHONPATH")
-  ;; (exec-path-from-shell-copy-env "WORKON_HOME")
   )
 
 
@@ -392,9 +380,12 @@
 
 (use-package diff-hl
   :ensure t
+  :bind (("C-c v p" . diff-hl-previous-hunk)
+         ("C-c v n" . diff-hl-next-hunk)
+         ("C-c v r" . diff-hl-revert-hunk))
   :config
+  (diff-hl-flydiff-mode +1)
   (global-diff-hl-mode +1)
-  ;; (diff-hl-flydiff-mode +1)
   )
 
 (use-package git-timemachine
@@ -450,6 +441,7 @@
   (require 'tdd))
 
 (use-package ido
+  :disabled t
   :ensure t
   :init
   (ido-mode t)
@@ -498,7 +490,7 @@
         projectile-require-project-root nil
         projectile-mode-line '(:eval (format " P[%s]" (projectile-project-name)))
         ;; projectile-completion-system 'grizzl
-        ;; projectile-completion-system 'ivy
+        projectile-completion-system 'ivy
         )
   (add-to-list 'projectile-globally-ignored-files ".DS_Store")
   (add-to-list 'projectile-globally-ignored-files "*.pyc")
@@ -509,6 +501,24 @@
   (add-to-list 'projectile-globally-ignored-directories ".venv")
   (add-to-list 'projectile-globally-ignored-directories ".cask")
   )
+
+(use-package swiper
+  :ensure t)
+
+(use-package counsel
+  :ensure t
+  :config
+  (use-package ivy
+    :config
+    (setq ivy-use-virtual-buffers t)
+    (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
+    (setq ivy-height 12)
+    (setq ivy-display-style 'fancy)
+    (ivy-mode +1))
+  (global-set-key [remap execute-extended-command] #'counsel-M-x)
+  (global-set-key [remap describe-function] #'counsel-describe-function)
+  (global-set-key [remap describe-variable] #'counsel-describe-variable)
+  (global-set-key [remap find-file] #'counsel-find-file))
 
 (use-package recentf
   :ensure t
@@ -579,12 +589,7 @@
   :commands global-company-mode
   :diminish company-mode
   :init
-  (add-hook 'prog-mode-hook 'global-company-mode)
-  (use-package company-tern
-    :disabled t
-    :ensure t
-    :config
-    (add-to-list 'company-backends 'company-tern)))
+  (add-hook 'prog-mode-hook 'global-company-mode))
 
 (use-package which-key
   :ensure t
@@ -858,18 +863,15 @@
     :config (pip-requirements-mode))
 
   (use-package elpy
-    :disabled t
     :ensure t
     :diminish elpy-mode
     :bind (("C-c t" . elpy-test-django-runner)
            ("C-c C-f" . elpy-find-file)
            ("C-c C-;" . mw/set-django-settings-module)
            ("C-c C-p" . elpy-autopep8-fix-code))
-    :init
-    (elpy-enable)
     :config
     (setq elpy-rpc-backend "jedi")
-    (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart)
+    ;; (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart)
     (setq elpy-test-django-runner-command '("python" "manage.py" "test" "--noinput"))
     (defun elpy-setup ()
       (interactive)
