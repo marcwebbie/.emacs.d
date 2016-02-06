@@ -10,7 +10,7 @@
   (package-refresh-contents)
   (package-install 'use-package))
 (require 'use-package)
-(setq use-package-verbose t)
+;; (setq use-package-verbose t)
 
 
 ;;============================================================
@@ -115,27 +115,26 @@
 
 ;; Themes
 ;; ==================================================
-(setq color-theme-is-global t)
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
 ;; Dark Themes
 ;; ==================================================
-(use-package base16-theme
-  :ensure t
-  :init
-  ;; (load-theme 'base16-default-dark :no-confirm)
-  ;; (load-theme 'base16-tomorrow-dark :no-confirm)
-  ;; (load-theme 'base16-bright-dark :no-confirm)
-  ;; (load-theme 'base16-monokai-dark :no-confirm)
-  ;; (load-theme 'base16-3024-dark :no-confirm)
-  ;; (load-theme 'base16-atelierlakeside-dark :no-confirm)
-  ;; (load-theme 'base16-atelierforest-dark :no-confirm)
-  ;; (load-theme 'base16-flat-dark :no-confirm)
-  )
-(use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
+;; (use-package base16-theme
+;;   :ensure t
+;;   :init
+;;   ;; (load-theme 'base16-default-dark :no-confirm)
+;;   ;; (load-theme 'base16-tomorrow-dark :no-confirm)
+;;   ;; (load-theme 'base16-bright-dark :no-confirm)
+;;   ;; (load-theme 'base16-monokai-dark :no-confirm)
+;;   ;; (load-theme 'base16-3024-dark :no-confirm)
+;;   ;; (load-theme 'base16-atelierlakeside-dark :no-confirm)
+;;   ;; (load-theme 'base16-atelierforest-dark :no-confirm)
+;;   ;; (load-theme 'base16-flat-dark :no-confirm)
+;;   )
+;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
 ;; (use-package spacemacs-theme :ensure t :init (load-theme 'spacemacs-dark :no-confirm))
 ;; (use-package solarized-theme :ensure t :init (load-theme 'solarized-dark :no-confirm))
-;; (use-package monokai-theme :ensure t :init (load-theme 'monokai :no-confirm))
+(use-package monokai-theme :ensure t :init (load-theme 'monokai :no-confirm))
 ;; (use-package molokai-theme :ensure t :init (load-theme 'molokai :no-confirm))
 ;; (use-package atom-dark-theme :ensure t :init (load-theme 'atom-dark :no-confirm))
 ;; (use-package darkmine-theme :ensure t :init (load-theme 'darkmine :no-confirm))
@@ -168,19 +167,18 @@
 
 
 (mw/set-best-font '(
-                    ("Roboto Mono" 14)
+                    ("Menlo" 15)
                     ("Inconsolata" 16)
-                    ("Source Code Pro" 14)
-                    ("DejaVu Sans Mono" 14)
+                    ("DejaVu Sans Mono" 15)
                     ("Ubuntu Mono" 16)
-                    ("Menlo" 14)
-                    ("Droid Sans Mono" 14)
-                    ("Monaco" 14)
-                    ("Anonymous Pro" 14)
+                    ("Monaco" 15)
+                    ("Roboto Mono" 14)
                     ("Droid Sans Mono Dotted" 14)
+                    ("Source Code Pro" 14)
+                    ("Anonymous Pro" 14)
+                    ("Droid Sans Mono" 14)
                     ("Liberation Mono" 14)
                     ("Code New Roman" 14)
-                    ("Ubuntu Mono" 16)
                     ("Fantasque Sans Mono" 18)
                     ))
 
@@ -203,7 +201,7 @@
 ;;; auto-mode-alist entries
 (add-to-list 'auto-mode-alist '("\\.m$" . octave-mode))
 (add-to-list 'auto-mode-alist '("\\.mom$" . nroff-mode))
-(add-to-list 'auto-mode-alist '("[Mm]akefile" . makefile-gmake-mode))
+(add-to-list 'auto-mode-alist '("[Mm]akefile" . makefile-mode))
 
 (add-to-list 'auto-mode-alist '(".zshrc$" . shell-script-mode))
 (add-to-list 'auto-mode-alist '(".zshenv$" . shell-script-mode))
@@ -331,6 +329,7 @@
 
 (use-package exec-path-from-shell
   :ensure t
+  :defer 5
   :if *is-a-mac*
   :config
   (exec-path-from-shell-initialize)
@@ -380,6 +379,7 @@
 
 (use-package diff-hl
   :ensure t
+  :demand t
   :bind (("C-c v p" . diff-hl-previous-hunk)
          ("C-c v n" . diff-hl-next-hunk)
          ("C-c v r" . diff-hl-revert-hunk))
@@ -407,12 +407,14 @@
       (save-place-mode +1)
     (setq-default save-place t)))
 
-(use-package dired
-  :init
+(use-package dired-x
+  :config
   (setq global-auto-revert-non-file-buffers t)
   (setq auto-revert-verbose nil)
   (setq-default dired-omit-files-p t) ; Buffer-local variable
-  (setq dired-omit-files "^\\.?#\\|^\\.$\\|^__pycache__$\\|\\.git"))
+  (setq dired-omit-files
+    (concat dired-omit-files "\\|\\.pdf$\\|^__pycache__$\\|^\\.git$\\|^\\.pyc$\\|^\\.DS_Store$"))
+  )
 
 (use-package highlight-symbol
   :ensure t
@@ -435,61 +437,22 @@
   (bind-key "p" 'bm-show-prev bm-show-mode-map))
 
 (use-package tdd
-  :load-path "vendor/tdd"
+  :load-path "vendor"
   :bind ("C-<f5>" . tdd-mode)
   :config
   (require 'tdd))
 
-(use-package ido
-  :disabled t
-  :ensure t
-  :init
-  (ido-mode t)
-  :config
-  (setq ido-enable-prefix nil
-        ido-enable-flex-matching t
-        ido-create-new-buffer 'always
-        ido-use-filename-at-point 'guess
-        ido-max-prospects 10
-        ;; ido-save-directory-list-file (expand-file-name "ido.hist" user-emacs-directory)
-        ido-default-file-method 'selected-window
-        ido-file-extensions-order '(".py" ".rb" ".el" ".js")
-        ido-auto-merge-work-directories-length -1)
-  (add-to-list 'ido-ignore-files '(".DS_Store" ".pyc"))
-  (add-to-list 'ido-ignore-directories '("__pycache__", ".git"))
-
-  (use-package ido-vertical-mode
-    :ensure t
-    :init
-    (setq ido-vertical-decorations (list "\n➜ " "" "\n" "\n..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]" "\n" ""))
-    (ido-vertical-mode 1)
-    (setq ido-vertical-define-keys 'C-n-C-p-up-and-down)
-    )
-
-  (use-package ido-ubiquitous
-    :ensure t
-    :init
-    (ido-ubiquitous-mode +1))
-
-  (use-package flx-ido
-    :ensure t
-    :init
-    (flx-ido-mode +1)
-    (setq ido-use-faces nil))
-  )
 
 (use-package projectile
   :ensure t
   :init
   (projectile-global-mode t)
   :config
-  (use-package grizzl :ensure t)
   (setq projectile-enable-caching t
         projectile-use-git-grep t
         projectile-switch-project-action 'projectile-dired
         projectile-require-project-root nil
         projectile-mode-line '(:eval (format " P[%s]" (projectile-project-name)))
-        ;; projectile-completion-system 'grizzl
         projectile-completion-system 'ivy
         )
   (add-to-list 'projectile-globally-ignored-files ".DS_Store")
@@ -500,40 +463,47 @@
   (add-to-list 'projectile-globally-ignored-directories ".env")
   (add-to-list 'projectile-globally-ignored-directories ".venv")
   (add-to-list 'projectile-globally-ignored-directories ".cask")
+  (add-to-list 'projectile-globally-ignored-directories ".cache")
   )
 
-(use-package swiper
-  :ensure t)
 
 (use-package counsel
   :ensure t
   :config
+  (use-package swiper
+    :ensure t
+    :bind (("C-s" . swiper)
+           ("C-r" . swiper))
+    )
   (use-package ivy
+    :bind (("C-c f" . ivy-recentf))
     :config
     (setq ivy-use-virtual-buffers t)
     (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
-    (setq ivy-height 12)
     (setq ivy-display-style 'fancy)
+    ;; (setq ivy-height 10)
     (ivy-mode +1))
   (global-set-key [remap execute-extended-command] #'counsel-M-x)
   (global-set-key [remap describe-function] #'counsel-describe-function)
   (global-set-key [remap describe-variable] #'counsel-describe-variable)
-  (global-set-key [remap find-file] #'counsel-find-file))
+  (global-set-key [remap imenu] #'counsel-describe-variable)
+  (global-set-key [remap find-file] #'counsel-find-file)
+  (bind-key* "M-i" 'counsel-imenu)
+
+  (defun imenu-mark-use-package ()
+    (add-to-list 'imenu-generic-expression
+                 '("use-package"
+                   "\\(^\\s-*(use-package +\\)\\(\\_<.+\\_>\\)" 2)))
+  (add-hook 'emacs-lisp-mode-hook #'imenu-mark-use-package)
+  )
+
 
 (use-package recentf
   :ensure t
-  :bind (("C-x f" . recentf-ido-find-file)
-         ("C-c f" . recentf-ido-find-file))
-  :init
-  (recentf-mode +1)
   :config
+  (recentf-mode +1)
   (setq recentf-keep '(file-remote-p file-readable-p))
   (setq recentf-max-saved-items 100))
-
-(use-package smex
-  :ensure t
-  :bind (("M-x" . smex)
-         ("C-x C-m" . smex)))
 
 (use-package golden-ratio
   :ensure t
@@ -567,14 +537,6 @@
 
 
 ;;#############################
-;; Web
-;;#############################
-(use-package restclient
-  :ensure t
-  :mode (("\\.rest" . restclient-mode)))
-
-
-;;#############################
 ;; Completion
 ;;#############################
 (use-package eldoc
@@ -594,12 +556,9 @@
 (use-package which-key
   :ensure t
   :diminish which-key-mode
-  :init
-  (which-key-mode))
+  :config
+  (which-key-mode +1))
 
-;;#############################
-;; Editing
-;;#############################
 (use-package hippie
   :load-path "vendor"
   :bind (("C-." . hippie-expand-no-case-fold)
@@ -607,6 +566,10 @@
   :config
   (require 'hippie))
 
+
+;;#############################
+;; Editing
+;;#############################
 (use-package drag-stuff
   :ensure t
   :bind (("M-p" . drag-stuff-up)
@@ -703,38 +666,10 @@
     (unless (looking-back "\\b")
       (backward-word))))
 
-(use-package imenu-anywhere
-  :ensure t
-  :bind (("M-i" . ido-imenu-anywhere))
-  :init
-  (defun imenu-mark-use-package ()
-    (add-to-list 'imenu-generic-expression
-                 '("use-package"
-                   "\\(^\\s-*(use-package +\\)\\(\\_<.+\\_>\\)" 2)))
-  (add-hook 'emacs-lisp-mode-hook #'imenu-mark-use-package)
-  :config
-  (setq imenu-anywhere-delimiter-ido " @ "))
-
-(use-package re-builder
-  :ensure t
-  :config
-  (setq reb-re-syntax 'string))
-
 
 ;;#############################
 ;; Modeline
 ;;#############################
-(use-package smart-mode-line
-  :disabled t
-  :ensure t
-  :config
-  (setq sml/no-confirm-load-theme t)
-  (sml/setup)
-  (use-package nyan-mode
-    :ensure t
-    :config
-    (nyan-mode)))
-
 (use-package spaceline-config
   :ensure spaceline
   :config
@@ -770,7 +705,7 @@
 
 
 ;;#############################
-;; Languages
+;; Major Modes
 ;;#############################
 (use-package web-mode
   :ensure t
@@ -818,6 +753,9 @@
 (use-package json-mode
   :ensure t
   :mode ".*\\.json")
+
+(use-package evil-mode
+  :bind (("<f6>" . evil-mode)))
 
 (use-package python
   :ensure t
