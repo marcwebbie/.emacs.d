@@ -312,16 +312,12 @@
   :commands (paradox-list-packages))
 
 (use-package super-save
-  :ensure t
-  :config
-  (setq super-save-auto-save-when-idle t)
-  (super-save-mode t)
-  )
-
-(use-package auto-save+
   :load-path "vendor"
   :config
-  (run-with-idle-timer 5 t 'auto-save+-save-buffers)
+  (setq super-save-auto-save-when-idle t
+        super-save-idle-duration 3
+        super-save-triggers (append super-save-triggers '("magit-status")))
+  (super-save-mode +1)
   )
 
 
