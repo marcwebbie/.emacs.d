@@ -29,6 +29,9 @@
 (tooltip-mode -1)
 (setq frame-title-format '(buffer-file-name "%f" ("%b")))
 
+;; Coding system
+(define-coding-system-alias 'UTF-8 'utf-8)
+
 ;; Don't break lines for me, please
 (setq-default truncate-lines t)
 
