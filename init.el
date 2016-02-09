@@ -772,8 +772,10 @@
   (add-hook 'python-mode-hook 'mw/python--add-debug-highlight)
 
   ;; Bindings
-  (bind-key "C-<f9>" 'mw/add-pudb-debug python-mode-map)
-  (bind-key "<f9>" 'mw/add-py-debug python-mode-map)
+  (bind-key "<f9>" 'mw/python--add-pdb-breakpoint python-mode-map)
+  (bind-key "C-<f9>" 'mw/python--add-pudb-breakpoint python-mode-map)
+  (bind-key "M-<f9>" 'mw/python--add-ipdb-breakpoint python-mode-map)
+  (bind-key "C-M-<f9>" 'mw/python--remove-breakpoints python-mode-map)
 
   (use-package pyvenv
     :ensure t
