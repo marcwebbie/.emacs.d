@@ -674,22 +674,27 @@
 (use-package spaceline-config
   :ensure spaceline
   :config
-  ;; (spaceline-spacemacs-theme)
-  (spaceline-emacs-theme)
-  (setq powerline-default-separator 'utf-8)
+  ;; Toggles
   (spaceline-toggle-minor-modes-off)
   (spaceline-toggle-buffer-encoding-off)
   (spaceline-toggle-buffer-encoding-abbrev-off)
-  (setq powerline-default-separator 'box)
+  (spaceline-toggle-flycheck-info-off)
+  (spaceline-toggle-flycheck-error-off)
+  (spaceline-toggle-flycheck-warning-off)
+
+  ;; Appearance
+  (spaceline-emacs-theme)
+  ;; (spaceline-spacemacs-theme)
+  (setq powerline-height '18)
+  (setq powerline-default-separator 'arrow-fade)
+  ;; (setq powerline-default-separator 'box)
   ;; (setq powerline-default-separator 'bar)
-  ;; (setq powerline-default-separator 'arrow-fade)
   ;; (setq powerline-default-separator 'slant)
   ;; (setq powerline-default-separator 'wave)
   ;; (setq powerline-default-separator 'utf-8)
   ;; (setq powerline-default-separator 'curve)
   ;; (setq powerline-default-separator 'chamfer)
   ;; (setq powerline-default-separator 'roundstub)
-  (setq powerline-height '18)
   )
 
 

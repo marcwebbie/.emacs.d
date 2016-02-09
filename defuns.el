@@ -10,7 +10,6 @@
 (autoload 'zap-up-to-char "misc"
   "Kill up to, but not including ARGth occurrence of CHAR.")
 
-
 (defun sp-kill-sexp-with-a-twist-of-lime ()
   (interactive)
   (if (sp-point-in-string)
@@ -23,7 +22,6 @@
           (kill-line)
         (sp-kill-sexp)))))
 
-
 (defun eval-and-replace ()
   "Replace the preceding sexp with its value."
   (interactive)
@@ -34,14 +32,12 @@
     (error (message "Invalid expression")
            (insert (current-kill 0)))))
 
-
 (defun replace-region-by (fn)
   (let* ((beg (region-beginning))
          (end (region-end))
          (contents (buffer-substring beg end)))
     (delete-region beg end)
     (insert (funcall fn contents))))
-
 
 (defun open-line-below ()
   "Open a line below the line the point is at.
@@ -59,7 +55,6 @@ Then move to that line and indent accordning to mode"
          (move-end-of-line 1)
          (newline)
          (indent-according-to-mode))))
-
 
 (defun open-line-above ()
   "Open a line above the line the point is at.
@@ -80,7 +75,6 @@ Then move to that line and indent accordning to mode"
          (forward-line -1)
          (indent-according-to-mode))))
 
-
 (defun clean-up-buffer-or-region ()
   "Untabifies, indents and deletes trailing whitespace from buffer or region."
   (interactive)
@@ -94,7 +88,6 @@ Then move to that line and indent accordning to mode"
     (save-restriction
       (narrow-to-region (region-beginning) (region-end))
       (delete-trailing-whitespace))))
-
 
 (defun duplicate-current-line-or-region (arg)
   "Duplicates the current line or region ARG times.
@@ -116,7 +109,6 @@ there's a region, all lines that region covers will be duplicated."
         (setq end (point)))
       (goto-char (+ origin (* (length region) arg) arg)))))
 
-
 (defun comment-or-uncomment-current-line-or-region ()
   "Comments or uncomments current current line or whole lines in region."
   (interactive)
@@ -129,7 +121,6 @@ there's a region, all lines that region covers will be duplicated."
        (progn (goto-char min) (line-beginning-position))
        (progn (goto-char max) (line-end-position))))))
 
-
 (defun kill-region-or-backward-word ()
   "kill region if active, otherwise kill backward word"
   (interactive)
@@ -137,12 +128,10 @@ there's a region, all lines that region covers will be duplicated."
       (kill-region (region-beginning) (region-end))
     (backward-kill-word 1)))
 
-
 (defun kill-to-beginning-of-line ()
   (interactive)
   (kill-region (save-excursion (beginning-of-line) (point))
                (point)))
-
 
 (defun url-decode-region (start end)
   "URL decode a region."
@@ -151,7 +140,6 @@ there's a region, all lines that region covers will be duplicated."
     (let ((text (url-unhex-string (buffer-substring start end))))
       (delete-region start end)
       (insert text))))
-
 
 (defun url-encode-region (start end)
   "URL encode a region."
@@ -181,7 +169,6 @@ number input."
   (save-excursion
     (hs-show-block)))
 
-
 (defun back-to-indentation-or-beginning-of-line ()
   "Moves point back to indentation if there is any
 non blank characters to the left of the cursor.
@@ -191,23 +178,9 @@ Otherwise point moves to beginning of line."
       (beginning-of-line)
     (back-to-indentation)))
 
-
-(defun scroll-down-five ()
-  "Scrolls down five rows."
-  (interactive)
-  (scroll-down 5))
-
-
-(defun scroll-up-five ()
-  "Scrolls up five rows."
-  (interactive)
-  (scroll-up 5))
-
-
 (defun find-project-root (dir)
   "Find project root directory"
   (f--traverse-upwards (f-dir? (f-expand ".git" it)) dir))
-
 
 ;;;; Buffers, Windows
 
@@ -239,7 +212,6 @@ Otherwise point moves to beginning of line."
            (set-window-start w2 s1))))
   (other-window 1))
 
-
 (defun rename-this-buffer-and-file ()
   "Renames current buffer and file it is visiting."
   (interactive)
@@ -256,7 +228,6 @@ Otherwise point moves to beginning of line."
                (set-visited-file-name new-name)
                (set-buffer-modified-p nil)
                (message "File '%s' successfully renamed to '%s'" name (file-name-nondirectory new-name))))))))
-
 
 (defun delete-this-buffer-and-file ()
   "Removes file connected to current buffer and kills buffer."
@@ -332,75 +303,7 @@ Otherwise point moves to beginning of line."
   (jump-to-register :magit-fullscreen))
 
 
-(defun recentf-ido-find-file ()
-  "Find a recent file using ido."
-  (interactive)
-  (let ((file (ido-completing-read "Choose recent file: " recentf-list nil t)))
-    (when file
-      (find-file file))))
-
-(defun ido-imenu ()
-  "Update the imenu index and then use ido to select a symbol to navigate to.
-Symbols matching the text at point are put first in the completion list."
-  (interactive)
-  (imenu--make-index-alist)
-  (let ((name-and-pos '())
-        (symbol-names '()))
-    (flet ((addsymbols (symbol-list)
-                       (when (listp symbol-list)
-                         (dolist (symbol symbol-list)
-                           (let ((name nil) (position nil))
-                             (cond
-                              ((and (listp symbol) (imenu--subalist-p symbol))
-                               (addsymbols symbol))
-
-                              ((listp symbol)
-                               (setq name (car symbol))
-                               (setq position (cdr symbol)))
-
-                              ((stringp symbol)
-                               (setq name symbol)
-                               (setq position (get-text-property 1 'org-imenu-marker symbol))))
-
-                             (unless (or (null position) (null name))
-                               (add-to-list 'symbol-names name)
-                               (add-to-list 'name-and-pos (cons name position))))))))
-      (addsymbols imenu--index-alist))
-    ;; If there are matching symbols at point, put them at the beginning of `symbol-names'.
-    (let ((symbol-at-point (thing-at-point 'symbol)))
-      (when symbol-at-point
-        (let* ((regexp (concat (regexp-quote symbol-at-point) "$"))
-               (matching-symbols (delq nil (mapcar (lambda (symbol)
-                                                     (if (string-match regexp symbol) symbol))
-                                                   symbol-names))))
-          (when matching-symbols
-            (sort matching-symbols (lambda (a b) (> (length a) (length b))))
-            (mapc (lambda (symbol) (setq symbol-names (cons symbol (delete symbol symbol-names))))
-                  matching-symbols)))))
-    (let* ((selected-symbol (ido-completing-read "Symbol? " symbol-names))
-           (position (cdr (assoc selected-symbol name-and-pos))))
-      (push-mark (point))
-      (goto-char position))))
-
 ;;;; Mastering Emacs
-
-(defun get-buffers-matching-mode (mode)
-  "Returns a list of buffers where their major-mode is equal to MODE"
-  (let ((buffer-mode-matches '()))
-   (dolist (buf (buffer-list))
-     (with-current-buffer buf
-       (if (eq mode major-mode)
-           (add-to-list 'buffer-mode-matches buf))))
-   buffer-mode-matches))
-
-
-(defun multi-occur-in-this-mode ()
-  "Show all lines matching REGEXP in buffers with this major mode."
-  (interactive)
-  (multi-occur
-   (get-buffers-matching-mode major-mode)
-   (car (occur-read-primary-args))))
-
 
 (defun etc-log-tail-handler ()
   "Clean auto-revert-tail mode"
@@ -462,20 +365,26 @@ Symbols matching the text at point are put first in the completion list."
   "Adds a highlighter for use by `python--pdb-breakpoint-string'"
   (highlight-lines-matching-regexp "import i?pu?db; +i?pu?db.set_trace().*$" 'hi-red-b))
 
-(defun mw/add-py-debug ()
+(defun mw/python--add-pdb-breakpoint ()
   "Add pdb.set_trace() code and move line down"
   (interactive)
   (insert "import pdb; pdb.set_trace()"))
 
-(defun mw/add-pudb-debug ()
+(defun mw/python--add-pudb-breakpoint ()
   "Add pudb.set_trace() code and move line down"
   (interactive)
   (insert "import pudb; pudb.set_trace()"))
 
-(defun mw/add-ipdb-debug ()
+(defun mw/python--add-ipdb-breakpoint ()
   "Add ipdb.set_trace() code and move line down"
   (interactive)
   (insert "import ipdb; ipdb.set_trace()"))
+
+(defun mw/python--remove-breakpoints ()
+  "Remove line with a pdb/pudb/ipdb breakpoint"
+  (save-excursion
+    (goto-char (point-min))
+    (flush-lines "import i?pu?db; +i?pu?db.set_trace().*$")))
 
 (defun mw/set-django-settings-module (django-settings-module)
   "set django settings module environment variable"
@@ -499,11 +408,9 @@ Symbols matching the text at point are put first in the completion list."
     (if (symbolp 'elpy-importmagic-fixup)
         (elpy-importmagic-fixup))))
 
-
 (defun first-file-exists-p (filelist)
   (let ((filename (expand-file-name (car filelist))))
    (if (file-exists-p filename) filename (first-file-exists-p (cdr filelist)))))
-
 
 (defun copy-file-name-to-clipboard ()
   "Copy the current buffer file name to the clipboard."
@@ -515,7 +422,6 @@ Symbols matching the text at point are put first in the completion list."
       (kill-new filename)
       (message "Copied buffer file name '%s' to the clipboard." filename))))
 
-
 (defun my-change-number-at-point (change)
   (let ((number (number-at-point))
         (point (point)))
@@ -526,12 +432,10 @@ Symbols matching the text at point are put first in the completion list."
         (replace-match (number-to-string (funcall change number)))
         (goto-char point)))))
 
-
 (defun my-increment-number-at-point ()
   "Increment number at point like vim's C-a"
   (interactive)
   (my-change-number-at-point '1+))
-
 
 (defun my-decrement-number-at-point ()
   "Decrement number at point like vim's C-x"
