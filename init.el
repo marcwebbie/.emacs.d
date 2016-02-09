@@ -473,15 +473,22 @@
   (add-to-list 'projectile-globally-ignored-directories ".cache")
   )
 
-
 (use-package counsel
   :ensure t
+  :demand t
+  :bind* (("M-i" . counsel-imenu)
+          ("C-c a" . counsel-ag)
+          ("C-c g" . counsel-git-grep)
+          ("C-c k" . counsel-descbinds)
+          ("C-x C-f" . counsel-find-file)
+          )
   :config
   (use-package swiper
     :ensure t
     :bind (("C-s" . swiper)
            ("C-r" . swiper))
     )
+
   (use-package ivy
     :bind (("C-c f" . ivy-recentf))
     :config
