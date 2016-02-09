@@ -2,8 +2,12 @@
 ;; Package initialize
 ;;============================================================
 (require 'package)
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/") t)
+(setq package-archives '(
+                         ("melpa" . "http://melpa.org/packages/")
+                         ("melpa-stable" . "http://stable.melpa.org/packages/")
+                         ;; uncomment below line if you need use GNU ELPA
+                         ;; ("gnu" . "http://elpa.gnu.org/packages/")
+                         ))
 (package-initialize)
 (setq package-enable-at-startup nil)
 (unless (package-installed-p 'use-package)
