@@ -493,20 +493,22 @@
     (setq ivy-display-style 'fancy)
     ;; (setq ivy-height 10)
     (ivy-mode +1))
+
+  (use-package imenu
+    :init
+    (defun imenu-mark-use-package ()
+      (add-to-list 'imenu-generic-expression
+                   '("use-package"
+                     "\\(^\\s-*(use-package +\\)\\(\\_<.+\\_>\\)" 2)))
+    (add-hook 'emacs-lisp-mode-hook #'imenu-mark-use-package))
+
+  ;; Keybindings
   (global-set-key [remap execute-extended-command] #'counsel-M-x)
   (global-set-key [remap describe-function] #'counsel-describe-function)
   (global-set-key [remap describe-variable] #'counsel-describe-variable)
-  (global-set-key [remap imenu] #'counsel-describe-variable)
+  (global-set-key [remap imenu] #'counsel-imenu)
   (global-set-key [remap find-file] #'counsel-find-file)
-  (bind-key* "M-i" 'counsel-imenu)
-
-  (defun imenu-mark-use-package ()
-    (add-to-list 'imenu-generic-expression
-                 '("use-package"
-                   "\\(^\\s-*(use-package +\\)\\(\\_<.+\\_>\\)" 2)))
-  (add-hook 'emacs-lisp-mode-hook #'imenu-mark-use-package)
   )
-
 
 (use-package recentf
   :ensure t
@@ -811,12 +813,9 @@
     :config (pip-requirements-mode))
 
   (use-package elpy
+    :disabled t
     :ensure t
     :diminish elpy-mode
-    :bind (("C-c t" . elpy-test-django-runner)
-           ("C-c C-f" . elpy-find-file)
-           ("C-c C-;" . mw/set-django-settings-module)
-           ("C-c C-p" . elpy-autopep8-fix-code))
     :config
     (setq elpy-rpc-backend "jedi")
     ;; (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart)
