@@ -786,11 +786,12 @@
     )
 
   (use-package auto-virtualenv
-    :load-path "vendor"
+    :load-path "~/Projects/auto-virtualenv"
+    :demand t
     :config
     (setq auto-virtualenv-dir "~/.virtualenvs")
-    ;; (setq auto-virtualenv-dir "~/.pyenv/versions")
-    (add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv))
+    (add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv)
+    )
 
   (use-package anaconda-mode
     :ensure t
