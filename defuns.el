@@ -149,9 +149,6 @@ there's a region, all lines that region covers will be duplicated."
       (delete-region start end)
       (insert text))))
 
-
-;;;; Navigation
-
 (defun goto-line-with-feedback ()
   "Show line numbers temporarily, while prompting for the line
 number input."
@@ -182,8 +179,6 @@ Otherwise point moves to beginning of line."
   "Find project root directory"
   (f--traverse-upwards (f-dir? (f-expand ".git" it)) dir))
 
-;;;; Buffers, Windows
-
 (defun nuke-all-buffers ()
   "Kill all buffers, leaving *scratch* only."
   (interactive)
@@ -192,7 +187,6 @@ Otherwise point moves to beginning of line."
      (kill-buffer buffer))
    (buffer-list))
   (delete-other-windows))
-
 
 (defun swap-windows ()
   "If you have 2 windows, it swaps them."
@@ -242,9 +236,6 @@ Otherwise point moves to beginning of line."
         (kill-buffer buffer)
         (message "File '%s' successfully removed" filename)))))
 
-
-;;;; Custom
-
 (defun re-builder-large ()
   "Just like `re-builder', only make the font and window larger."
   (interactive)
@@ -253,13 +244,9 @@ Otherwise point moves to beginning of line."
   (text-scale-increase 5)
   (set-window-text-height (selected-window) 7))
 
-
-;;;; External services
-
 (defun ipython ()
   (interactive)
   (ansi-term "/usr/bin/ipython"))
-
 
 (defun google ()
   "Search Googles with a query or region if any."
@@ -271,7 +258,6 @@ Otherwise point moves to beginning of line."
         (buffer-substring (region-beginning) (region-end))
       (read-string "Query: ")))))
 
-
 (defun youtube ()
   "Search YouTube with a query or region if any."
   (interactive)
@@ -282,7 +268,6 @@ Otherwise point moves to beginning of line."
                            (buffer-substring (region-beginning) (region-end))
                          (read-string "Search YouTube: "))))))
 
-
 (defun finder ()
   "Opens file directory in Finder."
   (interactive)
@@ -292,18 +277,11 @@ Otherwise point moves to beginning of line."
          (format "%s %s" (executable-find "open") (file-name-directory file)))
       (error "Buffer is not attached to any file."))))
 
-
-;;;; Other
-
-
 (defun magit-quit-session ()
   "Restores the previous window configuration and kills the magit buffer"
   (interactive)
   (kill-buffer)
   (jump-to-register :magit-fullscreen))
-
-
-;;;; Mastering Emacs
 
 (defun etc-log-tail-handler ()
   "Clean auto-revert-tail mode"
@@ -336,14 +314,12 @@ Otherwise point moves to beginning of line."
                )
       (message "Not a valid choice"))))
 
-
 (defun mw/buffer-django-p ()
   "Test if in a django template buffer"
   (save-excursion
     (search-forward-regexp "{% base\\|{% if\\|{% include\\|{% block"
                            nil
                            t)))
-
 
 (defun mw/insert-lambda-char ()
   (interactive)
@@ -382,6 +358,7 @@ Otherwise point moves to beginning of line."
 
 (defun mw/python--remove-breakpoints ()
   "Remove line with a pdb/pudb/ipdb breakpoint"
+  (interactive)
   (save-excursion
     (goto-char (point-min))
     (flush-lines "import i?pu?db; +i?pu?db.set_trace().*$")))
