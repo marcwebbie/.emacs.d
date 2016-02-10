@@ -2,13 +2,14 @@
 ;; Package initialize
 ;;============================================================
 (require 'package)
-(setq package-archives '(
-                         ("melpa" . "http://melpa.org/packages/")
-                         ("melpa-stable" . "http://stable.melpa.org/packages/")
-                         ;; uncomment below line if you need use GNU ELPA
-                         ;; ("gnu" . "http://elpa.gnu.org/packages/")
-                         ))
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
+(when (< emacs-major-version 24)
+  ;; For important compatibility libraries like cl-lib
+  (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/")))
 (package-initialize)
+
+;; use-package
 (setq package-enable-at-startup nil)
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
