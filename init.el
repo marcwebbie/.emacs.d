@@ -301,10 +301,10 @@
   :commands (paradox-list-packages))
 
 (use-package super-save
-  :load-path "vendor"
+  :ensure t
   :config
   (setq super-save-auto-save-when-idle t
-        super-save-idle-duration 3
+        super-save-idle-duration 5
         super-save-triggers (append super-save-triggers '("magit-status")))
   (super-save-mode +1)
   )
