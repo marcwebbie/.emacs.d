@@ -206,6 +206,15 @@
 ;;; global hook modes
 (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
 
+(defun terminal-notifier-notify (title message)
+  "Show a message with `terminal-notifier-command`."
+  (start-process "terminal-notifier"
+                 "*terminal-notifier*"
+                 (executable-find "terminal-notifier")
+                 "-title" title
+                 "-message" message
+                 "-activate" "org.gnu.Emacs"))
+
 
 ;;============================================================
 ;; Packages
@@ -435,6 +444,14 @@
   :config
   (require 'tdd))
 
+(use-package compile
+  :config
+  (defadvice compilation-start (before mw-pytest-compilation-start-before (command &optional mode name-function highlight-regexp) activate)
+      (message "Set compile command: %s" command)
+      (setq compile-command command)
+      )
+  )
+
 
 (use-package projectile
   :ensure t
@@ -553,7 +570,13 @@
   :commands global-company-mode
   :diminish company-mode
   :init
-  (add-hook 'prog-mode-hook 'global-company-mode))
+  (add-hook 'prog-mode-hook 'global-company-mode)
+  (use-package company-quickhelp
+    :ensure t
+    :config
+    (with-eval-after-load 'company
+      (company-quickhelp-mode)))
+  )
 
 (use-package which-key
   :ensure t
@@ -761,13 +784,17 @@
   :ensure t
   :mode ".*\\.json")
 
-(use-package evil-mode
+(use-package evil
+  :ensure t
   :bind (("<f6>" . evil-mode)))
 
 (use-package python
   :ensure t
   :commands (python-mode)
   :config
+  (setq-default python-indent 4)
+  (setq python-fill-docstring-style 'onetwo)
+
   ;; Hooks
   (add-hook 'python-mode-hook 'mw/python--add-todo-fixme-bug-hightlight)
   (add-hook 'python-mode-hook 'mw/python--add-debug-highlight)
@@ -786,11 +813,11 @@
     )
 
   (use-package auto-virtualenv
-    :load-path "~/Projects/auto-virtualenv"
-    :demand t
+    :ensure t
     :config
     (setq auto-virtualenv-dir "~/.virtualenvs")
     (add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv)
+    (add-hook 'window-configuration-change-hook 'auto-virtualenv-set-virtualenv)
     )
 
   (use-package anaconda-mode
@@ -799,6 +826,10 @@
     :diminish anaconda-mode
     :config
     (add-hook 'python-mode-hook #'anaconda-mode)
+    (setq company-tooltip-align-annotations t
+          company-dabbrev-downcase nil
+          company-dabbrev-code-everywhere t)
+
     (use-package company-anaconda
       :ensure t
       :if (boundp 'company-backends)
@@ -831,24 +862,27 @@
   (use-package pytest
     :ensure t
     :demand t
-    :bind* (("C-c t p" . pytest-one)
-            ("C-c t P" . copy-pytest-test-to-clipboard)
-            ("C-c t a" . pytest-all)
-            ("C-c t m" . pytest-module)
-            ("C-c t d" . pytest-directory))
+    :bind* (:map python-mode-map
+                 ("C-c t p" . pytest-one)
+                 ("C-c t P" . copy-pytest-test-to-clipboard)
+                 ("C-c t a" . pytest-all)
+                 ("C-c t m" . pytest-module)
+                 ("C-c t d" . pytest-directory))
     :config
     (defun copy-pytest-test-to-clipboard ()
       (interactive)
       (let ((testname (pytest-py-testable)))
         (when testname
-          (kill-new (format "py.test -x -s %s" testname) )
-          (message "Copied '%s' to the clipboard." (pytest-inner-testable))))))
+          (kill-new (format "py.test -x -s %s" testname))
+          (message "Copied '%s' to the clipboard." (testname)))))
+      )
 
   (use-package nose
     :ensure t
     :demand t
-    :bind* (("C-c t n" . nosetest-one)
-            ("C-c t N" . copy-nosetest-test-to-clipboard))
+    :bind* (:map python-mode-map
+                 ("C-c t n" . nosetests-one)
+                 ("C-c t N" . copy-nosetest-test-to-clipboard))
     :config
     (defun copy-nosetest-test-to-clipboard ()
       (interactive)
@@ -856,7 +890,7 @@
         (when testname
           (kill-new (format "nosetests -x -s %s" testname))
           (message "Copied '%s' to the clipboard." testname)))))
-    )
+  )
 
 
 (use-package yaml-mode
