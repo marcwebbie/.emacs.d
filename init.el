@@ -215,7 +215,6 @@
                  "-message" message
                  "-activate" "org.gnu.Emacs"))
 
-
 ;;============================================================
 ;; Packages
 ;;============================================================
@@ -480,9 +479,9 @@
   :ensure t
   :demand t
   :bind* (("M-i" . counsel-imenu)
-          ("C-c a" . counsel-ag)
-          ("C-c g" . counsel-git-grep)
-          ("C-c k" . counsel-descbinds)
+          ("C-c s a" . counsel-ag)
+          ("C-c s g" . counsel-git-grep)
+          ("C-c s k" . counsel-descbinds)
           ("C-x C-f" . counsel-find-file)
           )
   :config
@@ -572,6 +571,7 @@
   :init
   (add-hook 'prog-mode-hook 'global-company-mode)
   (use-package company-quickhelp
+    :disabled t
     :ensure t
     :config
     (with-eval-after-load 'company
@@ -597,8 +597,8 @@
 ;;#############################
 (use-package drag-stuff
   :ensure t
-  :bind (("M-p" . drag-stuff-up)
-         ("M-n" . drag-stuff-down)))
+  :bind* (("M-p" . drag-stuff-up)
+          ("M-n" . drag-stuff-down)))
 
 (use-package multiple-cursors
   :ensure t
@@ -789,9 +789,16 @@
   :bind (("<f6>" . evil-mode)))
 
 (use-package python
-  :ensure t
-  :commands (python-mode)
+  :init
+  (require 'python)
+  :bind (:map python-mode-map
+              ("<f9>" . mw/python--add-pdb-breakpoint)
+              ("C-<f9>" . mw/python--add-pudb-breakpoint)
+              ("M-<f9>" . mw/python--add-ipdb-breakpoint)
+              ("C-M-<f9>" . mw/python--remove-breakpoints)
+         )
   :config
+  ;; Defaults
   (setq-default python-indent 4)
   (setq python-fill-docstring-style 'onetwo)
 
@@ -799,26 +806,13 @@
   (add-hook 'python-mode-hook 'mw/python--add-todo-fixme-bug-hightlight)
   (add-hook 'python-mode-hook 'mw/python--add-debug-highlight)
 
-  ;; Bindings
-  (bind-key "<f9>" 'mw/python--add-pdb-breakpoint python-mode-map)
-  (bind-key "C-<f9>" 'mw/python--add-pudb-breakpoint python-mode-map)
-  (bind-key "M-<f9>" 'mw/python--add-ipdb-breakpoint python-mode-map)
-  (bind-key "C-M-<f9>" 'mw/python--remove-breakpoints python-mode-map)
-
-  (use-package pyvenv
-    :ensure t
-    :config
-    (setenv "WORKON_HOME" (first-file-exists-p (list "~/.virtualenvs" "~/.pyenv/versions")))
-    (setenv "VIRTUALENVWRAPPER_HOOK_DIR" (getenv "WORKON_HOME"))
-    )
-
   (use-package auto-virtualenv
     :ensure t
     :config
     (setq auto-virtualenv-dir "~/.virtualenvs")
     (add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv)
     (add-hook 'window-configuration-change-hook 'auto-virtualenv-set-virtualenv)
-    )
+    (add-hook 'focus-in-hook 'auto-virtualenv-set-virtualenv))
 
   (use-package anaconda-mode
     :ensure t
@@ -847,8 +841,6 @@
     :diminish elpy-mode
     :config
     (setq elpy-rpc-backend "jedi")
-    ;; (add-hook 'pyvenv-post-activate-hooks 'elpy-rpc-restart)
-    (setq elpy-test-django-runner-command '("python" "manage.py" "test" "--noinput"))
     (defun elpy-setup ()
       (interactive)
       (progn
@@ -857,7 +849,7 @@
 
   (use-package py-autopep8
     :ensure t
-    :bind (("C-c C-a" . py-autopep8-buffer)))
+    :commands (py-autopep8-buffer))
 
   (use-package pytest
     :ensure t
@@ -891,7 +883,6 @@
           (kill-new (format "nosetests -x -s %s" testname))
           (message "Copied '%s' to the clipboard." testname)))))
   )
-
 
 (use-package yaml-mode
   :ensure t
