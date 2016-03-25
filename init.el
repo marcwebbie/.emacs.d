@@ -562,7 +562,7 @@
   :commands eldoc
   :init
   (add-hook 'emacs-lisp-mode 'eldoc-mode)
-  (add-hook 'python-mode-hook 'eldoc-mode))
+  (add-hook 'python-mode-hook 'anaconda-eldoc-mode))
 
 (use-package company
   :ensure t
@@ -819,7 +819,7 @@
     :demand t
     :diminish anaconda-mode
     :config
-    (add-hook 'python-mode-hook #'anaconda-mode)
+    (add-hook 'python-mode-hook 'anaconda-mode)
     (setq company-tooltip-align-annotations t
           company-dabbrev-downcase nil
           company-dabbrev-code-everywhere t)
