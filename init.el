@@ -318,6 +318,9 @@
   (super-save-mode +1)
   )
 
+(use-package conf-mode
+  :mode ".*\\.coveragerc")
+
 
 ;;#############################
 ;; Shell
@@ -914,3 +917,15 @@
 
 (use-package less-css-mode
   :ensure t)
+
+(use-package ruby-mode
+  :mode (
+         ("\\.rake$" . ruby-mode)
+         ("Rakefile$" . ruby-mode)
+         ("\\.gemspec$" . ruby-mode)
+         ("\\.ru$" . ruby-mode)
+         ("Gemfile$" . ruby-mode)
+         ("Guardfile$" . ruby-mode)
+         ("Fastfile$" . ruby-mode)
+         )
+  )
