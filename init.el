@@ -116,7 +116,7 @@
 ;; Scrolling
 ;; =========================
 (setq scroll-error-top-bottom t
-      visible-bell t
+      visible-bell nil
       scroll-conservatively 10000
       scroll-margin 10
       auto-window-vscroll nil)
