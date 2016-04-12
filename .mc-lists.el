@@ -50,6 +50,8 @@
 
 (setq mc/cmds-to-run-once
       '(
+        coffee-dedent-line-backspace
+        counsel-M-x
         describe-key
         drag-stuff-down
         help-for-help

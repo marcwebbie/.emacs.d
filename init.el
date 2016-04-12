@@ -573,12 +573,6 @@
   :diminish company-mode
   :init
   (add-hook 'prog-mode-hook 'global-company-mode)
-  (use-package company-quickhelp
-    :disabled t
-    :ensure t
-    :config
-    (with-eval-after-load 'company
-      (company-quickhelp-mode)))
   )
 
 (use-package which-key
@@ -829,9 +823,9 @@
 
     (use-package company-anaconda
       :ensure t
-      :if (boundp 'company-backends)
-      :init (add-to-list 'company-backends 'company-anaconda))
-    )
+      :init
+      (eval-after-load 'company
+        '(add-to-list 'company-backends 'company-anaconda))))
 
   (use-package pip-requirements
     :ensure t
