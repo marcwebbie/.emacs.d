@@ -573,6 +573,18 @@
   :diminish company-mode
   :init
   (add-hook 'prog-mode-hook 'global-company-mode)
+
+  :config
+  (setq company-tooltip-limit 20) ;; bigger popup window
+  (setq company-idle-delay 0.5)   ;; decrease delay before autocompletion popup shows
+  (setq company-echo-delay 0)     ;; remove annoying blinking
+  (setq company-show-numbers t)   ;; show numbers for easy selection
+
+  (bind-key "C-n" #'company-select-next company-active-map)
+  (bind-key "C-p" #'company-select-previous company-active-map)
+  (bind-key "<tab>" #'company-complete company-active-map)
+  (bind-key "M-?" #'company-show-doc-buffer company-active-map)
+  (bind-key "M-." #'company-show-location company-active-map)
   )
 
 (use-package which-key
