@@ -861,6 +861,7 @@
     :commands (py-autopep8-buffer))
 
   (use-package pytest
+    :disabled t
     :ensure t
     :demand t
     :bind* (:map python-mode-map
@@ -869,6 +870,24 @@
                  ("C-c t a" . pytest-all)
                  ("C-c t m" . pytest-module)
                  ("C-c t d" . pytest-directory))
+    :config
+    (defun copy-pytest-test-to-clipboard ()
+      (interactive)
+      (let ((testname (pytest-py-testable)))
+        (when testname
+          (kill-new (format "py.test -x -s %s" testname))
+          (message "Copied '%s' to the clipboard." (testname)))))
+      )
+
+  (use-package py-test
+    :ensure t
+    :demand t
+    :bind* (:map python-mode-map
+                 ("C-c t p" . py-test-run-test-at-point)
+                 ("C-c t P" . copy-pytest-test-to-clipboard)
+                 ("C-c t d" . py-test-run-directory)
+                 ("C-c t m" . py-test-run-file)
+                 )
     :config
     (defun copy-pytest-test-to-clipboard ()
       (interactive)
