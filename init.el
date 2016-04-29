@@ -714,13 +714,16 @@
   (spaceline-toggle-flycheck-info-off)
   (spaceline-toggle-flycheck-error-off)
   (spaceline-toggle-flycheck-warning-off)
+  (spaceline-toggle-nyan-cat-on)
+  (spaceline-toggle-evil-state-on)
+  (spaceline-toggle-buffer-size-off)
 
   ;; Appearance
-  (spaceline-emacs-theme)
-  ;; (spaceline-spacemacs-theme)
-  (setq powerline-height '18)
-  (setq powerline-default-separator 'arrow-fade)
-  ;; (setq powerline-default-separator 'box)
+  ;; (spaceline-emacs-theme)
+  (spaceline-spacemacs-theme)
+  (setq powerline-height '20)
+  (setq powerline-default-separator 'box)
+  ;; (setq powerline-default-separator 'arrow-fade)
   ;; (setq powerline-default-separator 'bar)
   ;; (setq powerline-default-separator 'slant)
   ;; (setq powerline-default-separator 'wave)
@@ -728,6 +731,16 @@
   ;; (setq powerline-default-separator 'curve)
   ;; (setq powerline-default-separator 'chamfer)
   ;; (setq powerline-default-separator 'roundstub)
+
+  (use-package nyan-mode
+    :ensure t
+    :config
+    (nyan-mode t)
+    )
+
+  (use-package powerline-evil
+    :ensure t
+    )
   )
 
 
