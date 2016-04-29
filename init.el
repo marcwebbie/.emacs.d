@@ -185,10 +185,10 @@
 (load-local "defuns")
 
 ;;; Major mode abbrevs
-;; (add-hook 'emacs-lisp-mode-hook (lambda() (setq mode-name "Ⓔ")))
-;; (add-hook 'python-mode-hook (lambda() (setq mode-name "Ⓟ")))
-;; (add-hook 'js2-mode-hook (lambda() (setq mode-name "Ⓙ")))
-;; (add-hook 'web-mode-hook (lambda() (setq mode-name "Ⓦ")))
+(add-hook 'emacs-lisp-mode-hook (lambda() (setq mode-name "Ⓔ")))
+(add-hook 'python-mode-hook (lambda() (setq mode-name "Ⓟ")))
+(add-hook 'js2-mode-hook (lambda() (setq mode-name "Ⓙ")))
+(add-hook 'web-mode-hook (lambda() (setq mode-name "Ⓦ")))
 
 ;;; Minor Mode diminish
 (eval-after-load "xterm-title" '(diminish 'xterm-title-mode))
