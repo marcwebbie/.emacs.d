@@ -916,6 +916,8 @@
   :ensure t
   :mode ((".*\\.pass" . yaml-mode)
          ("\\.passpierc" . yaml-mode))
+  :config
+  (add-hook 'yaml-mode-hook (lambda () (electric-indent-local-mode -1)))
   )
 
 (use-package coffee-mode
@@ -985,7 +987,6 @@
     :config
     (eval-after-load 'company
       '(add-to-list 'company-backends 'company-irony))))
-
 
 (use-package php-mode
   :ensure t)
