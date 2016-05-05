@@ -990,3 +990,6 @@
 
 (use-package php-mode
   :ensure t)
+
+(use-package puppet-mode
+  :ensure t)
