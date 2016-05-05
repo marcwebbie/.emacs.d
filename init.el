@@ -127,8 +127,8 @@
 
 ;; Dark Themes
 ;; ==================================================
-;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
-(use-package monokai-theme :ensure t :init (load-theme 'monokai :no-confirm))
+(use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
+;; (use-package monokai-theme :ensure t :init (load-theme 'monokai :no-confirm))
 ;; (use-package spacemacs-theme :ensure t :init (load-theme 'spacemacs-dark :no-confirm))
 ;; (use-package solarized-theme :ensure t :init (load-theme 'solarized-dark :no-confirm))
 ;; (use-package molokai-theme :ensure t :init (load-theme 'molokai :no-confirm))
