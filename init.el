@@ -422,8 +422,8 @@
   :ensure t
   :bind (
          ("C-c b m" . bm-toggle)
-         ("C-c b [" . bm-previous)
-         ("C-c b ]" . bm-next)
+         ("C-c b p" . bm-previous)
+         ("C-c b n" . bm-next)
          ("C-c b l" . bm-show-all)
          )
   :config
