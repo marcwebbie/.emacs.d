@@ -350,22 +350,12 @@
          ("C-c v b" . magit-blame))
   :config
   (setq magit-last-seen-setup-instructions "1.4.0")
-  (setq magit-display-buffer-function
-        (lambda (buffer)
-          (if magit-display-buffer-noselect
-              ;; the code that called `magit-display-buffer-function'
-              ;; expects the original window to stay alive, we can't go
-              ;; fullscreen
-              (magit-display-buffer-traditional buffer)
-            (delete-other-windows)
-            ;; make sure the window isn't dedicated, otherwise
-            ;; `set-window-buffer' throws an error
-            (set-window-dedicated-p nil nil)
-            (set-window-buffer nil buffer)
-            ;; return buffer's window
-            (get-buffer-window buffer))))
   (setq magit-revert-buffers t)
-  (add-hook 'magit-status-mode-hook 'delete-other-windows)
+  (use-package fullframe
+    :ensure t
+    :config
+    (fullframe magit-status magit-mode-quit-window)
+    )
   (bind-key "q" 'magit-quit-session magit-status-mode-map))
 
 (use-package git-gutter
