@@ -105,11 +105,12 @@
 ;; Appearance
 ;;============================================================
 (global-hl-line-mode -1)
-;; Linum mode
-(global-linum-mode -1)
-(setq linum-format "%4d ")
-(add-hook 'prog-mode-hook 'linum-mode)
 
+;; Linum mode
+(add-hook 'prog-mode-hook 'linum-mode)
+(setq linum-format " %4d ")
+
+;; Curson
 (blink-cursor-mode -1)
 (setq blink-matching-paren nil)  ;; disable annoying blink-matching-paren
 
@@ -127,7 +128,9 @@
 
 ;; Dark Themes
 ;; ==================================================
-(use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
+;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
+;; (use-package flatland-theme :ensure t :init (load-theme 'flatland :no-confirm))
+(use-package darkokai-theme :ensure t :init (load-theme 'darkokai :no-confirm))
 ;; (use-package monokai-theme :ensure t :init (load-theme 'monokai :no-confirm))
 ;; (use-package spacemacs-theme :ensure t :init (load-theme 'spacemacs-dark :no-confirm))
 ;; (use-package solarized-theme :ensure t :init (load-theme 'solarized-dark :no-confirm))
@@ -178,6 +181,11 @@
                     ("Code New Roman" 14)
                     ("Fantasque Sans Mono" 18)
                     ))
+
+
+;; Setup window
+(set-fringe-mode '(8 . 0))
+(toggle-frame-maximized)
 
 ;;============================================================
 ;; Loading
