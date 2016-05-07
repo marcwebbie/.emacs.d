@@ -36,3 +36,4 @@ autosaves/*
 quelpa/
 anaconda-mode/
 /.python-environments/
+flycheck_init.el
