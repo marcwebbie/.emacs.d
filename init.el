@@ -231,7 +231,6 @@
   (bind-key "C-c n" 'clean-up-buffer-or-region)
   (bind-key "C-M-;" 'comment-or-uncomment-current-line-or-region)
   (bind-key "C-a" 'back-to-indentation-or-beginning-of-line)
-  (bind-key "C-z" 'zap-up-to-char)
   (bind-key "C-|" 'align-regexp)
   (bind-key "C-x c" 'copy-file-name-to-clipboard)
 
@@ -689,6 +688,11 @@
   (defadvice subword-capitalize (before capitalize-word-advice activate)
     (unless (looking-back "\\b")
       (backward-word))))
+
+(use-package zzz-to-char
+  :ensure t
+  :bind (("C-z" . zzz-up-to-char)
+         ("M-z" . zzz-to-char)))
 
 
 ;;#############################
