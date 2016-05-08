@@ -185,7 +185,7 @@
 
 ;; Setup window
 (set-fringe-mode '(8 . 0))
-(toggle-frame-maximized)
+;; (toggle-frame-maximized)
 
 ;;============================================================
 ;; Loading
@@ -364,19 +364,6 @@
     (fullframe magit-status magit-mode-quit-window)
     )
   (bind-key "q" 'magit-quit-session magit-status-mode-map))
-
-(use-package git-gutter
-  :disabled t
-  :ensure t
-  :bind (("C-c v =" . git-gutter:popup-hunk) ;; show hunk diff
-         ("C-c v p" . git-gutter:previous-hunk)
-         ("C-c v n" . git-gutter:next-hunk)
-         ("C-c v s" . git-gutter:stage-hunk)
-         ("C-c v r" . git-gutter:revert-hunk))
-  :diminish git-gutter-mode
-  :init
-  (global-git-gutter-mode t)
-  )
 
 (use-package diff-hl
   :ensure t
@@ -737,12 +724,7 @@
   (use-package nyan-mode
     :ensure t
     :config
-    (nyan-mode t)
-    )
-
-  (use-package powerline-evil
-    :ensure t
-    )
+    (nyan-mode t))
   )
 
 
@@ -859,41 +841,6 @@
     :mode "\\requirements.txt\\'"
     :config (pip-requirements-mode))
 
-  (use-package elpy
-    :disabled t
-    :ensure t
-    :diminish elpy-mode
-    :config
-    (setq elpy-rpc-backend "jedi")
-    (defun elpy-setup ()
-      (interactive)
-      (progn
-        (compile (format "%s install -U jedi flake8 importmagic autopep8 yapf" (executable-find "pip")))))
-    )
-
-  (use-package py-autopep8
-    :ensure t
-    :commands (py-autopep8-buffer))
-
-  (use-package pytest
-    :disabled t
-    :ensure t
-    :demand t
-    :bind* (:map python-mode-map
-                 ("C-c t p" . pytest-one)
-                 ("C-c t P" . copy-pytest-test-to-clipboard)
-                 ("C-c t a" . pytest-all)
-                 ("C-c t m" . pytest-module)
-                 ("C-c t d" . pytest-directory))
-    :config
-    (defun copy-pytest-test-to-clipboard ()
-      (interactive)
-      (let ((testname (pytest-py-testable)))
-        (when testname
-          (kill-new (format "py.test -x -s %s" testname))
-          (message "Copied '%s' to the clipboard." (testname)))))
-      )
-
   (use-package py-test
     :ensure t
     :demand t
@@ -1004,7 +951,9 @@
       '(add-to-list 'company-backends 'company-irony))))
 
 (use-package php-mode
+  :defer t
   :ensure t)
 
 (use-package puppet-mode
+  :defer t
   :ensure t)
