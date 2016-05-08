@@ -167,11 +167,11 @@
 
 
 (mw/set-best-font '(
+                    ("Monaco" 15)
                     ("Menlo" 15)
                     ("Inconsolata" 16)
                     ("DejaVu Sans Mono" 15)
                     ("Ubuntu Mono" 16)
-                    ("Monaco" 15)
                     ("Roboto Mono" 14)
                     ("Droid Sans Mono Dotted" 14)
                     ("Source Code Pro" 14)
