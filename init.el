@@ -395,6 +395,24 @@
       (save-place-mode +1)
     (setq-default save-place t)))
 
+(use-package eww
+  :bind ("C-c o" . w3mext-open-link-or-image-or-url)
+  :init
+  (defun w3mext-open-link-or-image-or-url ()
+  "Opens the current link or image or current page's uri or any url-like text under cursor in firefox."
+  (interactive)
+  (let (url)
+    (if (string= major-mode "w3m-mode")
+        (setq url (or (w3m-anchor) (w3m-image) w3m-current-url)))
+    (browse-url-generic (if url url (car (browse-url-interactive-arg "URL: "))))
+    ))
+  (setq browse-url-generic-program
+      (cond
+       (*is-a-mac* "open")
+       (linux (executable-find "google-chrome"))
+       ))
+  )
+
 (use-package dired-x
   :config
   (setq global-auto-revert-non-file-buffers t)
