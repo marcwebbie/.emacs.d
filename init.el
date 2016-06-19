@@ -853,10 +853,10 @@
     :config
     (defun copy-pytest-test-to-clipboard ()
       (interactive)
-      (let ((testname (pytest-py-testable)))
-        (when testname
-          (kill-new (format "py.test -x -s %s" testname))
-          (message "Copied '%s' to the clipboard." (testname)))))
+      (let ((pytestname (string-join (cons (buffer-file-name) (py-test-find-outer-test)) py-test-*test-path-separator*)))
+        (kill-new (format "py.test -x -s %s" pytestname))
+        (message "Copied '%s' to the clipboard." pytestname)
+        ))
       )
 
   (use-package nose
@@ -868,10 +868,10 @@
     :config
     (defun copy-nosetest-test-to-clipboard ()
       (interactive)
-      (let ((testname (format "%s:%s" buffer-file-name (nose-py-testable))))
-        (when testname
-          (kill-new (format "nosetests -x -s %s" testname))
-          (message "Copied '%s' to the clipboard." testname)))))
+      (let ((nosetestname (format "%s:%s" buffer-file-name (nose-py-testable))))
+        (when nosetestname
+          (kill-new (format "nosetests -x -s %s" nosetestname))
+          (message "Copied '%s' to the clipboard." nosetestname)))))
   )
 
 (use-package yaml-mode
