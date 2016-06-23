@@ -167,6 +167,7 @@
 
 
 (mw/set-best-font '(
+                    ("Consolas" 16)
                     ("Monaco" 15)
                     ("Menlo" 15)
                     ("Inconsolata" 16)
@@ -256,8 +257,8 @@
   (bind-key "C-x C-c" (λ (if (y-or-n-p "Quit Emacs? ") (save-buffers-kill-emacs))))
 
   ;; Search
-  (bind-key "C-c g" 'google)
-  (bind-key "C-c y" 'youtube)
+  (bind-key "C-c C-g" 'google)
+  (bind-key "C-c C-y" 'youtube)
 
   ;; Naming
   (bind-key "C-c m -" (lambda () (interactive) (replace-region-by 's-dashed-words)))
@@ -913,6 +914,10 @@
 (use-package gist
   :ensure t
   :demand t)
+
+(use-package browse-at-remote
+  :bind (("C-c g g" . browse-at-remote))
+  :ensure t)
 
 (use-package pig-mode
   :ensure t)
