@@ -167,17 +167,17 @@
 
 
 (mw/set-best-font '(
-                    ("Consolas" 16)
+                    ("Roboto Mono" 14)
                     ("DejaVu Sans Mono" 15)
                     ("Monaco" 15)
                     ("Menlo" 15)
                     ("Inconsolata" 16)
                     ("Ubuntu Mono" 16)
-                    ("Roboto Mono" 14)
                     ("Droid Sans Mono Dotted" 14)
                     ("Source Code Pro" 14)
                     ("Anonymous Pro" 14)
                     ("Droid Sans Mono" 14)
+                    ("Consolas" 16)
                     ("Liberation Mono" 14)
                     ("Code New Roman" 14)
                     ("Fantasque Sans Mono" 18)
