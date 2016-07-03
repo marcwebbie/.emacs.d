@@ -28,6 +28,7 @@
         org-delete-char
         org-end-of-line
         org-force-self-insert
+        org-kill-line
         org-return-indent
         org-self-insert-command
         org-yank
