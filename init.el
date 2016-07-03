@@ -870,6 +870,7 @@
                  ("C-c t m" . py-test-run-file)
                  )
     :config
+    (setq py-test-*default-buffer-name* "*compilation*")
     (defun copy-pytest-test-to-clipboard ()
       (interactive)
       (let ((pytestname (string-join (cons (buffer-file-name) (py-test-find-outer-test)) py-test-*test-path-separator*)))
