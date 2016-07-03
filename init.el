@@ -725,20 +725,15 @@
   (spaceline-toggle-nyan-cat-on)
   (spaceline-toggle-evil-state-on)
   (spaceline-toggle-buffer-size-off)
+  (setq powerline-default-separator 'box)
 
   ;; Appearance
-  ;; (spaceline-emacs-theme)
-  (spaceline-spacemacs-theme)
-  (setq powerline-height '20)
-  (setq powerline-default-separator 'box)
-  ;; (setq powerline-default-separator 'arrow-fade)
-  ;; (setq powerline-default-separator 'bar)
-  ;; (setq powerline-default-separator 'slant)
-  ;; (setq powerline-default-separator 'wave)
-  ;; (setq powerline-default-separator 'utf-8)
-  ;; (setq powerline-default-separator 'curve)
-  ;; (setq powerline-default-separator 'chamfer)
-  ;; (setq powerline-default-separator 'roundstub)
+  (use-package powerline
+    :ensure t
+    :init (setq powerline-height (truncate (* 1.0 (frame-char-height)))
+                  powerline-default-separator 'bar))
+  (spaceline-emacs-theme)
+  ;; (spaceline-spacemacs-theme)
 
   (use-package nyan-mode
     :ensure t
