@@ -297,6 +297,31 @@
   :config
   (setq-default auto-revert-interval 3))
 
+(use-package cyphejor
+  :ensure t
+  :config
+  (setq
+   cyphejor-rules
+   '(("mode" "")
+     ("lisp" "")
+     ("interaction" "")
+     ("fundamental" "Ⓕ")
+     ("emacs" "Ⓔ")
+     ("python" "")
+     ("js2" "")
+     ("web" "")
+     ("coffee" "")
+     ("markdown" "")
+     ("less-css" "less")
+     ("jade" "Jade")
+     ;; ("less" "")
+     ("css" "")
+     ;; ("magit" "")
+     ("magit" "")
+     ))
+  (cyphejor-mode t)
+  )
+
 
 ;;#############################
 ;; System
