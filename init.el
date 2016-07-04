@@ -873,7 +873,7 @@
     (defun copy-pytest-test-to-clipboard ()
       (interactive)
       (let ((pytestname (string-join (cons (buffer-file-name) (py-test-find-outer-test)) py-test-*test-path-separator*)))
-        (kill-new (format "py.test -x -s %s" pytestname))
+        (kill-new (format "py.test -v -x -s %s" pytestname))
         (message "Copied '%s' to the clipboard." pytestname)
         ))
       )
