@@ -31,6 +31,7 @@
         org-kill-line
         org-return-indent
         org-self-insert-command
+        org-todo
         org-yank
         orgtbl-self-insert-command
         python-indent-shift-left
