@@ -108,7 +108,7 @@
 
 ;; Linum mode
 (add-hook 'prog-mode-hook 'linum-mode)
-(setq linum-format " %4d ")
+(setq linum-format "%4d ")
 
 ;; Curson
 (blink-cursor-mode -1)
@@ -131,12 +131,12 @@
 ;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
 ;; (use-package flatland-theme :ensure t :init (load-theme 'flatland :no-confirm))
 (use-package darkokai-theme :ensure t :init (load-theme 'darkokai :no-confirm))
+;; (use-package seti-theme :ensure t :init (load-theme 'seti :no-confirm))
 ;; (use-package monokai-theme :ensure t :init (load-theme 'monokai :no-confirm))
 ;; (use-package spacemacs-theme :ensure t :init (load-theme 'spacemacs-dark :no-confirm))
 ;; (use-package solarized-theme :ensure t :init (load-theme 'solarized-dark :no-confirm))
 ;; (use-package molokai-theme :ensure t :init (load-theme 'molokai :no-confirm))
 ;; (use-package atom-dark-theme :ensure t :init (load-theme 'atom-dark :no-confirm))
-;; (use-package darkmine-theme :ensure t :init (load-theme 'darkmine :no-confirm))
 ;; (use-package cyberpunk-theme :ensure t :init (load-theme 'cyberpunk :no-confirm))
 ;; (use-package ample-theme :ensure t :init (load-theme 'ample :no-confirm))
 ;; (use-package badger-theme :ensure t :init (load-theme 'badger :no-confirm))
@@ -167,15 +167,17 @@
 
 
 (mw/set-best-font '(
-                    ("Roboto Mono" 14)
-                    ("DejaVu Sans Mono" 15)
                     ("Monaco" 15)
-                    ("Menlo" 15)
                     ("Inconsolata" 16)
+                    ("Anonymous Pro" 16)
+                    ("DejaVu Sans Mono" 15)
+                    ("Monoid Nerd Font" 14)
+                    ("RobotoMono Nerd Font" 14)
+                    ("Roboto Mono" 14)
+                    ("Menlo" 15)
                     ("Ubuntu Mono" 16)
                     ("Droid Sans Mono Dotted" 14)
                     ("Source Code Pro" 14)
-                    ("Anonymous Pro" 14)
                     ("Droid Sans Mono" 14)
                     ("Consolas" 16)
                     ("Liberation Mono" 14)
@@ -725,6 +727,7 @@
   (spaceline-toggle-nyan-cat-on)
   (spaceline-toggle-evil-state-on)
   (spaceline-toggle-buffer-size-off)
+  (spaceline-toggle-buffer-position-off)
   (setq powerline-default-separator 'box)
 
   ;; Appearance
@@ -736,6 +739,7 @@
   ;; (spaceline-spacemacs-theme)
 
   (use-package nyan-mode
+    :disabled t
     :ensure t
     :config
     (nyan-mode t))
