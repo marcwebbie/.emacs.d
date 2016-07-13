@@ -195,36 +195,13 @@
 ;;============================================================
 (load-local "defuns")
 
-;;; Major mode abbrevs
-(add-hook 'emacs-lisp-mode-hook (lambda() (setq mode-name "Ⓔ")))
-(add-hook 'python-mode-hook (lambda() (setq mode-name "Ⓟ")))
-(add-hook 'js2-mode-hook (lambda() (setq mode-name "Ⓙ")))
-(add-hook 'web-mode-hook (lambda() (setq mode-name "Ⓦ")))
-
-;;; Minor Mode diminish
-(eval-after-load "xterm-title" '(diminish 'xterm-title-mode))
-(eval-after-load "hi-lock" '(diminish 'hi-lock-mode))
-(eval-after-load "outline" '(diminish 'outline-minor-mode))
-
 ;;; auto-mode-alist entries
-(add-to-list 'auto-mode-alist '("\\.m$" . octave-mode))
-(add-to-list 'auto-mode-alist '("\\.mom$" . nroff-mode))
 (add-to-list 'auto-mode-alist '("[Mm]akefile" . makefile-mode))
-
 (add-to-list 'auto-mode-alist '(".zshrc$" . shell-script-mode))
 (add-to-list 'auto-mode-alist '(".zshenv$" . shell-script-mode))
 
 ;;; global hook modes
 (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
-
-(defun terminal-notifier-notify (title message)
-  "Show a message with `terminal-notifier-command`."
-  (start-process "terminal-notifier"
-                 "*terminal-notifier*"
-                 (executable-find "terminal-notifier")
-                 "-title" title
-                 "-message" message
-                 "-activate" "org.gnu.Emacs"))
 
 ;;============================================================
 ;; Packages
