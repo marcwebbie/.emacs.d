@@ -167,18 +167,18 @@
 
 
 (mw/set-best-font '(
-                    ("Monaco" 15)
+                    ("Roboto Mono" 16)
+                    ("Droid Sans Mono" 14)
                     ("Inconsolata" 16)
+                    ("Monaco" 15)
                     ("Anonymous Pro" 16)
                     ("DejaVu Sans Mono" 15)
                     ("Monoid Nerd Font" 14)
                     ("RobotoMono Nerd Font" 14)
-                    ("Roboto Mono" 14)
                     ("Menlo" 15)
                     ("Ubuntu Mono" 16)
                     ("Droid Sans Mono Dotted" 14)
                     ("Source Code Pro" 14)
-                    ("Droid Sans Mono" 14)
                     ("Consolas" 16)
                     ("Liberation Mono" 14)
                     ("Code New Roman" 14)
