@@ -763,7 +763,6 @@
   ;; (spaceline-spacemacs-theme)
 
   (use-package nyan-mode
-    :disabled t
     :ensure t
     :config
     (nyan-mode t))
