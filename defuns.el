@@ -418,3 +418,9 @@ Otherwise point moves to beginning of line."
   "Decrement number at point like vim's C-x"
   (interactive)
   (my-change-number-at-point '1-))
+
+
+(defun desktop-notify (title message)
+  "Show a message with `terminal-notifier-command`."
+  (shell-command
+   (format "%s -title %s -message %s -sender org.gnu.Emacs" (executable-find "terminal-notifier") title message)))
