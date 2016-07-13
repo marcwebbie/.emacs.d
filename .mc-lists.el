@@ -58,5 +58,6 @@
         drag-stuff-down
         help-for-help
         js2-mode-show-node
+        org-cycle
         shell-command-on-region
         ))
