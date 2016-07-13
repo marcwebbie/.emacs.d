@@ -571,12 +571,11 @@
   :init
   (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
-(use-package ace-jump-mode
+(use-package avy
   :ensure t
-  :bind (("C-c SPC" . ace-jump-mode)
-         ("C-c C-SPC" . ace-jump-mode-pop-mark))
-  :config
-  (setq ace-jump-mode-case-fold t)
+  :bind (("C-:" . avy-goto-char)
+         ("C-c SPC" . avy-goto-char-2)
+         ("M-g g" . avy-goto-line))
   )
 
 (use-package ace-window
