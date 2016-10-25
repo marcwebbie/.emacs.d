@@ -552,6 +552,7 @@
   :ensure t
   :bind (("C-:" . avy-goto-char)
          ("C-c SPC" . avy-goto-char-2)
+         ("C-;" . avy-goto-word-0)
          ("M-g g" . avy-goto-line))
   )
 
@@ -667,9 +668,9 @@
   (bind-key "a" 'mc/mark-all-like-this region-bindings-mode-map)
   (bind-key "e" 'mc/edit-lines region-bindings-mode-map)
   (bind-key "p" 'mc/mark-previous-like-this region-bindings-mode-map)
-  (bind-key "P" 'mc/unmark-previous-like-this region-bindings-mode-map)
+  (bind-key "P" 'mc/skip-to-previous-like-this region-bindings-mode-map)
   (bind-key "n" 'mc/mark-next-like-this region-bindings-mode-map)
-  (bind-key "N" 'mc/unmark-next-like-this region-bindings-mode-map)
+  (bind-key "N" 'mc/skip-to-next-like-this region-bindings-mode-map)
 
   ;; expand-regions
   (bind-key "f" 'er/mark-defun region-bindings-mode-map)
