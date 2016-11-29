@@ -525,10 +525,9 @@
 
 (use-package avy
   :ensure t
-  :bind (("C-:" . avy-goto-char)
-         ("C-c SPC" . avy-goto-char-2)
-         ("C-;" . avy-goto-word-0)
-         ("M-g g" . avy-goto-line))
+  :bind (("C-:" . avy-goto-char-2)
+         ("C-c SPC" . avy-goto-char)
+         ("C-c C-SPC" . avy-goto-word-0))
   )
 
 (use-package ace-window
