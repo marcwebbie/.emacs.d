@@ -128,32 +128,8 @@
 
 ;; Dark Themes
 ;; ==================================================
-;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
-;; (use-package flatland-theme :ensure t :init (load-theme 'flatland :no-confirm))
-(use-package darkokai-theme :ensure t :init (load-theme 'darkokai :no-confirm))
-;; (use-package seti-theme :ensure t :init (load-theme 'seti :no-confirm))
-;; (use-package monokai-theme :ensure t :init (load-theme 'monokai :no-confirm))
-;; (use-package spacemacs-theme :ensure t :init (load-theme 'spacemacs-dark :no-confirm))
-;; (use-package solarized-theme :ensure t :init (load-theme 'solarized-dark :no-confirm))
-;; (use-package molokai-theme :ensure t :init (load-theme 'molokai :no-confirm))
-;; (use-package atom-dark-theme :ensure t :init (load-theme 'atom-dark :no-confirm))
-;; (use-package cyberpunk-theme :ensure t :init (load-theme 'cyberpunk :no-confirm))
-;; (use-package ample-theme :ensure t :init (load-theme 'ample :no-confirm))
-;; (use-package badger-theme :ensure t :init (load-theme 'badger :no-confirm))
-;; (use-package darktooth-theme :ensure t :init (load-theme 'darktooth :no-confirm))
-;; (use-package gruvbox-theme :ensure t :init (load-theme 'gruvbox :no-confirm))
-;; (use-package zenburn-theme :ensure t :init (load-theme 'zenburn :no-confirm))
-;; (use-package tangotango-theme :ensure t :init (load-theme 'tangotango :no-confirm))
-
-;; Light Themes
-;; ==================================================
-;; (use-package spacemacs-theme :ensure t :init (load-theme 'spacemacs-light :no-confirm))
-;; (use-package leuven-theme :ensure t :init (load-theme 'leuven :no-confirm))
-;; (use-package solarized-theme :ensure t :init (load-theme 'solarized-light :no-confirm))
-;; (use-package hemisu-theme :ensure t :init (load-theme 'hemisu-ligth :no-confirm))
-;; (use-package tango-plus-theme :ensure t :init (load-theme 'tango-plus :no-confirm))
-;; (use-package color-theme-sanityinc-tomorrow :ensure t :init (load-theme 'sanityinc-tomorrow-day :noconfirm))
-;; (use-package ample-theme :ensure t :init (load-theme 'ample-light :no-confirm))
+(use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
+;; (use-package darkokai-theme :ensure t :init (load-theme 'darkokai :no-confirm))
 
 ;; Fonts
 ;; =========================
@@ -167,7 +143,7 @@
 
 
 (mw/set-best-font '(
-                    ("Roboto Mono" 16)
+                    ("Roboto Mono" 20)
                     ("Droid Sans Mono" 14)
                     ("Inconsolata" 16)
                     ("Monaco" 15)
