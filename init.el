@@ -187,8 +187,7 @@
 
 
 ;; Setup window
-(set-fringe-mode '(8 . 0))
-;; (toggle-frame-maximized)
+(toggle-frame-maximized)
 
 ;;============================================================
 ;; Loading
