@@ -128,8 +128,9 @@
 
 ;; Dark Themes
 ;; ==================================================
-(use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
+;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
 ;; (use-package darkokai-theme :ensure t :init (load-theme 'darkokai :no-confirm))
+(use-package ujelly-theme :ensure t :init (load-theme 'ujelly :no-confirm))
 
 ;; Fonts
 ;; =========================
