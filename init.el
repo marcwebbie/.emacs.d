@@ -696,17 +696,25 @@
   (spaceline-toggle-flycheck-info-off)
   (spaceline-toggle-flycheck-error-off)
   (spaceline-toggle-flycheck-warning-off)
-  (spaceline-toggle-nyan-cat-on)
+  (spaceline-toggle-nyan-cat-off)
   (spaceline-toggle-evil-state-on)
   (spaceline-toggle-buffer-size-off)
-  (spaceline-toggle-buffer-position-off)
-  (setq powerline-default-separator 'box)
 
   ;; Appearance
+  ;; (setq powerline-default-separator 'box)
+  ;; (setq powerline-default-separator 'arrow-fade)
+  ;; (setq powerline-default-separator 'bar)
+  (setq powerline-default-separator 'slant)
+  ;; (setq powerline-default-separator 'wave)
+  ;; (setq powerline-default-separator 'utf-8)
+  ;; (setq powerline-default-separator 'curve)
+  ;; (setq powerline-default-separator 'chamfer)
+  ;; (setq powerline-default-separator 'roundstub)
+  (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
+
   (use-package powerline
     :ensure t
-    :init (setq powerline-height (truncate (* 1.0 (frame-char-height)))
-                  powerline-default-separator 'bar))
+    )
   (spaceline-emacs-theme)
   ;; (spaceline-spacemacs-theme)
 
