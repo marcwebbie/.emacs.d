@@ -144,14 +144,16 @@
 
 
 (mw/set-best-font '(
+                    ("UbuntuMono Nerd Font" 20)
                     ("Roboto Mono" 18)
                     ("Droid Sans Mono" 14)
+                    ("Anonymous Pro" 16)
+                    ("AnonymicePowerline Nerd Font" 20)
                     ("Inconsolata" 16)
                     ("Monaco" 15)
-                    ("Anonymous Pro" 16)
+                    ("RobotoMono NF" 18)
                     ("DejaVu Sans Mono" 15)
                     ("Monoid Nerd Font" 14)
-                    ("RobotoMono Nerd Font" 14)
                     ("Menlo" 15)
                     ("Ubuntu Mono" 16)
                     ("Droid Sans Mono Dotted" 14)
@@ -704,10 +706,10 @@
   (spaceline-toggle-buffer-size-off)
 
   ;; Appearance
-  ;; (setq powerline-default-separator 'box)
+  (setq powerline-default-separator 'box)
   ;; (setq powerline-default-separator 'arrow-fade)
   ;; (setq powerline-default-separator 'bar)
-  (setq powerline-default-separator 'slant)
+  ;; (setq powerline-default-separator 'slant)
   ;; (setq powerline-default-separator 'wave)
   ;; (setq powerline-default-separator 'utf-8)
   ;; (setq powerline-default-separator 'curve)
@@ -965,7 +967,6 @@
   :bind (("C-c r" . vr/replace)
          ("C-c q" . vr/query-replace))
   )
-
 
 (use-package puppet-mode
   :defer t
