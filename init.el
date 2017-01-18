@@ -144,7 +144,7 @@
 
 
 (mw/set-best-font '(
-                    ("Roboto Mono" 20)
+                    ("Roboto Mono" 18)
                     ("Droid Sans Mono" 14)
                     ("Inconsolata" 16)
                     ("Monaco" 15)
