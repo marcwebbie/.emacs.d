@@ -258,16 +258,6 @@ Otherwise point moves to beginning of line."
         (buffer-substring (region-beginning) (region-end))
       (read-string "Query: ")))))
 
-(defun youtube ()
-  "Search YouTube with a query or region if any."
-  (interactive)
-  (browse-url
-   (concat
-    "http://www.youtube.com/results?search_query="
-    (url-hexify-string (if mark-active
-                           (buffer-substring (region-beginning) (region-end))
-                         (read-string "Search YouTube: "))))))
-
 (defun finder ()
   "Opens file directory in Finder."
   (interactive)

@@ -211,8 +211,7 @@
   (bind-key "C-x C-c" (λ (if (y-or-n-p "Quit Emacs? ") (save-buffers-kill-emacs))))
 
   ;; Search
-  (bind-key "C-c C-g" 'google)
-  (bind-key "C-c C-y" 'youtube)
+  (bind-key "C-c g" 'google)
 
   ;; Naming
   (bind-key "C-c m -" (lambda () (interactive) (replace-region-by 's-dashed-words)))
