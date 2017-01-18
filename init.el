@@ -197,6 +197,7 @@
   (bind-key "C-a" 'back-to-indentation-or-beginning-of-line)
   (bind-key "C-|" 'align-regexp)
   (bind-key "C-x c" 'copy-file-name-to-clipboard)
+  (bind-key "C-c q" 'query-replace)
 
   (bind-key "M-j" (λ (join-line -1)))
   (bind-key "M-h" 'kill-to-beginning-of-line)
@@ -436,7 +437,6 @@
       )
   )
 
-
 (use-package projectile
   :ensure t
   :init
@@ -464,10 +464,11 @@
   :ensure t
   :demand t
   :bind* (("M-i" . counsel-imenu)
-          ("C-c s a" . counsel-ag)
-          ("C-c s g" . counsel-git-grep)
-          ("C-c s k" . counsel-descbinds)
+          ("C-c c a" . counsel-ag)
+          ("C-c c g" . counsel-git-grep)
+          ("C-c c k" . counsel-descbinds)
           ("C-x C-f" . counsel-find-file)
+          ("C-c C-f" . counsel-recentf)
           )
   :config
   (use-package swiper
@@ -477,21 +478,19 @@
     )
 
   (use-package ivy
-    :bind (("C-c f" . ivy-recentf))
     :config
     (setq ivy-use-virtual-buffers t)
     (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
     (setq ivy-display-style 'fancy)
-    ;; (setq ivy-height 10)
+    (setq ivy-height 10)
     (ivy-mode +1))
 
-  (use-package imenu
-    :init
-    (defun imenu-mark-use-package ()
-      (add-to-list 'imenu-generic-expression
-                   '("use-package"
-                     "\\(^\\s-*(use-package +\\)\\(\\_<.+\\_>\\)" 2)))
-    (add-hook 'emacs-lisp-mode-hook #'imenu-mark-use-package))
+
+  (defun imenu-mark-use-package ()
+    (add-to-list 'imenu-generic-expression
+                 '("use-package"
+                   "\\(^\\s-*(use-package +\\)\\(\\_<.+\\_>\\)" 2)))
+  (add-hook 'emacs-lisp-mode-hook #'imenu-mark-use-package)
 
   ;; Keybindings
   (global-set-key [remap execute-extended-command] #'counsel-M-x)
@@ -525,9 +524,7 @@
 
 (use-package avy
   :ensure t
-  :bind (("C-:" . avy-goto-char-2)
-         ("C-c SPC" . avy-goto-char)
-         ("C-c C-SPC" . avy-goto-word-0))
+  :bind (("C-c SPC" . avy-goto-char))
   )
 
 (use-package ace-window
@@ -554,7 +551,6 @@
   :diminish company-mode
   :init
   (add-hook 'prog-mode-hook 'global-company-mode)
-
   :config
   (setq company-tooltip-limit 20) ;; bigger popup window
   (setq company-idle-delay 0.5)   ;; decrease delay before autocompletion popup shows
@@ -891,7 +887,7 @@
   :demand t)
 
 (use-package browse-at-remote
-  :bind (("C-c g g" . browse-at-remote))
+  :bind (("C-c C-g" . browse-at-remote))
   :ensure t)
 
 (use-package pig-mode
@@ -951,6 +947,14 @@
 (use-package php-mode
   :defer t
   :ensure t)
+
+(use-package visual-regexp-steroids
+  :ensure t
+  :defer t
+  :bind (("C-c r" . vr/replace)
+         ("C-c q" . vr/query-replace))
+  )
+
 
 (use-package puppet-mode
   :defer t
