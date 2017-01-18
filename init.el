@@ -469,35 +469,38 @@
           ("C-c c k" . counsel-descbinds)
           ("C-x C-f" . counsel-find-file)
           ("C-c C-f" . counsel-recentf)
+          ("C-c C-r" . ivy-resume)
+          ("C-s" . swiper)
+          ("C-r" . swiper)
+          ("M-x" . counsel-M-x)
+          ("C-x h f" . counsel-describe-function)
+          ("C-x h v" . counsel-describe-variable)
+          ("C-x C-f" . counsel-find-file)
           )
   :config
+
   (use-package swiper
-    :ensure t
-    :bind (("C-s" . swiper)
-           ("C-r" . swiper))
-    )
+    :ensure t)
 
   (use-package ivy
+    :ensure t
     :config
+    ;; (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
+    ;; (setq ivy-display-style 'fancy)
+    ;; (setq ivy-height 10)
     (setq ivy-use-virtual-buffers t)
-    (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
-    (setq ivy-display-style 'fancy)
-    (setq ivy-height 10)
-    (ivy-mode +1))
+    (setq ivy-count-format "(%d/%d) ")
+    (ivy-mode +1)
+    )
 
+  (use-package ivy-hydra
+    :ensure t)
 
   (defun imenu-mark-use-package ()
     (add-to-list 'imenu-generic-expression
                  '("use-package"
                    "\\(^\\s-*(use-package +\\)\\(\\_<.+\\_>\\)" 2)))
   (add-hook 'emacs-lisp-mode-hook #'imenu-mark-use-package)
-
-  ;; Keybindings
-  (global-set-key [remap execute-extended-command] #'counsel-M-x)
-  (global-set-key [remap describe-function] #'counsel-describe-function)
-  (global-set-key [remap describe-variable] #'counsel-describe-variable)
-  (global-set-key [remap imenu] #'counsel-imenu)
-  (global-set-key [remap find-file] #'counsel-find-file)
   )
 
 (use-package recentf
