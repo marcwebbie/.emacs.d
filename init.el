@@ -873,7 +873,7 @@
       (interactive)
       (let ((nosetestname (format "%s:%s" buffer-file-name (nose-py-testable))))
         (when nosetestname
-          (kill-new (format "nosetests -x -s %s" nosetestname))
+          (kill-new (format "nosetests --nologcapture -x -s %s" nosetestname))
           (message "Copied '%s' to the clipboard." nosetestname)))))
   )
 
