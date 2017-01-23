@@ -120,7 +120,9 @@ compilation command."
                     'keymap tdd-mode-line-map
                     'mouse-face 'mode-line-highlight
                     'help-echo (concat "Tests succeeded\n"
-                                       "mouse-1: Switch to test buffer"))))
+                                       "mouse-1: Switch to test buffer")))
+  (desktop-notify "Tests" "passing" "~/.emacs.d/img/green.png")
+  )
 
 (defun tdd-failure ()
   "Set the TDD indicator to red."
@@ -131,7 +133,9 @@ compilation command."
                     'keymap tdd-mode-line-map
                     'mouse-face 'mode-line-highlight
                     'help-echo (concat "Tests running\n"
-                                       "mouse-1: Switch to test buffer"))))
+                                       "mouse-1: Switch to test buffer")))
+  (desktop-notify "Tests" "failing" "~/.emacs.d/img/red.png")
+  )
 
 (defun tdd-waiting ()
   "Set the TDD indicator to mark an ongoing compilation run."

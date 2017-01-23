@@ -129,8 +129,8 @@
 ;; Dark Themes
 ;; ==================================================
 ;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
-;; (use-package darkokai-theme :ensure t :init (load-theme 'darkokai :no-confirm))
-(use-package ujelly-theme :ensure t :init (load-theme 'ujelly :no-confirm))
+(use-package darkokai-theme :ensure t :init (load-theme 'darkokai :no-confirm))
+;; (use-package ujelly-theme :ensure t :init (load-theme 'ujelly :no-confirm))
 
 ;; Fonts
 ;; =========================
@@ -434,7 +434,6 @@
 (use-package compile
   :config
   (defadvice compilation-start (before mw-pytest-compilation-start-before (command &optional mode name-function highlight-regexp) activate)
-      (message "Set compile command: %s" command)
       (setq compile-command command)
       )
   )
@@ -804,7 +803,8 @@
               ("C-<f9>" . mw/python--add-pudb-breakpoint)
               ("M-<f9>" . mw/python--add-ipdb-breakpoint)
               ("C-M-<f9>" . mw/python--remove-breakpoints)
-         )
+              ("C-c t s" . mw/set-django-settings-module)
+              )
   :config
   ;; Defaults
   (setq-default python-indent 4)

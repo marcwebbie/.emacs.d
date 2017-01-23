@@ -356,11 +356,9 @@ Otherwise point moves to beginning of line."
 (defun mw/set-django-settings-module (django-settings-module)
   "set django settings module environment variable"
   (interactive "sDJANGO_SETTINGS_MODULE: ")
-  (progn
-    (setenv "DJANGO_SETTINGS_MODULE" django-settings-module)
-    (message "DJANGO_SETTINGS_MODULE=%s" django-settings-module)))
+  (setenv "DJANGO_SETTINGS_MODULE" django-settings-module t))
 
-(defun mw/set-elpy-test-runners ()
+  (defun mw/set-elpy-test-runners ()
   "Set elpy test runners"
   (let ((python (executable-find "python")))
     (setq elpy-test-django-runner-command (list python "manage.py" "test" "--noinput"))
@@ -410,7 +408,7 @@ Otherwise point moves to beginning of line."
   (my-change-number-at-point '1-))
 
 
-(defun desktop-notify (title message)
+(defun desktop-notify (title message icon)
   "Show a message with `terminal-notifier-command`."
   (shell-command
-   (format "%s -title %s -message %s -sender org.gnu.Emacs" (executable-find "terminal-notifier") title message)))
+   (format "%s -title %s -message %s -sender org.gnu.Emacs -appIcon %s" (executable-find "terminal-notifier") title message icon)))
