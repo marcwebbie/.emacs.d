@@ -74,7 +74,6 @@
 (setq *spell-program* (which "aspell"))
 
 ;; Auto save buffers
-(setq auto-save-mode  nil)
 (add-hook 'before-save-hook 'whitespace-cleanup)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 

@@ -60,4 +60,5 @@
         js2-mode-show-node
         org-cycle
         shell-command-on-region
+        zzz-up-to-char
         ))
