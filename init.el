@@ -661,19 +661,7 @@
 (use-package subword
   :diminish subword-mode
   :init
-  (global-subword-mode 1)
-  :config
-  (defadvice subword-upcase (before upcase-word-advice activate)
-    (unless (looking-back "\\b")
-      (backward-word)))
-
-  (defadvice subword-downcase (before downcase-word-advice activate)
-    (unless (looking-back "\\b")
-      (backward-word)))
-
-  (defadvice subword-capitalize (before capitalize-word-advice activate)
-    (unless (looking-back "\\b")
-      (backward-word))))
+  (global-subword-mode 1))
 
 (use-package zzz-to-char
   :ensure t
