@@ -863,8 +863,7 @@
       )
 
   (use-package nose
-    :ensure t
-    :demand t
+    :load-path "vendor"
     :bind* (:map python-mode-map
                  ("C-c t n" . nosetests-one)
                  ("C-c t N" . copy-nosetest-test-to-clipboard))
