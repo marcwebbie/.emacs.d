@@ -339,13 +339,8 @@
   :bind (("C-x g" . magit-status)
          ("C-c v b" . magit-blame))
   :config
-  (setq magit-last-seen-setup-instructions "1.4.0")
-  (setq magit-revert-buffers t)
-  (use-package fullframe
-    :ensure t
-    :config
-    (fullframe magit-status magit-mode-quit-window)
-    )
+  (magit-auto-revert-mode +1)
+  (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
   (bind-key "q" 'magit-quit-session magit-status-mode-map))
 
 (use-package diff-hl
