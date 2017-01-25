@@ -441,7 +441,7 @@
 (use-package projectile
   :ensure t
   :init
-  (projectile-global-mode t)
+  (projectile-mode t)
   :config
   (setq projectile-enable-caching t
         projectile-use-git-grep t
