@@ -440,10 +440,7 @@
   (setq projectile-enable-caching t
         projectile-use-git-grep t
         projectile-switch-project-action 'projectile-dired
-        projectile-require-project-root nil
-        projectile-mode-line '(:eval (format " P[%s]" (projectile-project-name)))
-        projectile-completion-system 'ivy
-        )
+        projectile-completion-system 'ivy)
   (add-to-list 'projectile-globally-ignored-files ".DS_Store")
   (add-to-list 'projectile-globally-ignored-files "*.pyc")
   (add-to-list 'projectile-globally-ignored-files "*.python-version")
@@ -480,11 +477,8 @@
   (use-package ivy
     :ensure t
     :config
-    ;; (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
-    ;; (setq ivy-display-style 'fancy)
-    ;; (setq ivy-height 10)
+    (setq ivy-display-style 'fancy)
     (setq ivy-use-virtual-buffers t)
-    (setq ivy-count-format "(%d/%d) ")
     (ivy-mode +1)
     )
 
