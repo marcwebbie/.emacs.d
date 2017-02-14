@@ -679,6 +679,7 @@
   (spaceline-toggle-nyan-cat-off)
   (spaceline-toggle-evil-state-on)
   (spaceline-toggle-buffer-size-off)
+  (spaceline-toggle-version-control-off)
 
   ;; Appearance
   (setq powerline-default-separator 'box)
@@ -695,8 +696,7 @@
   (use-package powerline
     :ensure t
     )
-  (spaceline-emacs-theme)
-  ;; (spaceline-spacemacs-theme)
+  (spaceline-spacemacs-theme)
 
   (use-package nyan-mode
     :ensure t
