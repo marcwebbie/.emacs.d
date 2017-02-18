@@ -465,8 +465,6 @@
           ("C-s" . swiper)
           ("C-r" . swiper)
           ("M-x" . counsel-M-x)
-          ("C-x h f" . counsel-describe-function)
-          ("C-x h v" . counsel-describe-variable)
           ("C-x C-f" . counsel-find-file)
           )
   :config
