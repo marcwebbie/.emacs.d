@@ -811,7 +811,10 @@
       :ensure t
       :init
       (eval-after-load 'company
-        '(add-to-list 'company-backends 'company-anaconda))))
+        '(add-to-list 'company-backends 'company-anaconda)))
+    (remove-hook 'anaconda-mode-response-read-fail-hook
+                 'anaconda-mode-show-unreadable-response)
+    )
 
   (use-package pip-requirements
     :ensure t
