@@ -127,8 +127,9 @@
 
 ;; Dark Themes
 ;; ==================================================
-;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
-(use-package darkokai-theme :ensure t :init (load-theme 'darkokai :no-confirm))
+;; (use-package monokai-theme :ensure t :init (load-theme 'material :no-confirm))
+(use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
+;; (use-package darkokai-theme :ensure t :init (load-theme 'darkokai :no-confirm))
 ;; (use-package ujelly-theme :ensure t :init (load-theme 'ujelly :no-confirm))
 
 ;; Fonts
@@ -143,8 +144,8 @@
 
 
 (mw/set-best-font '(
+                    ("Roboto Mono" 16)
                     ("UbuntuMono Nerd Font" 20)
-                    ("Roboto Mono" 18)
                     ("Droid Sans Mono" 14)
                     ("Anonymous Pro" 16)
                     ("AnonymicePowerline Nerd Font" 20)
