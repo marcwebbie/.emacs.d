@@ -43,6 +43,7 @@
         sp-backward-sexp
         sp-delete-char
         sp-forward-sexp
+        sp-forward-slurp-sexp
         sp-splice-sexp
         wdired-exit
         yaml-electric-backspace
