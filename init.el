@@ -127,8 +127,9 @@
 
 ;; Dark Themes
 ;; ==================================================
-;; (use-package monokai-theme :ensure t :init (load-theme 'material :no-confirm))
-(use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
+(use-package monokai-theme :ensure t :init (load-theme 'material :no-confirm))
+;; (use-package prassee-theme :ensure t :init (load-theme 'material :no-confirm))
+;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
 ;; (use-package darkokai-theme :ensure t :init (load-theme 'darkokai :no-confirm))
 ;; (use-package ujelly-theme :ensure t :init (load-theme 'ujelly :no-confirm))
 
@@ -144,18 +145,18 @@
 
 
 (mw/set-best-font '(
-                    ("Roboto Mono" 16)
-                    ("UbuntuMono Nerd Font" 20)
-                    ("Droid Sans Mono" 14)
+                    ("Roboto Mono" 14)
                     ("Anonymous Pro" 16)
+                    ("Ubuntu Mono" 16)
+                    ("UbuntuMono Nerd Font" 14)
+                    ("Menlo" 16)
+                    ("Droid Sans Mono" 14)
                     ("AnonymicePowerline Nerd Font" 20)
                     ("Inconsolata" 16)
                     ("Monaco" 15)
                     ("RobotoMono NF" 18)
                     ("DejaVu Sans Mono" 15)
                     ("Monoid Nerd Font" 14)
-                    ("Menlo" 15)
-                    ("Ubuntu Mono" 16)
                     ("Droid Sans Mono Dotted" 14)
                     ("Source Code Pro" 14)
                     ("Consolas" 16)
@@ -457,9 +458,9 @@
   :ensure t
   :demand t
   :bind* (("M-i" . counsel-imenu)
-          ("C-c c a" . counsel-ag)
-          ("C-c c g" . counsel-git-grep)
-          ("C-c c k" . counsel-descbinds)
+          ("C-c s a" . counsel-ag)
+          ("C-c s g" . counsel-git-grep)
+          ("C-c s k" . counsel-descbinds)
           ("C-x C-f" . counsel-find-file)
           ("C-c C-f" . counsel-recentf)
           ("C-c C-r" . ivy-resume)
