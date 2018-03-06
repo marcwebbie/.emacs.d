@@ -127,10 +127,10 @@
 
 ;; Dark Themes
 ;; ==================================================
-(use-package monokai-theme :ensure t :init (load-theme 'material :no-confirm))
+;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
 ;; (use-package prassee-theme :ensure t :init (load-theme 'material :no-confirm))
 ;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
-;; (use-package darkokai-theme :ensure t :init (load-theme 'darkokai :no-confirm))
+(use-package darkokai-theme :ensure t :init (load-theme 'darkokai :no-confirm))
 ;; (use-package ujelly-theme :ensure t :init (load-theme 'ujelly :no-confirm))
 
 ;; Fonts
@@ -229,7 +229,8 @@
   (bind-key "C-c . -" 'my-decrement-number-at-point)
   )
 
-(use-package diminish)
+(use-package diminish
+  :disable t)
 
 ;;#############################
 ;; Interface
