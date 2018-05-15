@@ -230,7 +230,7 @@
   )
 
 (use-package diminish
-  :disable t)
+  :disabled t)
 
 ;;#############################
 ;; Interface
@@ -742,6 +742,23 @@
               (setq web-mode-script-padding 2)
               (setq web-mode-markup-indent-offset 2)
               (define-key web-mode-map [(return)] 'newline-and-indent))))
+
+(use-package nov
+    :ensure t
+    :mode (("\\.epub\\'" . nov-mode)
+         ("\\.html\\.erb\\'" . web-mode)
+         ("\\.html\\.ejs\\'" . web-mode)
+         ("\\.ejs\\'" . web-mode)
+         ("\\.mustache\\'" . web-mode))
+    )
+
+(use-package google-translate
+  :ensure t
+  :bind (("C-c t" . google-translate-at-point)
+         ("C-c T" . google-translate-query-translate))
+  :config
+  (require 'google-translate-default-ui)
+  )
 
 (use-package jinja2-mode
   :ensure t

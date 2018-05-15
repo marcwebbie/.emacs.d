@@ -45,6 +45,7 @@
         sp-forward-sexp
         sp-forward-slurp-sexp
         sp-splice-sexp
+        text-scale-adjust
         wdired-exit
         yaml-electric-backspace
         yaml-electric-dash-and-dot
