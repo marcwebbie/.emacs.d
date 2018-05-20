@@ -128,9 +128,9 @@
 ;; Dark Themes
 ;; ==================================================
 ;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
-;; (use-package prassee-theme :ensure t :init (load-theme 'material :no-confirm))
-;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
-(use-package darkokai-theme :ensure t :init (load-theme 'darkokai :no-confirm))
+;; (use-package flatui-theme :ensure t :init (load-theme 'flatui :no-confirm))
+(use-package ample-theme :ensure t :init (load-theme 'ample :no-confirm))
+;; (use-package darkokai-theme :ensure t :init (load-theme 'darkokai :no-confirm))
 ;; (use-package ujelly-theme :ensure t :init (load-theme 'ujelly :no-confirm))
 
 ;; Fonts
