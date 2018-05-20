@@ -38,3 +38,4 @@ anaconda-mode/
 /.python-environments/
 flycheck_init.el
 custom.el
+/nov-places
