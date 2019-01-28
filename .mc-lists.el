@@ -5,6 +5,7 @@
       '(
         back-to-indentation-or-beginning-of-line
         beginning-of-buffer
+        beginning-of-defun
         comment-or-uncomment-current-line-or-region
         dired-back-to-start-of-files
         dired-toggle-marks
@@ -23,6 +24,7 @@
         kmacro-end-or-call-macro
         markdown-cycle
         markdown-exdent-or-delete
+        markdown-outdent-or-delete
         my-increment-number-at-point
         org-beginning-of-line
         org-delete-char
@@ -58,6 +60,7 @@
         counsel-M-x
         describe-key
         drag-stuff-down
+        er/mark-python-block
         help-for-help
         js2-mode-show-node
         org-cycle

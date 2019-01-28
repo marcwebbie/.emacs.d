@@ -129,8 +129,9 @@
 ;; ==================================================
 ;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
 ;; (use-package flatui-theme :ensure t :init (load-theme 'flatui :no-confirm))
-(use-package ample-theme :ensure t :init (load-theme 'ample :no-confirm))
-;; (use-package darkokai-theme :ensure t :init (load-theme 'darkokai :no-confirm))
+;; (use-package ample-theme :ensure t :init (load-theme 'ample :no-confirm))
+(use-package darkokai-theme :ensure t :init (load-theme 'darkokai :no-confirm))
+;; (use-package monokai-theme :ensure t :init (load-theme 'darkokai :no-confirm))
 ;; (use-package ujelly-theme :ensure t :init (load-theme 'ujelly :no-confirm))
 
 ;; Fonts
@@ -304,11 +305,10 @@
 (use-package super-save
   :ensure t
   :config
-  (setq super-save-auto-save-when-idle t
-        super-save-idle-duration 5
-        super-save-triggers (append super-save-triggers '("magit-status")))
-  (super-save-mode +1)
-  )
+    (setq super-save-auto-save-when-idle t
+          super-save-idle-duration 5)
+    (super-save-mode +1)
+    )
 
 (use-package conf-mode
   :mode ".*\\.coveragerc")
@@ -343,7 +343,8 @@
   :config
   (magit-auto-revert-mode +1)
   (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
-  (bind-key "q" 'magit-quit-session magit-status-mode-map))
+  (bind-key "q" 'magit-quit-session magit-status-mode-map)
+  )
 
 (use-package diff-hl
   :ensure t
@@ -437,6 +438,7 @@
 
 (use-package projectile
   :ensure t
+  :bind ("C-c p" . 'projectile-command-map)
   :init
   (projectile-mode t)
   :config
