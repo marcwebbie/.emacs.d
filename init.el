@@ -130,9 +130,11 @@
 ;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
 ;; (use-package flatui-theme :ensure t :init (load-theme 'flatui :no-confirm))
 ;; (use-package ample-theme :ensure t :init (load-theme 'ample :no-confirm))
-(use-package darkokai-theme :ensure t :init (load-theme 'darkokai :no-confirm))
-;; (use-package monokai-theme :ensure t :init (load-theme 'darkokai :no-confirm))
+;; (use-package darkokai-theme :ensure t :init (load-theme 'darkokai :no-confirm))
+(use-package monokai-theme :ensure t :init (load-theme 'monokai :no-confirm))
 ;; (use-package ujelly-theme :ensure t :init (load-theme 'ujelly :no-confirm))
+
+(load-theme 'monokai)
 
 ;; Fonts
 ;; =========================
@@ -226,8 +228,8 @@
   (bind-key "C-c m C" (lambda () (interactive) (replace-region-by 's-upper-camel-case)))
 
   ;; Number
-  (bind-key "C-c . +" 'my-increment-number-at-point)
-  (bind-key "C-c . -" 'my-decrement-number-at-point)
+  (bind-key "C-c =" 'my-increment-number-decimal)
+  (bind-key "C-c -" 'my-decrement-number-decimal)
   )
 
 (use-package diminish
@@ -375,6 +377,10 @@
   (if (fboundp #'save-place-mode)
       (save-place-mode +1)
     (setq-default save-place t)))
+
+(use-package ace-jump-mode
+  :ensure t
+  :bind ("C-c a" . ace-jump-mode))
 
 (use-package eww
   :bind ("C-c o" . w3mext-open-link-or-image-or-url)
