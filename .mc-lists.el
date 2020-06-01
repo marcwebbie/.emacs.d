@@ -26,6 +26,7 @@
         markdown-exdent-or-delete
         markdown-outdent-or-delete
         my-increment-number-at-point
+        my-increment-number-decimal
         org-beginning-of-line
         org-delete-char
         org-end-of-line
