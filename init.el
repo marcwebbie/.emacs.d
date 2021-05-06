@@ -130,11 +130,9 @@
 ;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
 ;; (use-package flatui-theme :ensure t :init (load-theme 'flatui :no-confirm))
 ;; (use-package ample-theme :ensure t :init (load-theme 'ample :no-confirm))
-(use-package darkokai-theme :ensure t :init (load-theme 'darkokai :no-confirm))
+;; (use-package darkokai-theme :ensure t :init (load-theme 'darkokai :no-confirm))
 ;; (use-package monokai-theme :ensure t :init (load-theme 'monokai :no-confirm))
 ;; (use-package ujelly-theme :ensure t :init (load-theme 'ujelly :no-confirm))
-
-(load-theme 'monokai)
 
 ;; Fonts
 ;; =========================
@@ -148,13 +146,13 @@
 
 
 (mw/set-best-font '(
-                    ("Inconsolata" 16)
-                    ("Menlo" 14)
-                    ("Ubuntu Mono" 16)
+                    ("Droid Sans Mono" 14)
+                    ("Ubuntu Mono" 14)
+                    ("Menlo" 12)
+                    ("Inconsolata" 14)
                     ("Roboto Mono" 14)
                     ("Anonymous Pro" 16)
                     ("UbuntuMono Nerd Font" 14)
-                    ("Droid Sans Mono" 14)
                     ("AnonymicePowerline Nerd Font" 20)
                     ("Monaco" 15)
                     ("RobotoMono NF" 18)
@@ -192,6 +190,12 @@
 (use-package s
   :ensure t)
 
+(use-package restclient
+  :ensure t
+  :mode (".*\\.http" . restclient-mode)
+  )
+
+(setq js-indent-level 2)
 (use-package bind-key
   :ensure s
   :config
@@ -238,6 +242,26 @@
 ;;#############################
 ;; Interface
 ;;#############################
+
+(use-package doom-themes
+  :ensure t
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  (load-theme 'doom-one t)
+
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+
+  ;; Enable custom neotree theme (all-the-icons must be installed!)
+  (doom-themes-neotree-config)
+  ;; or for treemacs users
+  (setq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
+  (doom-themes-treemacs-config)
+
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))
 
 (use-package uniquify
   :config
@@ -778,7 +802,7 @@
   :ensure t
   :mode ".*\\.jade")
 
-(use-package js2-mode
+(use-package rjsx-mode
   :ensure t
   :mode ".*\\.js"
   :interpreter "node"
@@ -801,7 +825,7 @@
   :init
   (require 'python)
   :bind (:map python-mode-map
-              ("<f9>" . mw/python--add-pdb-breakpoint)
+              ("<f9>" . mw/python--add-pudb-breakpoint)
               ("C-<f9>" . mw/python--add-pudb-breakpoint)
               ("M-<f9>" . mw/python--add-ipdb-breakpoint)
               ("C-M-<f9>" . mw/python--remove-breakpoints)
@@ -824,6 +848,12 @@
     (add-hook 'window-configuration-change-hook 'auto-virtualenv-set-virtualenv)
     (add-hook 'focus-in-hook 'auto-virtualenv-set-virtualenv))
 
+  ;; (use-package jedi
+  ;;   :ensure t
+  ;;   :config
+  ;;   (setq jedi:complete-on-dot t)
+  ;;   )
+
   (use-package anaconda-mode
     :ensure t
     :demand t
@@ -832,15 +862,16 @@
     (add-hook 'python-mode-hook 'anaconda-mode)
     (setq company-tooltip-align-annotations t
           company-dabbrev-downcase nil
-          company-dabbrev-code-everywhere t)
-
+          company-dabbrev-code-everywhere t
+          anaconda-mode-localhost-address "localhost")
+    (remove-hook 'anaconda-mode-response-read-fail-hook
+                 'anaconda-mode-show-unreadable-response)
     (use-package company-anaconda
       :ensure t
       :init
       (eval-after-load 'company
         '(add-to-list 'company-backends 'company-anaconda)))
-    (remove-hook 'anaconda-mode-response-read-fail-hook
-                 'anaconda-mode-show-unreadable-response)
+
     )
 
   (use-package pip-requirements
@@ -877,7 +908,7 @@
       (interactive)
       (let ((nosetestname (format "%s:%s" buffer-file-name (nose-py-testable))))
         (when nosetestname
-          (kill-new (format "nosetests --nologcapture -x -s %s" nosetestname))
+          (kill-new (format "python manage.py test --nologcapture -x -s %s" nosetestname))
           (message "Copied '%s' to the clipboard." nosetestname)))))
   )
 

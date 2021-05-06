@@ -48,7 +48,9 @@
         sp-forward-sexp
         sp-forward-slurp-sexp
         sp-splice-sexp
+        sp-split-sexp
         text-scale-adjust
+        wdired-capitalize-word
         wdired-exit
         yaml-electric-backspace
         yaml-electric-dash-and-dot
@@ -60,10 +62,15 @@
         coffee-dedent-line-backspace
         counsel-M-x
         describe-key
+        diff-hl-revert-hunk
         drag-stuff-down
         er/mark-python-block
+        goto-line-with-feedback
         help-for-help
+        ivy-switch-buffer
         js2-mode-show-node
+        mouse-buffer-menu
+        mouse-set-region
         org-cycle
         shell-command-on-region
         zzz-up-to-char
