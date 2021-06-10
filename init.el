@@ -146,6 +146,7 @@
 
 
 (mw/set-best-font '(
+                    ("Consolas" 14)
                     ("Droid Sans Mono" 14)
                     ("Ubuntu Mono" 14)
                     ("Menlo" 12)
@@ -160,7 +161,6 @@
                     ("Monoid Nerd Font" 14)
                     ("Droid Sans Mono Dotted" 14)
                     ("Source Code Pro" 14)
-                    ("Consolas" 16)
                     ("Liberation Mono" 14)
                     ("Code New Roman" 14)
                     ("Fantasque Sans Mono" 18)
@@ -879,11 +879,20 @@
     :mode "\\requirements.txt\\'"
     :config (pip-requirements-mode))
 
+  (use-package python-pytest
+    :ensure t
+    :custom
+    (python-pytest-confirm nil)
+    :bind* (:map python-mode-map
+                 ("C-c t p" . python-pytest-function)
+                 ("C-c t P" . copy-pytest-test-to-clipboard)
+                 )
+    )
+
   (use-package py-test
     :ensure t
     :demand t
     :bind* (:map python-mode-map
-                 ("C-c t p" . py-test-run-test-at-point)
                  ("C-c t P" . copy-pytest-test-to-clipboard)
                  ("C-c t d" . py-test-run-directory)
                  ("C-c t m" . py-test-run-file)
