@@ -884,7 +884,7 @@
     :custom
     (python-pytest-confirm nil)
     :bind* (:map python-mode-map
-                 ("C-c t p" . python-pytest-function)
+                 ("C-c t p" . python-pytest-function-dwim)
                  ("C-c t P" . copy-pytest-test-to-clipboard)
                  )
     )
