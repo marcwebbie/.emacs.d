@@ -887,25 +887,16 @@
                  ("C-c t p" . python-pytest-function-dwim)
                  ("C-c t P" . copy-pytest-test-to-clipboard)
                  )
-    )
-
-  (use-package py-test
-    :ensure t
-    :demand t
-    :bind* (:map python-mode-map
-                 ("C-c t P" . copy-pytest-test-to-clipboard)
-                 ("C-c t d" . py-test-run-directory)
-                 ("C-c t m" . py-test-run-file)
-                 )
     :config
-    (setq py-test-*default-buffer-name* "*compilation*")
     (defun copy-pytest-test-to-clipboard ()
       (interactive)
-      (let ((pytestname (string-join (cons (buffer-file-name) (py-test-find-outer-test)) py-test-*test-path-separator*)))
-        (kill-new (format "py.test -v -x -s %s" pytestname))
-        (message "Copied '%s' to the clipboard." pytestname)
-        ))
+      (let ((testname (format "pytest --color=yes -s -x %s::%s" (buffer-file-name) (s-replace "." "::" (python-pytest--current-defun)))))
+        (kill-new testname)
+        (message "Copied '%s' to the clipboard." testname)
+        )
       )
+    )
+
 
   (use-package nose
     :load-path "vendor"
