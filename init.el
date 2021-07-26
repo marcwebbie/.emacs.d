@@ -146,11 +146,11 @@
 
 
 (mw/set-best-font '(
+                    ("Inconsolata" 16)
+                    ("Ubuntu Mono" 14)
                     ("Consolas" 14)
                     ("Droid Sans Mono" 14)
-                    ("Ubuntu Mono" 14)
                     ("Menlo" 12)
-                    ("Inconsolata" 14)
                     ("Roboto Mono" 14)
                     ("Anonymous Pro" 16)
                     ("UbuntuMono Nerd Font" 14)
