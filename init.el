@@ -146,16 +146,16 @@
 
 
 (mw/set-best-font '(
-                    ("Inconsolata" 16)
-                    ("Ubuntu Mono" 14)
-                    ("Consolas" 14)
-                    ("Droid Sans Mono" 14)
-                    ("Menlo" 12)
+                    ("Menlo" 14)
                     ("Roboto Mono" 14)
+                    ("Monaco" 14)
+                    ("Consolas" 14)
+                    ("Ubuntu Mono" 14)
+                    ("Inconsolata" 16)
+                    ("Droid Sans Mono" 14)
                     ("Anonymous Pro" 16)
                     ("UbuntuMono Nerd Font" 14)
                     ("AnonymicePowerline Nerd Font" 20)
-                    ("Monaco" 15)
                     ("RobotoMono NF" 18)
                     ("DejaVu Sans Mono" 15)
                     ("Monoid Nerd Font" 14)
@@ -249,7 +249,7 @@
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (load-theme 'doom-snazzy t)
+  (load-theme 'doom-dark+ t)
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
@@ -386,10 +386,6 @@
 (use-package git-timemachine
   :ensure t
   :bind ("C-c v t" . git-timemachine))
-
-(use-package gitconfig-mode
-  :ensure t
-  :mode ".*\\.gitconfig")
 
 
 ;;#############################
@@ -840,19 +836,28 @@
   (add-hook 'python-mode-hook 'mw/python--add-todo-fixme-bug-hightlight)
   (add-hook 'python-mode-hook 'mw/python--add-debug-highlight)
 
-  (use-package auto-virtualenv
-    :ensure t
-    :config
-    (setq auto-virtualenv-dir "~/.virtualenvs")
-    (add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv)
-    (add-hook 'window-configuration-change-hook 'auto-virtualenv-set-virtualenv)
-    (add-hook 'focus-in-hook 'auto-virtualenv-set-virtualenv))
-
-  ;; (use-package jedi
+  ;; (use-package auto-virtualenv
   ;;   :ensure t
+  ;;   :init
+  ;;   (use-package pyvenv
+  ;;     :ensure t)
   ;;   :config
-  ;;   (setq jedi:complete-on-dot t)
+  ;;   (require 'auto-virtualenv)
+  ;;   ;; (setq auto-virtualenv-custom-virtualenv-path ".custom-virtualenv")
+  ;;   (add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv)
+  ;;   (add-hook 'projectile-after-switch-project-hook 'auto-virtualenv-set-virtualenv)  ;; If using projectile
   ;;   )
+
+  (use-package auto-virtualenv
+    :load-path "vendor"
+    :init
+    (use-package pyvenv
+      :ensure t)
+    :config
+    (require 'auto-virtualenv)
+    (add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv)
+    (add-hook 'projectile-after-switch-project-hook 'auto-virtualenv-set-virtualenv)
+    )
 
   (use-package anaconda-mode
     :ensure t
