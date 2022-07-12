@@ -121,19 +121,6 @@
       scroll-margin 10
       auto-window-vscroll nil)
 
-;; Themes
-;; ==================================================
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-
-;; Dark Themes
-;; ==================================================
-;; (use-package material-theme :ensure t :init (load-theme 'material :no-confirm))
-;; (use-package flatui-theme :ensure t :init (load-theme 'flatui :no-confirm))
-;; (use-package ample-theme :ensure t :init (load-theme 'ample :no-confirm))
-;; (use-package darkokai-theme :ensure t :init (load-theme 'darkokai :no-confirm))
-;; (use-package monokai-theme :ensure t :init (load-theme 'monokai :no-confirm))
-;; (use-package ujelly-theme :ensure t :init (load-theme 'ujelly :no-confirm))
-
 ;; Fonts
 ;; =========================
 (defun mw/set-best-font (fonts)
