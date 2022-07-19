@@ -866,6 +866,11 @@
 
     )
 
+  (use-package jenkinsfile-mode
+    :ensure t
+    :mode ".*\\.jenkinsfile"
+    )
+
   (use-package pip-requirements
     :ensure t
     :mode "\\requirements.txt\\'"
