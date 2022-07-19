@@ -823,28 +823,26 @@
   (add-hook 'python-mode-hook 'mw/python--add-todo-fixme-bug-hightlight)
   (add-hook 'python-mode-hook 'mw/python--add-debug-highlight)
 
+  (use-package auto-virtualenv
+    :ensure t
+    :init
+    (use-package pyvenv
+      :ensure t)
+    :config
+    (add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv)
+    (add-hook 'projectile-after-switch-project-hook 'auto-virtualenv-set-virtualenv)  ;; If using projectile
+    )
+
   ;; (use-package auto-virtualenv
-  ;;   :ensure t
+  ;;   :load-path "vendor"
   ;;   :init
   ;;   (use-package pyvenv
   ;;     :ensure t)
   ;;   :config
   ;;   (require 'auto-virtualenv)
-  ;;   ;; (setq auto-virtualenv-custom-virtualenv-path ".custom-virtualenv")
   ;;   (add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv)
-  ;;   (add-hook 'projectile-after-switch-project-hook 'auto-virtualenv-set-virtualenv)  ;; If using projectile
+  ;;   (add-hook 'projectile-after-switch-project-hook 'auto-virtualenv-set-virtualenv)
   ;;   )
-
-  (use-package auto-virtualenv
-    :load-path "vendor"
-    :init
-    (use-package pyvenv
-      :ensure t)
-    :config
-    (require 'auto-virtualenv)
-    (add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv)
-    (add-hook 'projectile-after-switch-project-hook 'auto-virtualenv-set-virtualenv)
-    )
 
   (use-package anaconda-mode
     :ensure t
