@@ -4,6 +4,9 @@
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives
+             '("xaldew" . "https://gustafwaldemarson.com/elpa/"))
+(add-to-list 'package-unsigned-archives "xaldew")
 (when (< emacs-major-version 24)
   ;; For important compatibility libraries like cl-lib
   (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/")))
@@ -133,14 +136,14 @@
 
 
 (mw/set-best-font '(
+                    ("Inconsolata" 14)
                     ("Menlo" 14)
+                    ("Anonymous Pro" 14)
+                    ("Consolas" 14)
                     ("Roboto Mono" 14)
                     ("Monaco" 14)
-                    ("Consolas" 14)
                     ("Ubuntu Mono" 14)
-                    ("Inconsolata" 16)
                     ("Droid Sans Mono" 14)
-                    ("Anonymous Pro" 16)
                     ("UbuntuMono Nerd Font" 14)
                     ("AnonymicePowerline Nerd Font" 20)
                     ("RobotoMono NF" 18)
@@ -229,14 +232,31 @@
 ;;#############################
 ;; Interface
 ;;#############################
+(use-package material-theme
+  :disabled t
+  :ensure t
+  :init
+  (load-theme 'material t)
+  )
+
+(use-package monokai-theme
+  :ensure t
+  :init
+  (load-theme 'monokai t)
+  )
 
 (use-package doom-themes
+  :disabled t
   :ensure t
   :config
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (load-theme 'doom-dark+ t)
+  ;; (load-theme 'doom-ayu-mirage t)
+  ;; (load-theme 'doom-ayu-dark t)
+  ;; (load-theme 'doom-city-lights t)
+  ;; (load-theme 'doom-ephemeral t)
+  ;; (load-theme 'doom-flatwhite t)
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
@@ -258,8 +278,12 @@
   :ensure t
   :init
   (add-hook 'after-init-hook #'global-flycheck-mode)
+  (setq flycheck-pylintrc "~/.emacs.d/config/pylintrc")
+  (setq flycheck-flake8rc "~/.emacs.d/config/flake8rc")
   :config
-  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+  (flycheck-add-next-checker 'python-flake8 'python-pylint)
+  )
 
 (use-package autorevert
   :diminish auto-revert-mode
@@ -318,10 +342,10 @@
 (use-package super-save
   :ensure t
   :config
-    (setq super-save-auto-save-when-idle t
-          super-save-idle-duration 5)
-    (super-save-mode +1)
-    )
+  (setq super-save-auto-save-when-idle t
+        super-save-idle-duration 5)
+  (super-save-mode +1)
+  )
 
 (use-package conf-mode
   :mode ".*\\.coveragerc")
@@ -393,18 +417,18 @@
   :bind ("C-c o" . w3mext-open-link-or-image-or-url)
   :init
   (defun w3mext-open-link-or-image-or-url ()
-  "Opens the current link or image or current page's uri or any url-like text under cursor in firefox."
-  (interactive)
-  (let (url)
-    (if (string= major-mode "w3m-mode")
-        (setq url (or (w3m-anchor) (w3m-image) w3m-current-url)))
-    (browse-url-generic (if url url (car (browse-url-interactive-arg "URL: "))))
-    ))
+    "Opens the current link or image or current page's uri or any url-like text under cursor in firefox."
+    (interactive)
+    (let (url)
+      (if (string= major-mode "w3m-mode")
+          (setq url (or (w3m-anchor) (w3m-image) w3m-current-url)))
+      (browse-url-generic (if url url (car (browse-url-interactive-arg "URL: "))))
+      ))
   (setq browse-url-generic-program
-      (cond
-       (*is-a-mac* "open")
-       (linux (executable-find "google-chrome"))
-       ))
+        (cond
+         (*is-a-mac* "open")
+         (linux (executable-find "google-chrome"))
+         ))
   )
 
 (use-package dired-x
@@ -413,7 +437,7 @@
   (setq auto-revert-verbose nil)
   (setq-default dired-omit-files-p t) ; Buffer-local variable
   (setq dired-omit-files
-    (concat dired-omit-files "\\|\\.pdf$\\|^__pycache__$\\|^\\.git$\\|^\\.pyc$\\|^\\.DS_Store$"))
+        (concat dired-omit-files "\\|\\.pdf$\\|^__pycache__$\\|^\\.git$\\|^\\.pyc$\\|^\\.DS_Store$"))
   )
 
 (use-package highlight-symbol
@@ -445,8 +469,8 @@
 (use-package compile
   :config
   (defadvice compilation-start (before mw-pytest-compilation-start-before (command &optional mode name-function highlight-regexp) activate)
-      (setq compile-command command)
-      )
+    (setq compile-command command)
+    )
   )
 
 (use-package projectile
@@ -759,13 +783,13 @@
               (define-key web-mode-map [(return)] 'newline-and-indent))))
 
 (use-package nov
-    :ensure t
-    :mode (("\\.epub\\'" . nov-mode)
+  :ensure t
+  :mode (("\\.epub\\'" . nov-mode)
          ("\\.html\\.erb\\'" . web-mode)
          ("\\.html\\.ejs\\'" . web-mode)
          ("\\.ejs\\'" . web-mode)
          ("\\.mustache\\'" . web-mode))
-    )
+  )
 
 (use-package google-translate
   :ensure t
@@ -833,46 +857,25 @@
     (add-hook 'projectile-after-switch-project-hook 'auto-virtualenv-set-virtualenv)  ;; If using projectile
     )
 
-  ;; (use-package auto-virtualenv
-  ;;   :load-path "vendor"
-  ;;   :init
-  ;;   (use-package pyvenv
-  ;;     :ensure t)
+  ;; (use-package anaconda-mode
+  ;;   :ensure t
+  ;;   :demand t
+  ;;   :diminish anaconda-mode
   ;;   :config
-  ;;   (require 'auto-virtualenv)
-  ;;   (add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv)
-  ;;   (add-hook 'projectile-after-switch-project-hook 'auto-virtualenv-set-virtualenv)
+  ;;   (add-hook 'python-mode-hook 'anaconda-mode)
+  ;;   (setq company-tooltip-align-annotations t
+  ;;         company-dabbrev-downcase nil
+  ;;         company-dabbrev-code-everywhere t
+  ;;         anaconda-mode-localhost-address "localhost")
+  ;;   (remove-hook 'anaconda-mode-response-read-fail-hook
+  ;;                'anaconda-mode-show-unreadable-response)
+  ;;   (use-package company-anaconda
+  ;;     :ensure t
+  ;;     :init
+  ;;     (eval-after-load 'company
+  ;;       '(add-to-list 'company-backends 'company-anaconda)))
+
   ;;   )
-
-  (use-package anaconda-mode
-    :ensure t
-    :demand t
-    :diminish anaconda-mode
-    :config
-    (add-hook 'python-mode-hook 'anaconda-mode)
-    (setq company-tooltip-align-annotations t
-          company-dabbrev-downcase nil
-          company-dabbrev-code-everywhere t
-          anaconda-mode-localhost-address "localhost")
-    (remove-hook 'anaconda-mode-response-read-fail-hook
-                 'anaconda-mode-show-unreadable-response)
-    (use-package company-anaconda
-      :ensure t
-      :init
-      (eval-after-load 'company
-        '(add-to-list 'company-backends 'company-anaconda)))
-
-    )
-
-  (use-package jenkinsfile-mode
-    :ensure t
-    :mode ".*\\.jenkinsfile"
-    )
-
-  (use-package pip-requirements
-    :ensure t
-    :mode "\\requirements.txt\\'"
-    :config (pip-requirements-mode))
 
   (use-package python-pytest
     :ensure t
@@ -892,20 +895,60 @@
       )
     )
 
+  ;; (use-package nose
+  ;;   :load-path "vendor"
+  ;;   :bind* (:map python-mode-map
+  ;;                ("C-c t n" . nosetests-one)
+  ;;                ("C-c t N" . copy-nosetest-test-to-clipboard))
+  ;;   :config
+  ;;   (defun copy-nosetest-test-to-clipboard ()
+  ;;     (interactive)
+  ;;     (let ((nosetestname (format "%s:%s" buffer-file-name (nose-py-testable))))
+  ;;       (when nosetestname
+  ;;         (kill-new (format "python manage.py test --nologcapture -x -s %s" nosetestname))
+  ;;         (message "Copied '%s' to the clipboard." nosetestname))))
+  ;;   )
 
-  (use-package nose
-    :load-path "vendor"
-    :bind* (:map python-mode-map
-                 ("C-c t n" . nosetests-one)
-                 ("C-c t N" . copy-nosetest-test-to-clipboard))
+  (use-package py-isort
+    :ensure t
     :config
-    (defun copy-nosetest-test-to-clipboard ()
-      (interactive)
-      (let ((nosetestname (format "%s:%s" buffer-file-name (nose-py-testable))))
-        (when nosetestname
-          (kill-new (format "python manage.py test --nologcapture -x -s %s" nosetestname))
-          (message "Copied '%s' to the clipboard." nosetestname)))))
+    (add-hook 'before-save-hook 'py-isort-before-save)
+    )
+
+  (use-package lsp-pyright
+    :ensure t
+    :hook (python-mode . (lambda ()
+                           (require 'lsp-pyright)
+                           (lsp)))
+    :config
+    (setq lsp-ui-doc-enabled nil)
+    )  ; or lsp-deferred
   )
+
+;; (use-package python-black
+;;   :ensure t
+;;   :demand t
+;;   :after python
+;;   :hook (python-mode . python-black-on-save-mode)
+;;   )
+
+(use-package blacken
+  :ensure t
+  :demand t
+  :after python
+  :config
+  (add-hook 'python-mode-hook 'blacken-mode)
+  )
+
+(use-package jenkinsfile-mode
+  :ensure t
+  :mode ".*\\.jenkinsfile"
+  )
+
+(use-package pip-requirements
+  :ensure t
+  :mode "\\requirements.txt\\'"
+  :config (pip-requirements-mode))
 
 (use-package yaml-mode
   :ensure t
@@ -1001,3 +1044,16 @@
 (use-package puppet-mode
   :defer t
   :ensure t)
+
+
+(use-package yasnippet
+  :ensure t
+  :config
+  (yas-reload-all)
+  (use-package yasnippet-radical-snippets
+    :ensure t
+    :after yasnippet
+    :config
+    (yasnippet-radical-snippets-initialize))
+  (add-hook 'prog-mode-hook #'yas-minor-mode)
+  )

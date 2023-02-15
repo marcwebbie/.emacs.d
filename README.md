@@ -34,6 +34,16 @@ If you want to use my settings straight out of the box, here are some things to 
  * Watch [emacsrocks.com](http://emacsrocks.com)
 
 
+## Installing on python projects
+
+Aliases to install required packages, create a virtualenv with python3 and load virtualenv
+
+```
+mkenv() { python3 -m venv "$1" && "$1"/bin/pip install -U pip wheel black flake8 bpython ipython pudb && source "$1"/bin/activate; }
+ldenv() { source ~/.virtualenvs/"$(basename $PWD)"/bin/activate }
+```
+
+
 ## License ([Public Domain](http://choosealicense.com/licenses/unlicense/))
 
 This is free and unencumbered software released into the public domain.

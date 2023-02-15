@@ -170,6 +170,8 @@ Project root name is found using `auto-virtualenv--project-root'"
       (setq auto-virtualenv--path virtualenv-path)
       (pyvenv-mode t)
       (pyvenv-activate virtualenv-path)
+      (exec-path-from-shell-initialize)
+      (exec-path-from-shell-initialize)
       (when auto-virtualenv-verbose
         (message "activated virtualenv: %s" virtualenv-path)))))
 

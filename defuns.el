@@ -334,17 +334,17 @@ Otherwise point moves to beginning of line."
 (defun mw/python--add-pdb-breakpoint ()
   "Add pdb.set_trace() code and move line down"
   (interactive)
-  (insert "import pdb; pdb.set_trace()"))
+  (insert "import pdb; pdb.set_trace() # fmt: skip"))
 
 (defun mw/python--add-pudb-breakpoint ()
   "Add pudb.set_trace() code and move line down"
   (interactive)
-  (insert "import pudb; pudb.set_trace()"))
+  (insert "import pudb; pudb.set_trace() # fmt: skip"))
 
 (defun mw/python--add-ipdb-breakpoint ()
   "Add ipdb.set_trace() code and move line down"
   (interactive)
-  (insert "import ipdb; ipdb.set_trace()"))
+  (insert "import ipdb; ipdb.set_trace() # fmt: skip"))
 
 (defun mw/python--remove-breakpoints ()
   "Remove line with a pdb/pudb/ipdb breakpoint"
