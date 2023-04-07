@@ -233,13 +233,13 @@
 ;; Interface
 ;;#############################
 (use-package material-theme
-  :disabled t
   :ensure t
   :init
   (load-theme 'material t)
   )
 
 (use-package monokai-theme
+  :disabled t
   :ensure t
   :init
   (load-theme 'monokai t)
@@ -283,6 +283,21 @@
   :config
   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
   (flycheck-add-next-checker 'python-flake8 'python-pylint)
+  )
+
+(use-package flyspell
+  :ensure t
+  :mode ".*\\.srt"
+  :bind (
+         ("C-;" . flyspell-correct-word-before-point)
+         ("C-:" . flyspell-correct-word-before-point)
+         ("C-!" . flyspell-auto-correct-word)
+         )
+  :config
+  (defun flyspell-br ()
+  (interactive)
+  (ispell-change-dictionary "brasileiro")
+  (flyspell-buffer))
   )
 
 (use-package autorevert
@@ -414,6 +429,7 @@
   :bind ("C-c a" . ace-jump-mode))
 
 (use-package eww
+  :disabled t
   :bind ("C-c o" . w3mext-open-link-or-image-or-url)
   :init
   (defun w3mext-open-link-or-image-or-url ()
@@ -823,6 +839,13 @@
 (use-package json-mode
   :ensure t
   :mode ".*\\.json")
+
+(use-package feature-mode
+  :ensure t
+  :mode ".*\\.feature"
+  :config
+  (setq feature-step-search-path "features/**/*steps.py")
+  )
 
 (use-package evil
   :ensure t
