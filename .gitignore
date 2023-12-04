@@ -3,3 +3,8 @@ transient
 emacs-backup
 history
 views.py
+/recentf
+/projects
+/places
+/auto-save-list/
+/.cache/
