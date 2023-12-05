@@ -8,3 +8,7 @@ views.py
 /places
 /auto-save-list/
 /.cache/
+/.lsp-session-v1
+/.mc-lists.el
+/projectile-bookmarks.eld
+/projectile.cache
