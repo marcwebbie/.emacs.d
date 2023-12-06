@@ -1,0 +1,18 @@
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(auto-save-visited-interval 2)
+ '(auto-save-visited-mode t)
+ '(custom-safe-themes
+   '("06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "eab123a5ed21463c780e17fc44f9ffc3e501655b966729a2d5a2072832abd3ac" default))
+ '(package-selected-packages
+   '(dimmer symbol-overlay mmm-mode web-mode py-isort blacken lsp-pyright flycheck hippie-expand lsp-ui lsp-imenu lsp-mode flymake-ruff elpy prism projectile auto-virtualenv beacon diff-hl jenkinsfile-mode groovy-mode deadgrep real-auto-save jinja2-mode chatgpt-shell all-the-icons-dired nerd-icons-dired nerd-icons color-theme-sanityinc-tomorrow spacemacs-theme spaceline spaceline-config all-the-icons move-text highlight-indentation highlight-indentation-mode sublimity dashboard treesit-auto aggressive-indent aggressive-indent-mode zoom selected region-bindings-mode smartparens expand-region multiple-cursors drag-stuff wgrep orderless kind-icon cape corfu-terminal corfu marginalia vertico embark-consult embark consult avy json-mode yaml-mode magit which-key))
+ '(zoom-mode t nil (zoom)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
