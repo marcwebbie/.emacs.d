@@ -12,3 +12,5 @@ views.py
 /.mc-lists.el
 /projectile-bookmarks.eld
 /projectile.cache
+/quelpa/
+/straight/
