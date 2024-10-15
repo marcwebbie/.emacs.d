@@ -30,17 +30,17 @@
 ;; 1. Activate virtualenv after switching projects with Projectile:
 ;; This hook activates the virtual environment whenever you switch
 ;; projects using Projectile.
-
-(add-hook 'projectile-after-switch-project-hook
-          'auto-virtualenv-activate-virtualenv)
-
+;;
+;; (add-hook 'projectile-after-switch-project-hook
+;;           'auto-virtualenv-activate-virtualenv)
+;;
 ;; 2. Activate virtualenv after saving any file:
 ;; This hook activates the virtual environment whenever you save a file.
 ;; Be cautious with this setting, as it may not be desired for all file types.
-
-(add-hook 'after-save-hook
-          'auto-virtualenv-activate-virtualenv)
-
+;;
+;; (add-hook 'after-save-hook
+;;           'auto-virtualenv-activate-virtualenv)
+;;
 ;; Usage:
 ;; - Simply open a Python project that contains a recognized virtualenv
 ;;   (located in one of the specified directories).
