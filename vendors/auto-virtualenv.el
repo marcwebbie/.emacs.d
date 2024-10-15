@@ -1,60 +1,16 @@
-;;; Commentary:
+;;; auto-virtualenv.el --- Auto activate Python virtualenvs
 
+;; Copyright (C) 2017-2024 Marcwebbie
+
+;; Author: Marcwebbie <marcwebbie@gmail.com>
+;; URL: http://github.com/marcwebbie/auto-virtualenv
+;; Version: 1.5.0
+;; Keywords: Python, Virtualenv, Tools
+;; Package-Requires: ((cl-lib "0.5") (pyvenv "1.9") (s "1.10.0"))
+
+;;; Commentary:
 ;; Auto Virtualenv is an Emacs package that automatically activates
 ;; Python virtual environments based on the project you are working on.
-;; This eliminates the need to manually activate your virtualenv each time
-;; you switch projects, making your workflow smoother and more efficient.
-
-;; Installation:
-;; To install auto-virtualenv, add the following lines to your Emacs
-;; configuration file (init.el or .emacs):
-
-;; (use-package auto-virtualenv
-;;   :ensure t
-;;   :config
-;;   (auto-virtualenv-activate-virtualenv))
-
-;; Configuration:
-;; The package requires the following settings to function properly:
-
-;; - `auto-virtualenv-virtualenvs-root`: Specify directories where your
-;;   virtual environments are located. This is a list of directories
-;;   to scan for virtualenvs.
-;; - `auto-virtualenv-project-root-files`: Define files that indicate
-;;   a project root (e.g., ".git", ".projectile").
-
-;; Hook Setup:
-;; To automatically activate your virtual environment when you switch
-;; projects or save files, you can set up the following hooks:
-
-;; 1. Activate virtualenv after switching projects with Projectile:
-;; This hook activates the virtual environment whenever you switch
-;; projects using Projectile.
-;;
-;; (add-hook 'projectile-after-switch-project-hook
-;;           'auto-virtualenv-activate-virtualenv)
-;;
-;; 2. Activate virtualenv after saving any file:
-;; This hook activates the virtual environment whenever you save a file.
-;; Be cautious with this setting, as it may not be desired for all file types.
-;;
-;; (add-hook 'after-save-hook
-;;           'auto-virtualenv-activate-virtualenv)
-;;
-;; Usage:
-;; - Simply open a Python project that contains a recognized virtualenv
-;;   (located in one of the specified directories).
-;; - The virtualenv will be automatically activated based on the project's
-;;   configuration.
-;; - You can also check the *Messages* buffer to verify that the
-;;   correct virtualenv is activated, and to see the output of the
-;;   `which python` command.
-
-;; To deactivate the virtual environment, you can use the `pyvenv-deactivate`
-;; command, or simply close the buffer or Emacs session.
-
-;; Enjoy a streamlined Python development experience with automatic
-;; virtual environment activation!
 
 ;;; Code:
 
