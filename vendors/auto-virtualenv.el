@@ -42,11 +42,12 @@
     (message (apply 'format (concat "[auto-virtualenv] " msg) args))))
 
 (defun auto-virtualenv-update-mode-line ()
-  "Update the mode line to show the active virtual environment with emojis."
+  "Update the mode line to show the active virtual environment in bold brackets."
   (setq auto-virtualenv-mode-line
         (if auto-virtualenv-current-virtualenv
-            (format " 🐍 Venv: %s " (file-name-nondirectory (directory-file-name auto-virtualenv-current-virtualenv)))
-          " ⚠️ No Venv "))
+            (propertize (format "[Venv: %s]" (file-name-nondirectory (directory-file-name auto-virtualenv-current-virtualenv)))
+                        'face '(:weight bold :foreground "DeepSkyBlue"))
+          (propertize "[No Venv]" 'face '(:weight bold :foreground "Firebrick"))))
   ;; Update global mode line format with the virtual environment status
   (setq global-mode-string (list auto-virtualenv-mode-line))
   (force-mode-line-update))
