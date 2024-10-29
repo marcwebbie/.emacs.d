@@ -1,12 +1,10 @@
-;;; auto-virtualenv.el --- Auto activate Python virtualenvs
-
-;; Copyright (C) 2017-2024 Marcwebbie
+;;; auto-virtualenv.el --- Automatically activate Python virtualenvs -*- lexical-binding: t; -*-
 
 ;; Author: Marcwebbie <marcwebbie@gmail.com>
 ;; URL: http://github.com/marcwebbie/auto-virtualenv
-;; Version: 1.5.0
+;; Version: 2.1.0
 ;; Keywords: Python, Virtualenv, Tools
-;; Package-Requires: ((cl-lib "0.5") (pyvenv "1.9") (s "1.10.0"))
+;; Package-Requires: ((cl-lib "0.5") (projectile "2.3.0"))
 
 ;;; Commentary:
 ;; Auto Virtualenv is an Emacs package that automatically activates
@@ -14,26 +12,20 @@
 
 ;;; Code:
 
-(require 'pyvenv)
 (require 'cl-lib)
+(require 'projectile)
 
 (defgroup auto-virtualenv nil
   "Automatically activate Python virtual environments."
   :group 'python)
 
-(defcustom auto-virtualenv-virtualenvs-root
-  '("~/.virtualenvs/" "~/.pyenv/versions/")
-  "Directories where virtual environments are stored."
+(defcustom auto-virtualenv-global-dirs
+  '("~/.virtualenvs/" "~/.pyenv/versions/" "~/.envs/" "~/.conda/" "~/.conda/envs/")
+  "List of global directories to search for virtual environments by project name."
   :type '(repeat string)
   :group 'auto-virtualenv)
 
-(defcustom auto-virtualenv-project-root-files
-  '(".python-version" "manage.py" ".git")
-  "Files that indicate the root of a Python project."
-  :type '(repeat string)
-  :group 'auto-virtualenv)
-
-(defcustom auto-virtualenv-verbose nil
+(defcustom auto-virtualenv-verbose t
   "Enable verbose output for debugging."
   :type 'boolean
   :group 'auto-virtualenv)
@@ -44,60 +36,100 @@
 (defvar auto-virtualenv-mode-line nil
   "String to display in the mode line for the active virtual environment.")
 
+(defun auto-virtualenv--debug (msg &rest args)
+  "Print MSG formatted with ARGS if `auto-virtualenv-verbose' is enabled."
+  (when auto-virtualenv-verbose
+    (message (apply 'format (concat "[auto-virtualenv] " msg) args))))
+
 (defun auto-virtualenv-update-mode-line ()
-  "Update the mode line to show the active virtual environment."
+  "Update the mode line to show the active virtual environment with emojis."
   (setq auto-virtualenv-mode-line
         (if auto-virtualenv-current-virtualenv
-            (format " Venv: %s" (file-name-nondirectory auto-virtualenv-current-virtualenv))
-          " Venv: None"))
+            (format " 🐍 Venv: %s " (file-name-nondirectory (directory-file-name auto-virtualenv-current-virtualenv)))
+          " ⚠️ No Venv "))
+  ;; Update global mode line format with the virtual environment status
+  (setq global-mode-string (list auto-virtualenv-mode-line))
   (force-mode-line-update))
 
-(defun auto-virtualenv-find-project-root ()
-  "Find the project root by searching for common project files."
-  (let ((project-root (locate-dominating-file default-directory
-                                              (lambda (dir)
-                                                (cl-some (lambda (file)
-                                                           (file-exists-p (expand-file-name file dir)))
-                                                         auto-virtualenv-project-root-files)))))
-    (when project-root
-      (message "Project root found: %s" project-root)
-      project-root)))
+(defun auto-virtualenv-find-local-venv (project-root)
+  "Check for a local virtual environment in PROJECT-ROOT.
+Return the path if found, otherwise nil."
+  (auto-virtualenv--debug "Searching for local virtualenv in project root: %s" project-root)
+  (cl-some (lambda (venv-dir)
+             (let ((venv-path (expand-file-name venv-dir project-root)))
+               (when (file-directory-p venv-path)
+                 (auto-virtualenv--debug "Local virtualenv found at: %s" venv-path)
+                 venv-path)))
+           '(".virtualenv" ".venv")))
+
+(defun auto-virtualenv-read-python-version (project-root)
+  "Read the virtual environment name from the .python-version file in PROJECT-ROOT."
+  (let ((version-file (expand-file-name ".python-version" project-root)))
+    (when (file-readable-p version-file)
+      (auto-virtualenv--debug "Reading virtualenv name from .python-version file: %s" version-file)
+      (string-trim (with-temp-buffer
+                     (insert-file-contents version-file)
+                     (buffer-string))))))
+
+(defun auto-virtualenv-find-global-venv (env-name)
+  "Search for a virtual environment with ENV-NAME in global directories."
+  (auto-virtualenv--debug "Searching for global virtualenv with name: %s" env-name)
+  (cl-some (lambda (dir)
+             (let ((venv-path (expand-file-name env-name (expand-file-name dir))))
+               (when (file-directory-p venv-path)
+                 (auto-virtualenv--debug "Global virtualenv found at: %s" venv-path)
+                 venv-path)))
+           auto-virtualenv-global-dirs))
+
+(defun auto-virtualenv-activate (venv-path)
+  "Activate the virtual environment located at VENV-PATH."
+  (auto-virtualenv-deactivate) ;; Deactivate any existing environment
+  (setq auto-virtualenv-current-virtualenv (file-name-as-directory venv-path))
+  ;; Update exec-path and environment PATH
+  (let ((venv-bin (concat auto-virtualenv-current-virtualenv "bin")))
+    (setq exec-path (cons venv-bin exec-path))
+    (setenv "VIRTUAL_ENV" auto-virtualenv-current-virtualenv)
+    (setenv "PATH" (concat venv-bin path-separator (getenv "PATH"))))
+  (auto-virtualenv-update-mode-line)
+  (auto-virtualenv--debug "Activated virtualenv: %s" auto-virtualenv-current-virtualenv))
+
+(defun auto-virtualenv-deactivate ()
+  "Deactivate any current virtual environment."
+  (when auto-virtualenv-current-virtualenv
+    (let ((venv-bin (concat auto-virtualenv-current-virtualenv "bin")))
+      ;; Remove the virtualenv bin directory from exec-path and PATH
+      (setq exec-path (delete venv-bin exec-path))
+      (setenv "PATH" (mapconcat 'identity (delete venv-bin (split-string (getenv "PATH") path-separator)) path-separator))
+      (setenv "VIRTUAL_ENV" nil)
+      (auto-virtualenv--debug "Deactivated virtualenv: %s" auto-virtualenv-current-virtualenv)
+      (setq auto-virtualenv-current-virtualenv nil)
+      (auto-virtualenv-update-mode-line))))
 
 (defun auto-virtualenv-find-and-activate ()
   "Find and activate the virtual environment based on the project root."
-  (let* ((project-root (auto-virtualenv-find-project-root))
-         (env-name (and project-root (file-name-nondirectory (directory-file-name project-root)))))
-    (when env-name
-      (dolist (root auto-virtualenv-virtualenvs-root)
-        (let ((virtualenv-path (expand-file-name env-name root)))
-          (when (file-exists-p virtualenv-path)
-            (setq auto-virtualenv-current-virtualenv virtualenv-path)
-            (pyvenv-activate virtualenv-path)
-            (auto-virtualenv-update-mode-line)
-            (when auto-virtualenv-verbose
-              (message "Activated virtualenv: %s" virtualenv-path))
-            (message "Using Python: %s" (shell-command-to-string "which python")) ; Show the active Python path
-            ;; Exit the loop after activating
-            (setq done t)))))
-    ;; Check if we activated a virtualenv, otherwise notify
-    (unless auto-virtualenv-current-virtualenv
-      (when auto-virtualenv-verbose
-        (message "No virtualenv found for project: %s" project-root)))))
+  (let* ((project-root (projectile-project-root))
+         (project-name (file-name-nondirectory (directory-file-name project-root)))
+         (env-name (or (auto-virtualenv-read-python-version project-root) project-name))
+         (venv-path (or (auto-virtualenv-find-local-venv project-root)
+                        (auto-virtualenv-find-global-venv env-name))))
+    (if venv-path
+        (auto-virtualenv-activate venv-path)
+      (auto-virtualenv--debug "No virtualenv found for project: %s" project-root))))
 
-(defun auto-virtualenv-activate ()
-  "Activate virtualenv automatically."
-  (message "Activating virtualenv...")
-  (unless auto-virtualenv-current-virtualenv
+(defun auto-virtualenv-auto-activate ()
+  "Auto activate virtual environment for the current project."
+  (when (and (projectile-project-p)
+             (not (equal auto-virtualenv-current-virtualenv (projectile-project-root))))
     (auto-virtualenv-find-and-activate)))
 
-(add-hook 'find-file-hook #'auto-virtualenv-activate)
+;; Hook functions to automatically activate virtualenv
+(add-hook 'find-file-hook #'auto-virtualenv-auto-activate)
+(add-hook 'projectile-after-switch-project-hook #'auto-virtualenv-auto-activate)
 
 ;; Add the mode line display
-(defun auto-virtualenv-mode-line-update ()
-  "Add the virtualenv status to the mode line."
-  (setq global-mode-string (list auto-virtualenv-mode-line)))
-
-(add-hook 'after-change-major-mode-hook #'auto-virtualenv-mode-line-update)
+(setq-default mode-line-format
+              (append mode-line-format
+                      '((:eval auto-virtualenv-mode-line))))
 
 (provide 'auto-virtualenv)
 
