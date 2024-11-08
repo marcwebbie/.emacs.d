@@ -117,6 +117,15 @@
         (tdd-mode-run-test command)
       (message "No test command found at point."))))
 
+(defun tdd-mode-run-test-file ()
+  "Run the current test file."
+  (interactive)
+  (let* ((file-name (buffer-file-name))
+         (pytest-executable (tdd-mode-get-pytest-executable)))
+    (if file-name
+        (tdd-mode-run-test (format "%s --color=yes %s" pytest-executable file-name))
+      (message "No file associated with the current buffer."))))
+
 (defun tdd-mode-apply-ansi-color ()
   "Apply ANSI color codes in the test buffer for improved readability."
   (with-current-buffer tdd-mode-test-buffer
@@ -160,10 +169,7 @@
 (define-minor-mode tdd-mode
   "Enhanced TDD mode for Python development with real-time feedback and notifications."
   :lighter " TDD"
-  :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "C-c t") 'tdd-mode-run-test-at-point)
-            (define-key map (kbd "C-c T") 'tdd-mode-run-test)
-            map)
+  ;; No keymap defined here to allow user-defined key bindings
   (if tdd-mode
       (progn
         (setq tdd-mode-project-root (tdd-mode-get-project-root))
