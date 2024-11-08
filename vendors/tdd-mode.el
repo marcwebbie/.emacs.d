@@ -1,27 +1,14 @@
-;;; tdd-mode.el --- TDD Mode for running Python tests automatically -*- lexical-binding: t; -*-
-
-;; Author: Marcwebbie <marcwebbie@gmail.com>
-;; Version: 1.0
-;; Keywords: python, testing, tdd
-;; Package-Requires: ((emacs "24.3") (ansi-color "3.0"))
-
-;;; Commentary:
-;;
-;; TDD Mode enables a streamlined workflow for running tests within Python files.
-;; Users can run the test at point, or a global test command, and automatically
-;; re-run the last test upon saving any buffer in the project.
-;;
-;; Supports `pytest`, `nosetests`, and `django test` with color-coded output.
-;; Notifications indicate success or failure status after each test run.
-;;
-;; Usage:
-;; - Activate `tdd-mode` in a Python test file (usually with a test_ prefix).
-;; - Use `C-c t` to run the test at point or `C-c T` for a custom/global test.
-;; - Tests re-run automatically on save, with success/failure notifications.
-
-;;; Code:
+;;; tdd-mode.el --- Enhanced TDD Mode for Python development -*- lexical-binding: t; -*-
 
 (require 'ansi-color)
+(require 'f)
+(require 'alert) ;; Use alert for notifications
+(require 'auto-virtualenv)
+(require 'ellama) ;; Ensure ellama is required for AI insights
+
+;; Set alert to use terminal-notifier on macOS
+(when (eq system-type 'darwin)
+  (setq alert-default-style 'notifier))
 
 (defvar tdd-mode-test-buffer "*tdd-output*"
   "Buffer name for displaying test output.")
@@ -40,6 +27,21 @@
 
 (defvar tdd-mode-notify-on-fail t
   "Whether to show a notification on test fail.")
+
+(defvar tdd-mode-sound-on-fail t
+  "Whether to play a sound on test failure.")
+
+(defvar tdd-mode-ai-insights-enabled t
+  "Whether to send failing test output to Ollama via ellama for insights.")
+
+(defun tdd-mode-get-project-root ()
+  "Detect and return the project root directory based on common project markers."
+  (or tdd-mode-project-root
+      (setq tdd-mode-project-root
+            (or (locate-dominating-file default-directory ".git")
+                (locate-dominating-file default-directory "pyproject.toml")
+                (locate-dominating-file default-directory "setup.py")
+                (user-error "Project root not found. Please ensure your project has a recognizable root marker.")))))
 
 (defun tdd-mode-get-test-command-at-point ()
   "Generate the test command for pytest with ClassName::test_function format at point."
@@ -92,7 +94,19 @@
           (tdd-mode-apply-ansi-color)
           (display-buffer tdd-mode-test-buffer)
           (tdd-mode-notify exit-code)
-          (tdd-mode-log-last-test exit-code))))))
+          (tdd-mode-log-last-test exit-code)
+          (when (and tdd-mode-ai-insights-enabled (not (eq exit-code 0)))
+            (tdd-mode-send-to-ai-for-insights))
+          (when (and tdd-mode-sound-on-fail (not (eq exit-code 0)))
+            (play-sound-file "/path/to/failure-sound.wav")))))))
+
+(defun tdd-mode-run-test-at-point ()
+  "Run the test command at the current point, if possible."
+  (interactive)
+  (let ((command (tdd-mode-get-test-command-at-point)))
+    (if command
+        (tdd-mode-run-test command)
+      (message "No test command found at point."))))
 
 (defun tdd-mode-apply-ansi-color ()
   "Apply ANSI color codes in the test buffer for improved readability."
@@ -101,14 +115,20 @@
 
 (defun tdd-mode-notify (exit-code)
   "Send a notification based on the EXIT-CODE of the test."
-  (let ((message (if (eq exit-code 0) "✅ Test passed!" "❌ Test failed!")))
+  (let ((msg (if (eq exit-code 0) "✅ Test passed!" "❌ Test failed!"))
+        (urgency (if (eq exit-code 0) 'normal 'high)))
     (when (or (and (eq exit-code 0) tdd-mode-notify-on-pass)
               (and (not (eq exit-code 0)) tdd-mode-notify-on-fail))
-      (notifications-notify
-       :title "TDD Mode"
-       :body message
-       :urgency (if (eq exit-code 0) 'low 'critical)))
-    (message message)))
+      (alert msg :title "TDD Mode" :severity urgency))
+    (message msg)))
+
+(defun tdd-mode-send-to-ai-for-insights ()
+  "Send the failing test output to Ollama via ellama for AI insights."
+  (let ((output (with-current-buffer tdd-mode-test-buffer
+                  (buffer-substring-no-properties (point-min) (point-max)))))
+    (message "🔍 Sending failing test output to AI for insights...")
+    (ellama-chat (format "Please help analyze this test failure:\n\n%s" output))
+    (message "💡 AI insights for test failure: %s" output)))
 
 (defun tdd-mode-log-last-test (exit-code)
   "Log the last test command with the EXIT-CODE and timestamp."
@@ -142,8 +162,7 @@
             (define-key map (kbd "C-c T") 'tdd-mode-run-test)
             map)
   (if tdd-mode
-      (progn
-        (add-hook 'after-save-hook 'tdd-mode-run-last-test-on-save))
+      (add-hook 'after-save-hook 'tdd-mode-run-last-test-on-save)
     (remove-hook 'after-save-hook 'tdd-mode-run-last-test-on-save)))
 
 (provide 'tdd-mode)
