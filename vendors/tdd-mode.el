@@ -98,10 +98,12 @@
     (when test-command
       (setq tdd-mode-last-test-command test-command)
       (with-current-buffer (get-buffer-create tdd-mode-test-buffer)
+        (setq buffer-read-only nil) ;; Allow writing in the buffer
         (erase-buffer)
         (insert (concat "$ " test-command "\n\n"))
         (let ((exit-code (call-process-shell-command test-command nil tdd-mode-test-buffer t)))
           (tdd-mode-apply-ansi-color)
+          (setq buffer-read-only t) ;; Set buffer as read-only after output
           (display-buffer tdd-mode-test-buffer)
           (tdd-mode-update-status exit-code)
           (tdd-mode-notify exit-code)
