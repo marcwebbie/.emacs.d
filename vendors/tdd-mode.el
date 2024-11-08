@@ -1,23 +1,13 @@
 ;;; tdd-mode.el --- Enhanced TDD Mode for Python development -*- lexical-binding: t; -*-
 
 (require 'ansi-color)
-(require 'f)
-(require 'alert) ;; Use alert for notifications
-(require 'auto-virtualenv)
-(require 'ellama) ;; Ensure ellama is required for AI insights
-
-;; Set alert to use terminal-notifier on macOS
-(when (eq system-type 'darwin)
-  (setq alert-default-style 'notifier))
+(require 'alert)
 
 (defvar tdd-mode-test-buffer "*tdd-output*"
   "Buffer name for displaying test output.")
 
 (defvar tdd-mode-last-test-command nil
   "The last test command run by the user.")
-
-(defvar tdd-mode-project-root nil
-  "Root directory of the project being tracked by `tdd-mode`.")
 
 (defvar tdd-mode-test-runner 'pytest
   "The test runner to use. Options are 'pytest, 'nosetests, and 'django.")
@@ -28,11 +18,22 @@
 (defvar tdd-mode-notify-on-fail t
   "Whether to show a notification on test fail.")
 
-(defvar tdd-mode-sound-on-fail t
-  "Whether to play a sound on test failure.")
+(defvar tdd-mode-project-root nil
+  "Root directory of the project being tracked by `tdd-mode`.")
 
-(defvar tdd-mode-ai-insights-enabled t
-  "Whether to send failing test output to Ollama via ellama for insights.")
+(defun tdd-mode-get-python-executable ()
+  "Retrieve the Python executable path from the active virtual environment."
+  (let ((venv (getenv "VIRTUAL_ENV")))
+    (if venv
+        (concat venv "/bin/python")
+      (error "No active virtual environment found"))))
+
+(defun tdd-mode-get-pytest-executable ()
+  "Retrieve the pytest executable from the active virtual environment."
+  (let ((venv (getenv "VIRTUAL_ENV")))
+    (if (and venv (file-exists-p (concat venv "/bin/pytest")))
+        (concat venv "/bin/pytest")
+      (error "pytest not found in active virtual environment"))))
 
 (defun tdd-mode-get-project-root ()
   "Detect and return the project root directory based on common project markers."
@@ -48,19 +49,20 @@
   (let* ((file-name (buffer-file-name))
          (function-name (tdd-mode-get-function-name-at-point))
          (class-name (tdd-mode-get-class-name-at-point))
-         (runner tdd-mode-test-runner))
+         (pytest-executable (tdd-mode-get-pytest-executable)))
+    (message "[tdd-mode] Using pytest executable: %s" pytest-executable)
     (cond
-     ((eq runner 'pytest)
+     ((eq tdd-mode-test-runner 'pytest)
       (when (and file-name function-name)
         (if class-name
-            (format "pytest --color=yes %s::%s::%s" file-name class-name function-name)
-          (format "pytest --color=yes %s::%s" file-name function-name))))
-     ((eq runner 'nosetests)
+            (format "%s --color=yes %s::%s::%s" pytest-executable file-name class-name function-name)
+          (format "%s --color=yes %s::%s" pytest-executable file-name function-name))))
+     ((eq tdd-mode-test-runner 'nosetests)
       (when (and file-name function-name)
         (format "nosetests %s:%s" file-name function-name)))
-     ((eq runner 'django)
+     ((eq tdd-mode-test-runner 'django)
       (when file-name
-        (format "python manage.py test %s" file-name)))
+        (format "%s manage.py test %s" (tdd-mode-get-python-executable) file-name)))
      (t (error "Unsupported test runner")))))
 
 (defun tdd-mode-get-class-name-at-point ()
@@ -94,11 +96,7 @@
           (tdd-mode-apply-ansi-color)
           (display-buffer tdd-mode-test-buffer)
           (tdd-mode-notify exit-code)
-          (tdd-mode-log-last-test exit-code)
-          (when (and tdd-mode-ai-insights-enabled (not (eq exit-code 0)))
-            (tdd-mode-send-to-ai-for-insights))
-          (when (and tdd-mode-sound-on-fail (not (eq exit-code 0)))
-            (play-sound-file "/path/to/failure-sound.wav")))))))
+          (tdd-mode-log-last-test exit-code))))))
 
 (defun tdd-mode-run-test-at-point ()
   "Run the test command at the current point, if possible."
@@ -115,20 +113,8 @@
 
 (defun tdd-mode-notify (exit-code)
   "Send a notification based on the EXIT-CODE of the test."
-  (let ((msg (if (eq exit-code 0) "✅ Test passed!" "❌ Test failed!"))
-        (urgency (if (eq exit-code 0) 'normal 'high)))
-    (when (or (and (eq exit-code 0) tdd-mode-notify-on-pass)
-              (and (not (eq exit-code 0)) tdd-mode-notify-on-fail))
-      (alert msg :title "TDD Mode" :severity urgency))
+  (let ((msg (if (eq exit-code 0) "✅ Test passed!" "❌ Test failed!")))
     (message msg)))
-
-(defun tdd-mode-send-to-ai-for-insights ()
-  "Send the failing test output to Ollama via ellama for AI insights."
-  (let ((output (with-current-buffer tdd-mode-test-buffer
-                  (buffer-substring-no-properties (point-min) (point-max)))))
-    (message "🔍 Sending failing test output to AI for insights...")
-    (ellama-chat (format "Please help analyze this test failure:\n\n%s" output))
-    (message "💡 AI insights for test failure: %s" output)))
 
 (defun tdd-mode-log-last-test (exit-code)
   "Log the last test command with the EXIT-CODE and timestamp."
@@ -141,17 +127,17 @@
                     log-file)))
 
 (defun tdd-mode-run-last-test-on-save ()
-  "Re-run the last test command if a .py file in the project is saved."
+  "Re-run the last test command if a .py file in the same project is saved."
   (when (and tdd-mode-last-test-command
-             (tdd-mode-buffer-in-project-p (buffer-file-name)))
+             (tdd-mode-same-project-p))
     (tdd-mode-run-test tdd-mode-last-test-command)))
 
-(defun tdd-mode-buffer-in-project-p (file)
-  "Check if FILE is within the project root."
-  (let ((project-root (tdd-mode-get-project-root)))
-    (and project-root
-         (f-descendant-of-p file project-root)
-         (string= (f-ext file) "py"))))
+(defun tdd-mode-same-project-p ()
+  "Check if the current buffer's project root matches `tdd-mode-project-root`."
+  (let ((current-root (locate-dominating-file default-directory ".git")))
+    (and current-root
+         (string= current-root tdd-mode-project-root)
+         (string= (file-name-extension (buffer-file-name)) "py"))))
 
 ;;;###autoload
 (define-minor-mode tdd-mode
@@ -162,8 +148,10 @@
             (define-key map (kbd "C-c T") 'tdd-mode-run-test)
             map)
   (if tdd-mode
-      (add-hook 'after-save-hook 'tdd-mode-run-last-test-on-save)
-    (remove-hook 'after-save-hook 'tdd-mode-run-last-test-on-save)))
+      (progn
+        (setq tdd-mode-project-root (tdd-mode-get-project-root))
+        (add-hook 'after-save-hook 'tdd-mode-run-last-test-on-save t t))
+    (remove-hook 'after-save-hook 'tdd-mode-run-last-test-on-save t)))
 
 (provide 'tdd-mode)
 
