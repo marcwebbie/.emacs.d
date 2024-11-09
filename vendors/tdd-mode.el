@@ -21,17 +21,28 @@
 (defvar tdd-mode-watch-files '("\\.py\\'" "\\.toml\\'")
   "List of regex patterns for file extensions that trigger test re-run on save.")
 
+(defvar tdd-mode-original-mode-line-bg (face-background 'mode-line)
+  "Store the original mode-line background color.")
+
+(defun tdd-mode-set-mode-line-color (color)
+  "Set the mode-line background color to COLOR."
+  (set-face-background 'mode-line color))
+
+(defun tdd-mode-reset-mode-line-color ()
+  "Reset the mode-line background color to its original value."
+  (tdd-mode-set-mode-line-color tdd-mode-original-mode-line-bg))
+
+(defun tdd-mode-update-status (exit-code)
+  "Show a pass or fail indication by changing mode-line background color based on the test result EXIT-CODE."
+  (if (eq exit-code 0)
+      (tdd-mode-set-mode-line-color "#4CAF50")  ;; Green for pass
+    (tdd-mode-set-mode-line-color "#F44336")))  ;; Red for fail
+
 (defun tdd-mode-popup-notification (message color)
   "Display a popup with MESSAGE and background COLOR."
   (let ((popup (make-overlay (point-min) (point-min))))
     (overlay-put popup 'before-string (propertize message 'face `(:background ,color :foreground "black")))
     (run-with-timer 0.5 nil (lambda () (delete-overlay popup)))))
-
-(defun tdd-mode-update-status (exit-code)
-  "Show popup notification based on the test result EXIT-CODE."
-  (if (eq exit-code 0)
-      (tdd-mode-popup-notification "Tests Passed" "#d0ffd0") ;; Light green for pass
-    (tdd-mode-popup-notification "Tests Failed" "#ffd0d0"))) ;; Light red for fail
 
 (defun tdd-mode-get-python-executable ()
   "Retrieve the Python executable path from the active virtual environment."
@@ -111,6 +122,8 @@
           (setq buffer-read-only t) ;; Set buffer as read-only after output
           (display-buffer tdd-mode-test-buffer)
           (tdd-mode-update-status exit-code)
+          (tdd-mode-popup-notification (if (eq exit-code 0) "Tests Passed" "Tests Failed")
+                                       (if (eq exit-code 0) "#d0ffd0" "#ffd0d0"))
           (tdd-mode-notify exit-code)
           (tdd-mode-log-last-test exit-code))))))
 
@@ -202,8 +215,9 @@
   (if tdd-mode
       (progn
         (setq tdd-mode-project-root (tdd-mode-get-project-root))
-        (add-hook 'after-save-hook #'tdd-mode-after-save-handler t t))
-    (remove-hook 'after-save-hook #'tdd-mode-after-save-handler t)))
+        (add-hook 'after-save-hook #'tdd-mode-after-save-handler nil t))
+    (remove-hook 'after-save-hook #'tdd-mode-after-save-handler t)
+    (tdd-mode-reset-mode-line-color)))
 
 (provide 'tdd-mode)
 
