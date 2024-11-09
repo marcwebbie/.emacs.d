@@ -24,6 +24,10 @@
 (defvar tdd-mode-original-mode-line-bg (face-background 'mode-line)
   "Store the original mode-line background color.")
 
+(defvar tdd-mode-buffer-popup t
+  "Controls whether the `*tdd-output*` buffer should pop up.
+If non-nil, the buffer will pop up. If nil, it will run in the background.")
+
 (defun tdd-mode-set-mode-line-color (color)
   "Set the mode-line background color to COLOR."
   (set-face-background 'mode-line color))
@@ -31,6 +35,13 @@
 (defun tdd-mode-reset-mode-line-color ()
   "Reset the mode-line background color to its original value."
   (tdd-mode-set-mode-line-color tdd-mode-original-mode-line-bg))
+
+(defun tdd-mode-display-buffer ()
+  "Display the test output buffer based on `tdd-mode-buffer-popup` setting."
+  (if tdd-mode-buffer-popup
+      (display-buffer tdd-mode-test-buffer)
+    (with-current-buffer tdd-mode-test-buffer
+      (bury-buffer))))
 
 (defun tdd-mode-update-status (exit-code)
   "Show a pass or fail indication by changing mode-line background color based on the test result EXIT-CODE."
@@ -59,11 +70,13 @@
       (error "pytest not found in active virtual environment"))))
 
 (defun tdd-mode-get-project-root ()
-  "Detect and return the project root directory based on common project markers."
-  (or (locate-dominating-file default-directory ".git")
-      (locate-dominating-file default-directory "pyproject.toml")
-      (locate-dominating-file default-directory "setup.py")
-      (user-error "Project root not found. Please ensure your project has a recognizable root marker.")))
+  "Detect and return the project root directory based on common project markers.
+If the buffer is not associated with a file, return nil."
+  (if (buffer-file-name)
+      (or (locate-dominating-file default-directory ".git")
+          (locate-dominating-file default-directory "pyproject.toml")
+          (locate-dominating-file default-directory "setup.py"))
+    nil))
 
 (defun tdd-mode-get-test-command-at-point ()
   "Generate the test command for pytest with ClassName::test_function format at point."
@@ -120,7 +133,7 @@
         (let ((exit-code (call-process-shell-command test-command nil tdd-mode-test-buffer t)))
           (tdd-mode-apply-ansi-color)
           (setq buffer-read-only t) ;; Set buffer as read-only after output
-          (display-buffer tdd-mode-test-buffer)
+          (tdd-mode-display-buffer) ;; Display output based on popup setting
           (tdd-mode-update-status exit-code)
           (tdd-mode-popup-notification (if (eq exit-code 0) "Tests Passed" "Tests Failed")
                                        (if (eq exit-code 0) "#d0ffd0" "#ffd0d0"))
@@ -166,7 +179,7 @@
 
 (defun tdd-mode-log-last-test (exit-code)
   "Log the last test command with the EXIT-CODE and timestamp."
-  (let ((log-file (concat (tdd-mode-get-project-root) ".tdd-mode-log")))
+  (let ((log-file (concat (or (tdd-mode-get-project-root) "") ".tdd-mode-log")))
     (append-to-file (format "[%s] %s - %s\n"
                             (format-time-string "%Y-%m-%d %H:%M:%S")
                             (if (eq exit-code 0) "PASSED" "FAILED")
@@ -182,7 +195,7 @@
 
 (defun tdd-mode-same-project-p ()
   "Check if the current buffer's project root matches `tdd-mode-project-root`."
-  (let ((current-root (locate-dominating-file default-directory ".git")))
+  (let ((current-root (tdd-mode-get-project-root)))
     (and current-root
          (string= current-root tdd-mode-project-root))))
 
@@ -219,6 +232,13 @@
     (remove-hook 'after-save-hook #'tdd-mode-after-save-handler t)
     (tdd-mode-reset-mode-line-color)))
 
+;;;###autoload
+(define-globalized-minor-mode global-tdd-mode tdd-mode
+  (lambda ()
+    ;; Only activate `tdd-mode` in Python buffers or if a virtual environment is active.
+    (when (or (derived-mode-p 'python-mode)
+              (and (getenv "VIRTUAL_ENV") (not (minibufferp))))
+      (tdd-mode 1))))
 (provide 'tdd-mode)
 
 ;;; tdd-mode.el ends here
