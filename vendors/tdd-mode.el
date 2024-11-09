@@ -18,18 +18,20 @@
 (defvar tdd-mode-notify-on-fail t
   "Whether to show a notification on test fail.")
 
-(defvar tdd-mode-test-status "✅"
-  "Current status of the last test result, shown in the mode line.")
+(defvar tdd-mode-watch-files '("\\.py\\'" "\\.toml\\'")
+  "List of regex patterns for file extensions that trigger test re-run on save.")
 
-;; Add test status to the global mode line
-(defun tdd-mode-update-mode-line ()
-  "Update mode line with the current test status."
-  (setq global-mode-string
-        (list " "
-              (propertize tdd-mode-test-status 'face '(:weight bold)))))
+(defun tdd-mode-popup-notification (message color)
+  "Display a popup with MESSAGE and background COLOR."
+  (let ((popup (make-overlay (point-min) (point-min))))
+    (overlay-put popup 'before-string (propertize message 'face `(:background ,color :foreground "black")))
+    (run-with-timer 0.5 nil (lambda () (delete-overlay popup)))))
 
-;; Ensure mode line is updated when tdd-mode is enabled
-(add-hook 'tdd-mode-hook #'tdd-mode-update-mode-line)
+(defun tdd-mode-update-status (exit-code)
+  "Show popup notification based on the test result EXIT-CODE."
+  (if (eq exit-code 0)
+      (tdd-mode-popup-notification "Tests Passed" "#d0ffd0") ;; Light green for pass
+    (tdd-mode-popup-notification "Tests Failed" "#ffd0d0"))) ;; Light red for fail
 
 (defun tdd-mode-get-python-executable ()
   "Retrieve the Python executable path from the active virtual environment."
@@ -61,10 +63,13 @@
     (message "[tdd-mode] Using pytest executable: %s" pytest-executable)
     (cond
      ((eq tdd-mode-test-runner 'pytest)
-      (when (and file-name function-name)
-        (if class-name
-            (format "%s --color=yes %s::%s::%s" pytest-executable file-name class-name function-name)
-          (format "%s --color=yes %s::%s" pytest-executable file-name function-name))))
+      (when file-name
+        (cond
+         ((and class-name function-name)
+          (format "%s --color=yes %s::%s::%s" pytest-executable file-name class-name function-name))
+         (function-name
+          (format "%s --color=yes %s::%s" pytest-executable file-name function-name))
+         (t (format "%s --color=yes %s" pytest-executable file-name)))))
      ((eq tdd-mode-test-runner 'nosetests)
       (when (and file-name function-name)
         (format "nosetests %s:%s" file-name function-name)))
@@ -78,7 +83,7 @@
   (save-excursion
     (let ((class-name nil))
       (beginning-of-defun)
-      (while (and (not class-name) (re-search-backward "^\s*class\s+\\([A-Za-z0-9_]+\\)" nil t))
+      (while (and (not class-name) (re-search-backward "^\s*class\s+\$begin:math:text$[A-Za-z0-9_]+\\$end:math:text$" nil t))
         (setq class-name (match-string 1)))
       class-name)))
 
@@ -87,7 +92,7 @@
   (save-excursion
     (let ((function-name nil))
       (beginning-of-defun)
-      (when (re-search-forward "def \\([a-zA-Z0-9_]+\\)" nil t)
+      (when (re-search-forward "def \$begin:math:text$[a-zA-Z0-9_]+\\$end:math:text$" nil t)
         (setq function-name (match-string 1)))
       function-name)))
 
@@ -126,6 +131,15 @@
         (tdd-mode-run-test (format "%s --color=yes %s" pytest-executable file-name))
       (message "No file associated with the current buffer."))))
 
+(defun tdd-mode-run-all-tests ()
+  "Run all tests from the project root."
+  (interactive)
+  (let ((pytest-executable (tdd-mode-get-pytest-executable))
+        (project-root (tdd-mode-get-project-root)))
+    (if (and pytest-executable project-root)
+        (tdd-mode-run-test (format "%s --color=yes %s" pytest-executable project-root))
+      (message "Cannot determine project root or pytest executable."))))
+
 (defun tdd-mode-apply-ansi-color ()
   "Apply ANSI color codes in the test buffer for improved readability."
   (with-current-buffer tdd-mode-test-buffer
@@ -136,11 +150,6 @@
   (let ((msg (if (eq exit-code 0) "✅ Test passed!" "❌ Test failed!"))
         (severity (if (eq exit-code 0) 'normal 'high)))
     (alert msg :title "TDD Mode" :severity severity)))
-
-(defun tdd-mode-update-status (exit-code)
-  "Update the mode line badge based on the test result EXIT-CODE."
-  (setq tdd-mode-test-status (if (eq exit-code 0) "✅" "❌"))
-  (tdd-mode-update-mode-line))
 
 (defun tdd-mode-log-last-test (exit-code)
   "Log the last test command with the EXIT-CODE and timestamp."
@@ -153,7 +162,7 @@
                     log-file)))
 
 (defun tdd-mode-run-last-test-on-save ()
-  "Re-run the last test command if a .py file in the same project is saved."
+  "Re-run the last test command if a relevant file in the project is saved."
   (when (and tdd-mode-last-test-command
              (tdd-mode-same-project-p))
     (tdd-mode-run-test tdd-mode-last-test-command)))
@@ -162,20 +171,39 @@
   "Check if the current buffer's project root matches `tdd-mode-project-root`."
   (let ((current-root (locate-dominating-file default-directory ".git")))
     (and current-root
-         (string= current-root tdd-mode-project-root)
-         (string= (file-name-extension (buffer-file-name)) "py"))))
+         (string= current-root tdd-mode-project-root))))
+
+(defun tdd-mode-should-trigger-test-reload (filename)
+  "Check if a FILENAME matches the patterns in `tdd-mode-watch-files`."
+  (cl-some (lambda (pattern) (string-match-p pattern filename))
+           tdd-mode-watch-files))
+
+(defun tdd-mode-after-save-handler ()
+  "Run tests if the saved file matches a pattern in `tdd-mode-watch-files`."
+  (when (and buffer-file-name
+             (tdd-mode-should-trigger-test-reload buffer-file-name))
+    (tdd-mode-run-last-test-on-save)))
+
+(add-hook 'after-save-hook #'tdd-mode-after-save-handler)
+
+(defun tdd-mode-copy-output ()
+  "Copy the contents of the test output buffer to the clipboard."
+  (interactive)
+  (if (get-buffer tdd-mode-test-buffer)
+      (with-current-buffer tdd-mode-test-buffer
+        (kill-ring-save (point-min) (point-max))
+        (message "Test output copied to clipboard."))
+    (message "No test output buffer found.")))
 
 ;;;###autoload
 (define-minor-mode tdd-mode
   "Enhanced TDD mode for Python development with real-time feedback and notifications."
   :lighter " TDD"
-  ;; No keymap defined here to allow user-defined key bindings
   (if tdd-mode
       (progn
         (setq tdd-mode-project-root (tdd-mode-get-project-root))
-        (tdd-mode-update-mode-line)
-        (add-hook 'after-save-hook 'tdd-mode-run-last-test-on-save t t))
-    (remove-hook 'after-save-hook 'tdd-mode-run-last-test-on-save t)))
+        (add-hook 'after-save-hook #'tdd-mode-after-save-handler t t))
+    (remove-hook 'after-save-hook #'tdd-mode-after-save-handler t)))
 
 (provide 'tdd-mode)
 
