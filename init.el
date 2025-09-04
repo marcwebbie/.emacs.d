@@ -4,13 +4,11 @@
 ;;; Requires Emacs 29 or newer
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (when (< emacs-major-version 29)
   (error (format "Emacs Bedrock only works with Emacs 29 and newer; you have version ~a" emacs-major-version)))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;   Basic settings
+;;; Basic settings
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Check if the system is not macOS (darwin) before setting the Meta key bindings
@@ -18,7 +16,6 @@
   ;; Set both Alt and Super (Windows) keys as Meta
   (setq x-alt-keysym 'meta)
   (setq x-super-keysym 'meta))
-
 ;; Package initialization
 ;;
 ;; We'll stick to the built-in GNU and non-GNU ELPAs (Emacs Lisp Package
@@ -26,14 +23,12 @@
 ;; at if you want more packages. MELPA in particular is very popular. See
 ;; instructions at:
 ;;
-;;    https://melpa.org/#/getting-started
+;; https://melpa.org/#/getting-started
 ;;
 ;; You can simply uncomment the following if you'd like to get started with
 ;; MELPA packages quickly:
-;;
 (with-eval-after-load 'package
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
-
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name
@@ -49,29 +44,22 @@
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
-
-(setopt initial-major-mode 'fundamental-mode)  ; default mode for the *scratch* buffer
+(setopt initial-major-mode 'fundamental-mode) ; default mode for the *scratch* buffer
 (setopt display-time-default-load-average nil) ; this information is useless for most
-
 ;; Automatically reread from disk if the underlying file changes
 (setopt auto-revert-avoid-polling t)
 (setopt auto-revert-interval 5)
 (setopt auto-revert-check-vc-info t)
 (global-auto-revert-mode)
-
 ;; Save history of minibuffer
 (savehist-mode)
-
 ;; Move through windows with Ctrl-<arrow keys>
 (windmove-default-keybindings 'control) ; You can use other modifiers here
-
 ;; Fix archaic defaults
 (setopt sentence-end-double-space nil)
-
 ;; Make right-click do something sensible
 (when (display-graphic-p)
   (context-menu-mode))
-
 ;; Don't litter file system with *~ backup files; put them all inside
 ;; ~/.emacs.d/backup or wherever
 (defun bedrock--backup-file-name (fpath)
@@ -83,153 +71,120 @@ If the new path's directories does not exist, create them."
     (make-directory (file-name-directory backupFilePath) (file-name-directory backupFilePath))
     backupFilePath))
 (setopt make-backup-file-name-function 'bedrock--backup-file-name)
-
 (use-package embark-consult
   :ensure t
   :after (embark consult))
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;   Discovery aids
+;;; Discovery aids
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;; which-key: shows a popup of available keybindings when typing a long key
 ;; sequence (e.g. C-x ...)
 (use-package which-key
   :ensure t
   :config
   (which-key-mode))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;   Minibuffer/completion settings
+;;; Minibuffer/completion settings
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;; For help, see: https://www.masteringemacs.org/article/understanding-minibuffer-completion
-
-(setopt enable-recursive-minibuffers t)                ; Use the minibuffer whilst in the minibuffer
-(setopt completion-cycle-threshold 1)                  ; TAB cycles candidates
-(setopt completions-detailed t)                        ; Show annotations
-(setopt tab-always-indent 'complete)                   ; When I hit TAB, try to complete, otherwise, indent
+(setopt enable-recursive-minibuffers t) ; Use the minibuffer whilst in the minibuffer
+(setopt completion-cycle-threshold 1) ; TAB cycles candidates
+(setopt completions-detailed t) ; Show annotations
+(setopt tab-always-indent 'complete) ; When I hit TAB, try to complete, otherwise, indent
 (setopt completion-styles '(basic initials substring)) ; Different styles to match input to candidates
-
-(setopt completion-auto-help 'always)                  ; Open completion always; `lazy' another option
-(setopt completions-max-height 20)                     ; This is arbitrary
+(setopt completion-auto-help 'always) ; Open completion always; `lazy' another option
+(setopt completions-max-height 20) ; This is arbitrary
 (setopt completions-detailed t)
 (setopt completions-format 'one-column)
 (setopt completions-group t)
-(setopt completion-auto-select 'second-tab)            ; Much more eager
-
+(setopt completion-auto-select 'second-tab) ; Much more eager
 (keymap-set minibuffer-mode-map "TAB" 'minibuffer-complete) ; TAB acts more like how it does in the shell
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;   Interface enhancements/defaults
+;;; Interface enhancements/defaults
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;; Mode line information
-(setopt line-number-mode t)                        ; Show current line in modeline
-(setopt column-number-mode t)                      ; Show column as well
-
-(setopt x-underline-at-descent-line nil)           ; Prettier underlines
-(setopt switch-to-buffer-obey-display-actions t)   ; Make switching buffers more consistent
-
-(setopt show-trailing-whitespace nil)      ; By default, don't underline trailing spaces
-(setopt indicate-buffer-boundaries 'left)  ; Show buffer top and bottom in the margin
-
+(setopt line-number-mode t) ; Show current line in modeline
+(setopt column-number-mode t) ; Show column as well
+(setopt x-underline-at-descent-line nil) ; Prettier underlines
+(setopt switch-to-buffer-obey-display-actions t) ; Make switching buffers more consistent
+(setopt show-trailing-whitespace nil) ; By default, don't underline trailing spaces
+(setopt indicate-buffer-boundaries 'left) ; Show buffer top and bottom in the margin
 ;; Enable horizontal scrolling
 (setopt mouse-wheel-tilt-scroll t)
 (setopt mouse-wheel-flip-direction t)
-
 ;; We won't set these, but they're good to know about
 (setopt indent-tabs-mode nil)
 (setopt tab-width 4)
-
 ;; Misc. UI tweaks
-(blink-cursor-mode -1)                                ; Steady cursor
-(pixel-scroll-precision-mode)                         ; Smooth scrolling
-
+(blink-cursor-mode -1) ; Steady cursor
+(pixel-scroll-precision-mode) ; Smooth scrolling
 ;; Use common keystrokes by default
 ;;(cua-mode)
-
 ;; Display line numbers in programming mode
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
-(setopt display-line-numbers-width 3)           ; Set a minimum width
-
+(setopt display-line-numbers-width 3) ; Set a minimum width
 ;; Nice line wrapping when working with text
 (add-hook 'text-mode-hook 'visual-line-mode)
-
 ;; Modes to highlight the current line with
 ;; (let ((hl-line-hooks '(text-mode-hook prog-mode-hook)))
-;;   (mapc (lambda (hook) (add-hook hook 'hl-line-mode)) hl-line-hooks))
-
+;; (mapc (lambda (hook) (add-hook hook 'hl-line-mode)) hl-line-hooks))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;   Tab-bar configuration
+;;; Tab-bar configuration
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;; Show the tab-bar as soon as tab-bar functions are invoked
 (setopt tab-bar-show 1)
-
 ;; Add the time to the tab-bar, if visible
 (add-to-list 'tab-bar-format 'tab-bar-format-align-right 'append)
 (add-to-list 'tab-bar-format 'tab-bar-format-global 'append)
 (setopt display-time-format "%a %F %T")
 (setopt display-time-interval 1)
 (display-time-mode)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;   Theme
+;;; Theme
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package emacs
   :init
   (use-package spacemacs-theme
     :ensure t)
-
   (use-package monokai-theme
     :ensure t)
-
   (use-package doom-themes
     :ensure t
     :config
     ;; Global settings (defaults)
-    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+    (setq doom-themes-enable-bold t ; if nil, bold is universally disabled
           doom-themes-enable-italic t) ; if nil, italics is universally disabled
-
     ;; (load-theme 'doom-one t)
-
     ;; Enable flashing mode-line on errors
     (doom-themes-visual-bell-config)
-
     ;; Enable custom neotree theme (all-the-icons must be installed!)
     (doom-themes-neotree-config)
-
     ;; or for treemacs users
     ;; (setq doom-themes-treemacs-theme "doom-wilmersdorf") ; use "doom-colors" for less minimal icon theme
     (doom-themes-treemacs-config)
     ;; Corrects (and improves) org-mode's native fontification.
     (doom-themes-org-config)
-
     ;; Load theme
     ;; Low contrast
     ;; (load-theme 'doom-wilmersdorf t)
     (load-theme 'doom-nord t)
-
     ;; Classics
     ;; (load-theme 'doom-solarized-dark t)
     ;; (load-theme 'doom-solarized-dark-high-contrast t)
     ;; (load-theme 'doom-tomorrow-night t)
     )
-
   ;; (use-package monokai-theme
-  ;;   :ensure t)
+  ;; :ensure t)
   :config
   ;; (load-theme 'sanityinc-tomorrow-night t)
   ;; (load-theme 'sanityinc-tomorrow-day t)
@@ -238,48 +193,38 @@ If the new path's directories does not exist, create them."
   ;; (load-theme 'spacemacs-dark t)
   ;; (load-theme 'monokai t)
   ;; (add-hook 'prog-mode-hook (lambda ()
-  ;;                             (setq-local global-hl-line-mode
-  ;;                                         nil)))
+  ;; (setq-local global-hl-line-mode
+  ;; nil)))
   )
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;   Optional extras
+;;; Optional extras
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;; Uncomment the (load-file …) lines or copy code from the extras/ elisp files
 ;; as desired
-
 ;; UI/UX enhancements mostly focused on minibuffer and autocompletion interfaces
 ;; These ones are *strongly* recommended!
 (load-file (expand-file-name "extras/base.el" user-emacs-directory))
-
 ;; Packages for software development
 ;;(load-file (expand-file-name "extras/dev.el" user-emacs-directory))
-
 ;; Vim-bindings in Emacs (evil-mode configuration)
 ;(load-file (expand-file-name "extras/vim-like.el" user-emacs-directory))
-
 ;; Org-mode configuration
 ;; WARNING: need to customize things inside the elisp file before use! See
 ;; the file extras/org-intro.txt for help.
 ;(load-file (expand-file-name "extras/org.el" user-emacs-directory))
-
 ;; Email configuration in Emacs
 ;; WARNING: needs the `mu' program installed; see the elisp file for more
 ;; details.
 ;(load-file (expand-file-name "extras/email.el" user-emacs-directory))
-
 ;; Tools for academic researchers
 ;(load-file (expand-file-name "extras/researcher.el" user-emacs-directory))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;   Built-in customization framework
+;;; Built-in customization framework
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -298,10 +243,9 @@ If the new path's directories does not exist, create them."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;   USER Customizations
+;;; USER Customizations
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -310,22 +254,17 @@ If the new path's directories does not exist, create them."
 (if (file-exists-p custom-file) (load custom-file))
 (add-hook 'before-save-hook 'whitespace-cleanup)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-
 (setq scroll-error-top-bottom t) ;; Page up and down goes to begging or end of buffer
-
 (use-package treesit-auto
   :disabled t
   :ensure t
   :config
   (global-treesit-auto-mode))
-
 ;;; I prefer cmd key for meta
 (setq mac-option-key-is-meta nil
       mac-command-key-is-meta t
       mac-command-modifier 'meta
       mac-option-modifier 'none)
-
-
 ;;#############################
 ;; Defuns
 ;;#############################
@@ -348,7 +287,6 @@ there's a region, all lines that region covers will be duplicated."
         (insert region)
         (setq end (point)))
       (goto-char (+ origin (* (length region) arg) arg)))))
-
 (defun mw/set-best-font (fonts)
   (when fonts
     (let* ((fontname (car (car fonts)))
@@ -356,19 +294,14 @@ there's a region, all lines that region covers will be duplicated."
            (fontstring (format "%s-%d" fontname fontsize)))
       (if (member fontname (font-family-list)) (set-frame-font fontstring)
         (mw/set-best-font (cdr fonts))))))
-
 ;; shorthand for interactive lambdas
 (defmacro λ (&rest body)
   `(lambda ()
      (interactive)
      ,@body))
-
-
 ;;;; Editing
-
 (autoload 'zap-up-to-char "misc"
   "Kill up to, but not including ARGth occurrence of CHAR.")
-
 (defun sp-kill-sexp-with-a-twist-of-lime ()
   (interactive)
   (if (sp-point-in-string)
@@ -380,7 +313,6 @@ there's a region, all lines that region covers will be duplicated."
               (s-matches? "\\s+" (buffer-substring-no-properties beg end)))
           (kill-line)
         (sp-kill-sexp)))))
-
 (defun eval-and-replace ()
   "Replace the preceding sexp with its value."
   (interactive)
@@ -390,14 +322,12 @@ there's a region, all lines that region covers will be duplicated."
              (current-buffer))
     (error (message "Invalid expression")
            (insert (current-kill 0)))))
-
 (defun replace-region-by (fn)
   (let* ((beg (region-beginning))
          (end (region-end))
          (contents (buffer-substring beg end)))
     (delete-region beg end)
     (insert (funcall fn contents))))
-
 (defun open-line-below ()
   "Open a line below the line the point is at.
 Then move to that line and indent accordning to mode"
@@ -414,7 +344,6 @@ Then move to that line and indent accordning to mode"
          (move-end-of-line 1)
          (newline)
          (indent-according-to-mode))))
-
 (defun open-line-above ()
   "Open a line above the line the point is at.
 Then move to that line and indent accordning to mode"
@@ -433,7 +362,6 @@ Then move to that line and indent accordning to mode"
          (newline)
          (forward-line -1)
          (indent-according-to-mode))))
-
 (defun clean-up-buffer-or-region ()
   "Untabifies, indents and deletes trailing whitespace from buffer or region."
   (interactive)
@@ -447,7 +375,6 @@ Then move to that line and indent accordning to mode"
     (save-restriction
       (narrow-to-region (region-beginning) (region-end))
       (delete-trailing-whitespace))))
-
 (defun duplicate-current-line-or-region (arg)
   "Duplicates the current line or region ARG times.
 If there's no region, the current line will be duplicated. However, if
@@ -467,7 +394,6 @@ there's a region, all lines that region covers will be duplicated."
         (insert region)
         (setq end (point)))
       (goto-char (+ origin (* (length region) arg) arg)))))
-
 (defun comment-or-uncomment-current-line-or-region ()
   "Comments or uncomments current current line or whole lines in region."
   (interactive)
@@ -479,19 +405,16 @@ there's a region, all lines that region covers will be duplicated."
       (comment-or-uncomment-region
        (progn (goto-char min) (line-beginning-position))
        (progn (goto-char max) (line-end-position))))))
-
 (defun kill-region-or-backward-word ()
   "kill region if active, otherwise kill backward word"
   (interactive)
   (if (region-active-p)
       (kill-region (region-beginning) (region-end))
     (backward-kill-word 1)))
-
 (defun kill-to-beginning-of-line ()
   (interactive)
   (kill-region (save-excursion (beginning-of-line) (point))
                (point)))
-
 (defun url-decode-region (start end)
   "URL decode a region."
   (interactive "r")
@@ -499,7 +422,6 @@ there's a region, all lines that region covers will be duplicated."
     (let ((text (url-unhex-string (buffer-substring start end))))
       (delete-region start end)
       (insert text))))
-
 (defun url-encode-region (start end)
   "URL encode a region."
   (interactive "r")
@@ -507,7 +429,6 @@ there's a region, all lines that region covers will be duplicated."
     (let ((text (url-hexify-string (buffer-substring start end))))
       (delete-region start end)
       (insert text))))
-
 (defun goto-line-with-feedback ()
   "Show line numbers temporarily, while prompting for the line
 number input."
@@ -524,7 +445,6 @@ number input."
         (linum-mode -1))))
   (save-excursion
     (hs-show-block)))
-
 (defun back-to-indentation-or-beginning-of-line ()
   "Move point back to indentation if there is any
 non blank characters to the left of the cursor.
@@ -533,11 +453,9 @@ Otherwise point moves to beginning of line."
   (if (= (point) (save-excursion (back-to-indentation) (point)))
       (beginning-of-line)
     (back-to-indentation)))
-
 (defun find-project-root (dir)
   "Find project root directory"
   (f--traverse-upwards (f-dir? (f-expand ".git" it)) dir))
-
 (defun nuke-all-buffers ()
   "Kill all buffers, leaving *scratch* only."
   (interactive)
@@ -546,7 +464,6 @@ Otherwise point moves to beginning of line."
      (kill-buffer buffer))
    (buffer-list))
   (delete-other-windows))
-
 (defun swap-windows ()
   "If you have 2 windows, it swaps them."
   (interactive)
@@ -564,7 +481,6 @@ Otherwise point moves to beginning of line."
            (set-window-start w1 s2)
            (set-window-start w2 s1))))
   (other-window 1))
-
 (defun rename-this-buffer-and-file ()
   "Renames current buffer and file it is visiting."
   (interactive)
@@ -581,7 +497,6 @@ Otherwise point moves to beginning of line."
                (set-visited-file-name new-name)
                (set-buffer-modified-p nil)
                (message "File '%s' successfully renamed to '%s'" name (file-name-nondirectory new-name))))))))
-
 (defun delete-this-buffer-and-file ()
   "Removes file connected to current buffer and kills buffer."
   (interactive)
@@ -594,19 +509,15 @@ Otherwise point moves to beginning of line."
         (delete-file filename)
         (kill-buffer buffer)
         (message "File '%s' successfully removed" filename)))))
-
 (defun re-builder-large ()
   "Just like `re-builder', only make the font and window larger."
   (interactive)
-
   (re-builder)
   (text-scale-increase 5)
   (set-window-text-height (selected-window) 7))
-
 (defun ipython ()
   (interactive)
   (ansi-term "/usr/bin/ipython"))
-
 (defun google ()
   "Search Googles with a query or region if any."
   (interactive)
@@ -616,7 +527,6 @@ Otherwise point moves to beginning of line."
     (if (region-active-p)
         (buffer-substring (region-beginning) (region-end))
       (read-string "Query: ")))))
-
 (defun finder ()
   "Opens file directory in Finder."
   (interactive)
@@ -625,13 +535,11 @@ Otherwise point moves to beginning of line."
         (shell-command
          (format "%s %s" (executable-find "open") (file-name-directory file)))
       (error "Buffer is not attached to any file."))))
-
 (defun magit-quit-session ()
   "Restores the previous window configuration and kills the magit buffer"
   (interactive)
   (kill-buffer)
   (jump-to-register :magit-fullscreen))
-
 (defun etc-log-tail-handler ()
   "Clean auto-revert-tail mode"
   (end-of-buffer)
@@ -644,13 +552,10 @@ Otherwise point moves to beginning of line."
   (font-lock-mode 0)
   (when (fboundp 'show-smartparens-mode)
     (show-smartparens-mode 0)))
-
-
 ;;;; Marcwebbie
-
 (defun mw/spell-dictionary (choice)
   "Switch between language dictionaries."
-  (interactive "cChoose:  (1) English | (2) French | (3) Portuguese")
+  (interactive "cChoose: (1) English | (2) French | (3) Portuguese")
   (let ((lang (cond
                ((eq choice ?1) "en")
                ((eq choice ?2) "fr")
@@ -662,67 +567,54 @@ Otherwise point moves to beginning of line."
                (flyspell-buffer)
                )
       (message "Not a valid choice"))))
-
 (defun mw/buffer-django-p ()
   "Test if in a django template buffer"
   (save-excursion
     (search-forward-regexp "{% base\\|{% if\\|{% include\\|{% block"
                            nil
                            t)))
-
 (defun mw/insert-lambda-char ()
   (interactive)
   (insert "λ"))
-
 (defun mw/set-presentation-font ()
   (interactive)
   (set-frame-font "Monaco-40"))
-
-
 ;;#############################
 ;; Python
 ;;#############################
 (defun mw/python--add-todo-fixme-bug-hightlight ()
   "Adds a highlighter for use by FIXME, TODO, BUG comment"
   (font-lock-add-keywords nil '(("\\<\\(FIXME\\|TODO\\|BUG\\):" 1 font-lock-warning-face t))))
-
 (defun mw/python--add-debug-highlight ()
   "Adds a highlighter for use by `python--pdb-breakpoint-string'"
   (highlight-lines-matching-regexp "import i?pu?db; +i?pu?db.set_trace().*$" 'hi-red-b))
-
 (defun mw/python--add-pdb-breakpoint ()
   "Add pdb.set_trace() code and move line down"
   (interactive)
   (insert "import pdb; pdb.set_trace() # fmt: skip"))
-
 (defun mw/python--add-pudb-breakpoint ()
   "Add pudb.set_trace() code and move line down"
   (interactive)
   (insert "import pudb; pudb.set_trace() # fmt: skip"))
-
 (defun mw/python--add-ipdb-breakpoint ()
   "Add ipdb.set_trace() code and move line down"
   (interactive)
   (insert "import ipdb; ipdb.set_trace() # fmt: skip"))
-
 (defun mw/python--remove-breakpoints ()
   "Remove line with a pdb/pudb/ipdb breakpoint"
   (interactive)
   (save-excursion
     (goto-char (point-min))
     (flush-lines "import i?pu?db; +i?pu?db.set_trace().*$")))
-
 (defun mw/set-django-settings-module (django-settings-module)
   "set django settings module environment variable"
   (interactive "sDJANGO_SETTINGS_MODULE: ")
   (setenv "DJANGO_SETTINGS_MODULE" django-settings-module t))
-
 (defun mw/set-elpy-test-runners ()
   "Set elpy test runners"
   (let ((python (executable-find "python")))
     (setq elpy-test-django-runner-command (list python "manage.py" "test" "--noinput"))
     (setq elpy-test-discover-runner-command (list python "-m" "unittest"))))
-
 (defun mw/clean-python-file-hook ()
   "Clean python buffer before saving"
   (interactive)
@@ -731,11 +623,9 @@ Otherwise point moves to beginning of line."
         (elpy-autopep8-fix-code))
     (if (symbolp 'elpy-importmagic-fixup)
         (elpy-importmagic-fixup))))
-
 (defun first-file-exists-p (filelist)
   (let ((filename (expand-file-name (car filelist))))
     (if (file-exists-p filename) filename (first-file-exists-p (cdr filelist)))))
-
 (defun copy-file-name-to-clipboard ()
   "Copy the current buffer file name to the clipboard."
   (interactive)
@@ -745,14 +635,10 @@ Otherwise point moves to beginning of line."
     (when filename
       (kill-new filename)
       (message "Copied buffer file name '%s' to the clipboard." filename))))
-
-
 (defun desktop-notify (title message icon)
   "Show a message with `terminal-notifier-command`."
   (shell-command
    (format "%s -title %s -message %s -sender org.gnu.Emacs -appIcon %s" (executable-find "terminal-notifier") title message icon)))
-
-
 (defun my-increment-number-decimal (&optional arg)
   "Increment the number forward from point by 'arg'."
   (interactive "p*")
@@ -768,48 +654,40 @@ Otherwise point moves to beginning of line."
             (setq answer (+ (expt 10 field-width) answer)))
           (replace-match (format (concat "%0" (int-to-string field-width) "d")
                                  answer)))))))
-
-
 (defun my-decrement-number-decimal (&optional arg)
   (interactive "p*")
   (my-increment-number-decimal (if arg (- arg) -1)))
-
 ;;#############################
 ;; Interface
 ;;#############################
 (defun mw/set-font ()
   "Set a default font based on available fonts, size, and display type."
   (interactive)
-  (let* ((preferred-fonts '("Fira Code" "JetBrains Mono"  "Source Code Pro" "Hack"  "Iosevka" "Monaco" "Ubuntu Mono" "DejaVu Sans Mono"))
+  (let* ((preferred-fonts '("Fira Code" "JetBrains Mono" "Source Code Pro" "Hack" "Iosevka" "Monaco" "Ubuntu Mono" "DejaVu Sans Mono"))
          (font-size (if (eq system-type 'darwin) 140 120))
          (chosen-font (seq-find (lambda (font) (member font (font-family-list))) preferred-fonts)))
     (when chosen-font
       (set-face-attribute 'default nil :family chosen-font :height font-size)
       (message "Font set to %s, size %d" chosen-font (/ font-size 10)))))
 (mw/set-font)
-
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (save-place-mode 1)
 (setq next-line-add-newlines t)
-
 (use-package beacon
   :ensure t
   :config
   (beacon-mode 1)
   )
-
 (use-package dashboard
   :ensure t
   :config
   (dashboard-setup-startup-hook))
-
 (use-package sublimity
   :disabled t
   :ensure t
   :config
   (sublimity-mode 1))
-
 (use-package zoom
   :ensure t
   :init
@@ -817,15 +695,12 @@ Otherwise point moves to beginning of line."
   :config
   (custom-set-variables
    '(zoom-size '(0.618 . 0.618))))
-
 (use-package aggressive-indent
   :ensure t
   :config (global-aggressive-indent-mode 1))
-
 (use-package highlight-indentation
   :ensure t
   :config (highlight-indentation-mode t))
-
 (use-package nerd-icons
   :ensure t
   :config
@@ -833,10 +708,8 @@ Otherwise point moves to beginning of line."
     :ensure t
     :hook
     (dired-mode . nerd-icons-dired-mode)))
-
 (use-package all-the-icons
   :ensure t)
-
 (use-package doom-modeline
   :ensure t
   :init (doom-modeline-mode 1)
@@ -847,7 +720,6 @@ Otherwise point moves to beginning of line."
   (setq doom-modeline-time 0)
   (display-time-mode 0)
   )
-
 (use-package dimmer
   :ensure t
   :config
@@ -856,25 +728,19 @@ Otherwise point moves to beginning of line."
   (dimmer-configure-magit)
   (dimmer-configure-hydra)
   )
-
 ;;#############################
 ;; Editing
 ;;#############################
 (delete-selection-mode 1) ;; Always replace when yanking
 (global-set-key (kbd "C-c d")
                 'duplicate-current-line-or-region)
-
-
 ;; (global-set-key (kbd "C-M ;")
-;;                 'comment-or-uncomment-region)
-
-
+;; 'comment-or-uncomment-region)
 (use-package multiple-cursors
   :ensure t
   :bind (("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C-w" . mc/mark-all-words-like-this)))
-
 (use-package expand-region
   :bind ("C-=" . er/expand-region)
   :config
@@ -884,7 +750,6 @@ Otherwise point moves to beginning of line."
                                      '(er/mark-defun))))
   (add-hook 'python-mode-hook 'er/add-python-mode-expansions)
   )
-
 (use-package region-bindings-mode
   :ensure t
   :commands (region-bindings-mode-enable)
@@ -898,7 +763,6 @@ Otherwise point moves to beginning of line."
   (bind-key "P" 'mc/skip-to-previous-like-this region-bindings-mode-map)
   (bind-key "n" 'mc/mark-next-like-this region-bindings-mode-map)
   (bind-key "N" 'mc/skip-to-next-like-this region-bindings-mode-map)
-
   ;; expand-regions
   (bind-key "c" 'er/mark-outer-python-block region-bindings-mode-map)
   (bind-key "f" 'er/mark-defun region-bindings-mode-map)
@@ -909,20 +773,16 @@ Otherwise point moves to beginning of line."
   (bind-key "+" 'er/expand-region region-bindings-mode-map)
   (bind-key "=" 'er/expand-region region-bindings-mode-map)
   (bind-key "SPC" 'er/expand-region region-bindings-mode-map)
-
   (setq region-bindings-mode-disabled-modes '(term-mode))
   (setq region-bindings-mode-disable-predicates
         (list (lambda () buffer-read-only)))
-
   ;; ispell
   (bind-key "s" 'ispell-region region-bindings-mode-map)
   )
-
 (use-package subword
   :diminish subword-mode
   :init
   (global-subword-mode 1))
-
 (use-package smartparens
   :ensure t
   :diminish smartparens-mode
@@ -952,15 +812,12 @@ Otherwise point moves to beginning of line."
   (require 'smartparens-config)
   (require 'smartparens-config)
   )
-
 (use-package move-text
   :ensure t
   :config
   :bind
   (("M-p" . move-text-up)
    ("M-n" . move-text-down)))
-
-
 ;;#############################
 ;; LANGUAGE MODES
 ;;#############################
@@ -968,7 +825,6 @@ Otherwise point moves to beginning of line."
   :ensure t
   :mode "\\.j2\\'"
   )
-
 (use-package groovy-mode
   :ensure t
   :mode "\\.groovy\\'"
@@ -977,7 +833,6 @@ Otherwise point moves to beginning of line."
     :ensure t
     :mode "\\.jenkinsfile\\'")
   )
-
 ;;#############################
 ;; VERSION CONTROL
 ;;#############################
@@ -992,24 +847,20 @@ Otherwise point moves to beginning of line."
   (global-diff-hl-mode)
   (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
-
 ;;#############################
 ;; NAVIGATION
 ;;#############################
-(keymap-global-set "C-M-;" 'comment-or-uncoment-region)
+(keymap-global-set "C-M-;" 'comment-or-uncomment-current-line-or-region)
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
-
 (use-package avy
   :ensure t
   :bind
   (("C-c SPC" . avy-goto-char)
    ))
-
 (use-package deadgrep
   :ensure t
   :bind
   ("C-c s" . deadgrep))
-
 (use-package projectile
   :ensure t
   :bind-keymap ("C-c p" . projectile-command-map)
@@ -1017,58 +868,47 @@ Otherwise point moves to beginning of line."
   (setq projectile-mode-line-function '(lambda () (format " [%s]" (projectile-project-name))))
   :config
   (projectile-mode +1))
-
 (use-package prism
   :ensure t
   :config
   (prism-mode +1))
-
 (use-package consult
   :bind (("C-s" . consult-line)("C-c C-j" . consult-imenu)("M-i" . consult-imenu)))
-
 ;; Enable rich annotations using the Marginalia package
 (use-package marginalia
-  ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
+  ;; Bind `marginalia-cycle' locally in the minibuffer. To make the binding
   ;; available in the *Completions* buffer, add it to the
   ;; `completion-list-mode-map'.
   :bind (:map minibuffer-local-map
               ("M-A" . marginalia-cycle))
-
   ;; The :init section is always executed.
   :init
-
   ;; Marginalia must be activated in the :init section of use-package such that
   ;; the mode gets enabled right away. Note that this forces loading the
   ;; package.
   (marginalia-mode))
-
 (use-package symbol-overlay
   :ensure t
   :bind (("M-[" . symbol-overlay-jump-prev)
          ("M-]" . symbol-overlay-jump-next)))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python Development Setup
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;; Black - Python code formatter
 (use-package blacken
   :ensure t
   :hook (python-mode . blacken-mode)
   :custom
-  (blacken-fast-unsafe t)  ;; Enable faster, potentially less safe formatting
+  (blacken-fast-unsafe t) ;; Enable faster, potentially less safe formatting
   (blacken-allow-py36 t)
   :config
-
-  )  ;; Support Python 3.6 syntax
-
+  ) ;; Support Python 3.6 syntax
 ;; Isort - Import sorter
 (use-package py-isort
   :ensure t
   :hook (before-save . py-isort-before-save)
   :custom
   (py-isort-options '("--profile" "black"))) ;; Align with Black's style
-
 ;; Auto-Virtualenv - Automatically activate virtual environments
 (use-package auto-virtualenv
   :load-path "~/Projects/auto-virtualenv/"
@@ -1076,17 +916,19 @@ Otherwise point moves to beginning of line."
          (projectile-after-switch-project . auto-virtualenv-find-and-activate))
   :config
   (setq auto-virtualenv-verbose t))
-
 ;; LSP and Pyright for Python
 (use-package lsp-mode
   :ensure t
   :commands lsp
   :hook ((python-mode . lsp)
-         (typescript-mode . lsp))
+         (typescript-mode . lsp)
+         (web-mode . (lambda ()
+                       (when (string-equal "tsx" (file-name-extension buffer-file-name))
+                         (lsp)))))
   :init
-  (setq lsp-completion-provider :capf      ;; Use capf for Corfu
-        lsp-prefer-capf t                  ;; Prefer capf completions
-        lsp-idle-delay 0.5                 ;; Reduce LSP latency
+  (setq lsp-completion-provider :capf ;; Use capf for Corfu
+        lsp-prefer-capf t ;; Prefer capf completions
+        lsp-idle-delay 0.5 ;; Reduce LSP latency
         lsp-headerline-breadcrumb-enable nil) ;; Disable header breadcrumbs
   :config
   (use-package lsp-pyright
@@ -1096,27 +938,24 @@ Otherwise point moves to beginning of line."
                            (require 'lsp-pyright)
                            (lsp)))
     :custom
-    (setq lsp-disabled-clients '(ruff))  ;; Disable Ruff LSP server
     (lsp-pyright-auto-import-completions t) ;; Enable auto-import suggestions
     (lsp-pyright-disable-organize-imports t)
-    (lsp-pyright-enable-ruff nil)           ;; Disable Ruff via Pyright
-    (lsp-pyright-multi-root nil)))          ;; Use single workspace for Pyright
-
+    (lsp-pyright-enable-ruff nil) ;; Disable Ruff via Pyright
+    (lsp-pyright-multi-root nil))) ;; Use single workspace for Pyright
 ;; Corfu - Completion framework
 (use-package corfu
   :ensure t
   :init
   (global-corfu-mode)
   :custom
-  (corfu-auto t)                  ;; Enable auto-completion
-  (corfu-auto-delay 0.2)          ;; Short delay before suggestions
-  (corfu-cycle t)                 ;; Allow cycling through completions
-  (corfu-auto-prefix 2)           ;; Trigger after 2 characters
-  (corfu-preview-current nil)     ;; Disable preview of current candidate
+  (corfu-auto t) ;; Enable auto-completion
+  (corfu-auto-delay 0.2) ;; Short delay before suggestions
+  (corfu-cycle t) ;; Allow cycling through completions
+  (corfu-auto-prefix 2) ;; Trigger after 2 characters
+  (corfu-preview-current nil) ;; Disable preview of current candidate
   :bind (:map corfu-map
               ("TAB" . corfu-next)
               ("S-TAB" . corfu-previous)))
-
 ;; Flycheck - Real-time linting
 (use-package flycheck
   :ensure t
@@ -1130,24 +969,21 @@ Otherwise point moves to beginning of line."
    ("C-c f s" . flycheck-select-checker)
    ("C-c f n" . flycheck-next-error)
    ("C-c f p" . flycheck-previous-error)))
-
 ;; Python-Specific Settings
 (use-package python
   :ensure t
   :config
   (setq python-indent-offset 4) ;; Use 4 spaces for Python indentation
   (setq python-shell-interpreter "python3"))
-
-(use-package tdd-mode
-  :load-path "~/Projects/tdd-mode"
-  :hook (python-mode . tdd-mode)
-  :bind-keymap ("C-c t" . tdd-mode-command-map)
+(use-package python-tdd-mode
+  :load-path "~/Projects/python-tdd-mode"
+  :hook (python-mode . python-tdd-mode)
+  :bind-keymap ("C-c t" . python-tdd-mode-command-map)
   :config
-  (setq tdd-mode-test-runner 'pytest        ;; Use pytest as the test runner
-        tdd-mode-notify-on-pass t           ;; Notify on passing tests
-        tdd-mode-notify-on-fail t           ;; Notify on failing tests
-        tdd-mode-auto-run-on-save t))       ;; Automatically run tests on save
-
+  (setq python-tdd-mode-test-runner 'pytest ;; Use pytest as the test runner
+        python-tdd-mode-notify-on-pass t ;; Notify on passing tests
+        python-tdd-mode-notify-on-fail t ;; Notify on failing tests
+        python-tdd-mode-auto-run-on-save t)) ;; Automatically run tests on save
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Other languages and modes
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1160,7 +996,6 @@ Otherwise point moves to beginning of line."
   :config
   ;; Automatically activate ansible-mode for playbooks and roles
   (setq ansible::section-face '(:foreground "goldenrod" :weight bold)))
-
 (use-package ansible-doc
   :ensure t
   :defer t
@@ -1169,44 +1004,35 @@ Otherwise point moves to beginning of line."
   :bind
   (:map ansible-doc-mode-map
         ("C-c C-d" . ansible-doc))) ;; Bind ansible-doc for easy access to documentation
-
 (use-package rainbow-delimiters
   :ensure t
   :config
   (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
-
 (use-package vcl-mode
   :ensure t
   :mode ("\\.vcl\\.j2\\'" . vcl-mode))
-
 (use-package nginx-mode
   :ensure t
   :mode ("\\.conf\\.j2\\'" . nginx-mode))
-
 (use-package jinja2-mode
   :ensure t
   :mode ("\\.j2\\'" . jinja2-mode))
-
 (use-package yaml-mode
   :ensure t
   :mode ("\\.yml\\'" "\\.yaml\\'")
   :config
   (add-hook 'yaml-mode-hook 'display-line-numbers-mode)
   (setq yaml-indent-offset 2))
-
 (use-package ansible-vault
   :ensure t
   :hook (yaml-mode . ansible-vault-mode) ; Automatically enable in yaml-mode
   :config
   (setq ansible-vault-password-file "~/.ansible/vault_pass"))
-
 (use-package restclient
   :ensure t
   :mode ("\\.http\\'" . restclient-mode))
-
-
 (use-package bind-key
-  :ensure s
+  :ensure t
   :init
   (use-package s
     :ensure t)
@@ -1220,22 +1046,18 @@ Otherwise point moves to beginning of line."
   (bind-key "C-c q" 'query-replace)
   (bind-key "C-z" 'zap-up-to-char)
   (bind-key "M-j" (λ (join-line -1)))
-
   ;; Buffer/Files
   (bind-key "C-c R" 'rename-this-buffer-and-file)
   (bind-key "C-c D" 'delete-this-buffer-and-file)
-
   ;; Naming
   (bind-key "C-c m -" (lambda () (interactive) (replace-region-by 's-dashed-words)))
   (bind-key "C-c m _" (lambda () (interactive) (replace-region-by 's-snake-case)))
   (bind-key "C-c m c" (lambda () (interactive) (replace-region-by 's-lower-camel-case)))
   (bind-key "C-c m C" (lambda () (interactive) (replace-region-by 's-upper-camel-case)))
-
   ;; Number
   (bind-key "C-c =" 'my-increment-number-decimal)
   (bind-key "C-c -" 'my-decrement-number-decimal)
   )
-
 (use-package magit
   :ensure t
   :bind (("C-x g" . magit-status)
@@ -1253,10 +1075,8 @@ Otherwise point moves to beginning of line."
         ;; Move to the beginning of the buffer and insert the formatted ticket number
         (goto-char (point-min))
         (insert (format "[%s] " ticket-number)))))
-
   (add-hook 'git-commit-setup-hook 'my-magit-auto-branch-name-to-commit-message)
   (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
-
 (use-package markdown-mode
   :ensure t
   :mode ("\\.md\\'" . markdown-mode)
@@ -1264,42 +1084,36 @@ Otherwise point moves to beginning of line."
   (setq markdown-command "pandoc")
   (define-key markdown-mode-map (kbd "M-p") 'move-text-up)
   (define-key markdown-mode-map (kbd "M-n") 'move-text-down))
-
 (use-package git-gutter
   :ensure t
   :init
   (global-git-gutter-mode +1) ;; Enable globally
   :config
   (setq git-gutter:update-interval 2) ;; Update every 2 seconds
-  :bind (("C-x v =" . git-gutter:popup-hunk)  ;; Show changes for the current hunk
+  :bind (("C-x v =" . git-gutter:popup-hunk) ;; Show changes for the current hunk
          ("C-x v r" . git-gutter:revert-hunk) ;; Revert the current hunk
-         ("C-x v n" . git-gutter:next-hunk)   ;; Go to the next hunk
-         ("C-x v p" . git-gutter:previous-hunk))) ;; Go to the previous hunk  ;; Stage changes in hunk ;; Go to the previous hunk
-
-
+         ("C-x v n" . git-gutter:next-hunk) ;; Go to the next hunk
+         ("C-x v p" . git-gutter:previous-hunk))) ;; Go to the previous hunk
 (use-package conf-mode
   :mode (("\\.env\\..*\\'" . conf-mode) ; Match files like .env.production, .env.test
-         ("\\.env\\'" . conf-mode))    ; Match .env files
+         ("\\.env\\'" . conf-mode)) ; Match .env files
   )
-
 ;; Ledger-mode Configuration
 (use-package ledger-mode
   :ensure t
   :mode ("\\.ledger\\'" . ledger-mode) ; Automatically activate for .ledger files
   :custom
   ;; General settings
-  (ledger-highlight-xact-under-point t)       ; Highlight transaction under point
-  (ledger-clear-whole-transactions t)        ; Clear entire transactions
-  (ledger-post-amount-alignment-column 65)   ; Align amounts to column 52
-  (ledger-reconcile-default-commodity "$")   ; Default commodity
-  (ledger-reconcile-finish-force-quit t)     ; Close reconcile buffer after finishing
-
+  (ledger-highlight-xact-under-point t) ; Highlight transaction under point
+  (ledger-clear-whole-transactions t) ; Clear entire transactions
+  (ledger-post-amount-alignment-column 65) ; Align amounts to column 52
+  (ledger-reconcile-default-commodity "$") ; Default commodity
+  (ledger-reconcile-finish-force-quit t) ; Close reconcile buffer after finishing
   ;; Faces customization
   (ledger-font-cleared-face '((t :foreground "green" :weight bold)))
   (ledger-font-pending-face '((t :foreground "orange" :weight bold)))
   (ledger-font-uncleared-face '((t :foreground "red" :weight bold)))
   (ledger-font-comment-face '((t :foreground "gray" :italic t)))
-
   ;; Reports customization
   (ledger-reports
    '(("balance" "ledger -f %(ledger-file) bal")
@@ -1307,25 +1121,22 @@ Otherwise point moves to beginning of line."
      ("expenses by month" "ledger -f %(ledger-file) reg ^Expenses -M")
      ("income statement" "ledger -f %(ledger-file) -M bal ^Income ^Expenses")
      ("net worth" "ledger -f %(ledger-file) bal Assets Liabilities")))
-
   ;; Hooks
   :hook
-  (ledger-mode . hl-line-mode)               ; Highlight current line
-  (ledger-mode . visual-line-mode)           ; Enable line wrapping
-  (ledger-mode . display-line-numbers-mode)  ; Enable line numbers
-
+  (ledger-mode . hl-line-mode) ; Highlight current line
+  (ledger-mode . visual-line-mode) ; Enable line wrapping
+  (ledger-mode . display-line-numbers-mode) ; Enable line numbers
   ;; Keybindings
   :bind
   (:map ledger-mode-map
-        ("C-c C-r" . ledger-reconcile)              ; Reconcile account
-        ("C-c C-a" . ledger-add-transaction)        ; Add a transaction
+        ("C-c C-r" . ledger-reconcile) ; Reconcile account
+        ("C-c C-a" . ledger-add-transaction) ; Add a transaction
         ("C-c C-d" . ledger-delete-current-transaction) ; Delete transaction
-        ("C-c C-o C-r" . ledger-report)             ; Run a report
+        ("C-c C-o C-r" . ledger-report) ; Run a report
         ("C-c C-p" . ledger-display-balance-at-point) ; Quick balance display
-        ("C-c C-f" . ledger-narrow-to-regex)        ; Narrow transactions
-        ("C-c C-g" . ledger-occur-refresh)          ; Refresh occur view
+        ("C-c C-f" . ledger-narrow-to-regex) ; Narrow transactions
+        ("C-c C-g" . ledger-occur-refresh) ; Refresh occur view
         ("C-c C-k" . ledger-copy-transaction-at-point))) ; Copy transaction
-
 (use-package request
   :ensure t
   :bind
@@ -1354,7 +1165,6 @@ If a region is active, use it as the query. Otherwise, use the word at point."
                         (message "No results found.")))))
         :error (cl-function (lambda (&rest _args)
                               (message "Error retrieving search results."))))))
-
   (defun google-search-open (query)
     "Perform a Google search for QUERY and open the result in the default browser.
 If a region is active, use it as the query. Otherwise, use the word at point."
@@ -1363,7 +1173,6 @@ If a region is active, use it as the query. Otherwise, use the word at point."
                (buffer-substring-no-properties (region-beginning) (region-end))
              (thing-at-point 'word t))))
     (browse-url (format "https://www.google.com/search?q=%s" (url-hexify-string query))))
-
   (defun open-business-directory (query)
     "Search for QUERY in the French business directory and open the result in the default browser.
 If a region is active, use it as the query. Otherwise, use the word at point."
@@ -1374,7 +1183,6 @@ If a region is active, use it as the query. Otherwise, use the word at point."
     (browse-url
      (format "https://annuaire-entreprises.data.gouv.fr/rechercher?terme=%s&cp_dep_label=&cp_dep_type=&cp_dep=&fn=&n=&dmin=&dmax=&type=&label=&etat=&sap=&naf=&nature_juridique=&tranche_effectif_salarie=&categorie_entreprise="
              (url-hexify-string query)))))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Artificial Intelligence
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1384,23 +1192,19 @@ If a region is active, use it as the query. Otherwise, use the word at point."
   ;; Set up Ollama backend with mistral-nemo:latest
   (setq gptel-backend
         (gptel-make-ollama "Ollama"
-          :host "localhost:11434"       ;; Default Ollama host
-          :stream t                    ;; Enable streaming responses
+          :host "localhost:11434" ;; Default Ollama host
+          :stream t ;; Enable streaming responses
           :models '(mistral-nemo:latest))) ;; Use mistral-nemo:latest model
-
   ;; Set default model to mistral-nemo:latest
   (setq gptel-model 'mistral-nemo:latest)
-
   ;; Optional: Configure token limits and temperature
   (setq gptel-max-tokens 1000
         gptel-temperature 0.7)
-
   ;; Optional: Set hooks for better user experience
   (add-hook 'gptel-post-stream-hook #'gptel-auto-scroll) ;; Auto-scroll responses
   (add-hook 'gptel-post-response-functions #'gptel-end-of-response)) ;; Move cursor to end of response
-
-
 (use-package smart-prompt
+  :disabled t
   :load-path "~/Projects/smart-prompt/"
   ;; :hook (python-mode . smart-prompt-mode)
   :custom
@@ -1410,33 +1214,51 @@ If a region is active, use it as the query. Otherwise, use the word at point."
   ;; (smart-prompt-setup-keymap)
   (smart-prompt-global-mode 1)
   )
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Typescript and Node
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package typescript-mode
-  :mode "\\.ts\\'"
-  :hook (typescript-mode . lsp)
-  :config
-  (setq typescript-indent-level 2))
-
 (use-package web-mode
-  :mode "\\.tsx\\'"
-  :hook (web-mode . lsp)
+  :ensure t
+  :mode (("\\.tsx\\'" . web-mode))
   :config
-  (setq web-mode-enable-auto-quoting nil) ; prevents unexpected quote insertion
   (setq web-mode-code-indent-offset 2))
-
 (use-package prettier
+  :ensure t
   :hook ((typescript-mode . prettier-mode)
          (web-mode . prettier-mode)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Terraform
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package terraform-mode
+  :ensure t
+  :mode ("\\.tf\\'" "\\.tfvars\\'"))
 
-(use-package dap-mode
-  :after lsp-mode
+
+(use-package envrc
+  :ensure t
   :config
-  (dap-auto-configure-mode)
-  (require 'dap-node)
-  (dap-node-setup)) ;; Installs Node debug adapter
+  (envrc-global-mode))
 
 
+(defun my-copy-diff-to-clipboard (&optional remote-branch)
+  "Copies the diff of current work and all commits to a remote branch to the clipboard in Markdown format.
+Defaults to 'develop' on the remote."
+  (interactive "sBranch to compare against (defaults to origin/develop): ")
+  (let* ((remote-branch (if (string= "" remote-branch) "origin/develop" remote-branch))
+         (diff-command (format "git diff %s" remote-branch))
+         (diff-output (shell-command-to-string diff-command))
+         (log-command (format "git --no-pager log --oneline --decorate %s..HEAD" remote-branch))
+         (log-output (shell-command-to-string log-command))
+         (markdown-content (concat
+                            "```diff\n"
+                            diff-output
+                            "```\n\n"
+                            "### Commits\n"
+                            "```\n"
+                            log-output
+                            "```\n")))
+    (kill-new markdown-content)
+    (message "Diff and commits copied to clipboard!")))
+
+(global-set-key (kbd "C-c C") 'my-copy-diff-to-clipboard)
 ;; End
