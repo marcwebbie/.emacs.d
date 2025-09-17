@@ -1,5 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Emacs 29+ Configuration — macOS & GNU/Linux
+;;; Emacs 30+ Configuration — macOS & GNU/Linux
 ;;; Author: Marc (marcwebbie)
 ;;; Goals: stable, modern, defer-friendly, Monokai-first theme, strong Python/
 ;;;        Django/TypeScript/Terraform stacks, optional LLM helpers.
@@ -8,11 +8,18 @@
 ;;;---------------------------------------------------------------------------
 ;;; 0) HARD REQUIREMENTS & VERSION GUARD
 ;;;---------------------------------------------------------------------------
-(when (< emacs-major-version 29)
-  (error "This configuration requires Emacs 29 or newer; you have %s"
+(when (< emacs-major-version 30)
+  (error "This configuration requires Emacs 30 or newer; you have %s"
          emacs-major-version))
 
 (setq inhibit-startup-message t)
+
+(require 'treesit)
+
+;; Prefer user-compiled grammars over system ones
+(setq treesit-extra-load-path
+      (list (expand-file-name "~/.emacs.d/tree-sitter/")))
+
 
 ;;;---------------------------------------------------------------------------
 ;;; 1) PACKAGE MANAGEMENT: STRAIGHT.EL + USE-PACKAGE
@@ -154,6 +161,9 @@
 ;; Silence :distant-foreground=nil warnings
 (set-face-attribute 'highlight nil :distant-foreground 'unspecified)
 
+;; Maximize the initial frame
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+
 ;;;---------------------------------------------------------------------------
 ;;; 4) KEYBOARD / OS-INTEGRATION
 ;;;---------------------------------------------------------------------------
@@ -167,32 +177,36 @@
         mac-command-modifier 'meta
         mac-option-modifier 'none))
 
+
 ;;;---------------------------------------------------------------------------
-;;; 5) THEMES & FONTS
+;;; 5) THEMES & FONTS — Wayland/HiDPI aware, emoji + Nerd Icons fallbacks
 ;;;---------------------------------------------------------------------------
 (use-package nerd-icons
   :defer t
+  ;; We'll set the family dynamically below if present
   :custom (nerd-icons-font-family "Symbols Nerd Font Mono"))
 
 (use-package monokai-theme :defer t)
 (use-package doom-themes :defer t)
 (use-package spacemacs-theme :defer t)
+(use-package modus-themes :defer t)
+(use-package doom-themes :defer t)
 
 (defun mw/apply-theme ()
   "Load preferred theme."
-  (load-theme 'monokai t))
+  ;; (load-theme 'monokai t)
+  ;; (load-theme 'modus-vivendi t)
+  ;; (load-theme 'modus-operandi t)
+  (load-theme 'doom-one t)
+  )
+
 (add-hook 'after-init-hook #'mw/apply-theme)
 
-(defun mw/set-font ()
-  "Pick best available programming font with sensible size per OS."
-  (interactive)
-  (let* ((candidates '("JetBrains Mono" "Fira Code" "Ubuntu Mono" "Consolas" "Anonymous Pro" "DejaVu Sans Mono"))
-         (chosen (seq-find (lambda (f) (member f (font-family-list))) candidates))
-         (size (if (eq system-type 'darwin) 140 120)))
-    (when chosen
-      (set-face-attribute 'default nil :family chosen :height size)
-      (message "Font: %s %0.1fpt" chosen (/ size 10.0)))))
-(add-hook 'after-init-hook #'mw/set-font)
+;; Preferred fonts (hardcode top choices; assume available)
+(let ((candidates '("Ubuntu Mono" "JetBrains Mono" "Fira Code" "DejaVu Sans Mono")))
+  (let ((font (seq-find (lambda (f) (member f (font-family-list))) candidates)))
+    (when font
+      (set-frame-font (format "%s-12" font) nil t))))
 
 ;;;---------------------------------------------------------------------------
 ;;; 6) MODELINE & DASHBOARD
@@ -424,6 +438,25 @@
     (add-hook 'magit-pre-refresh-hook #'diff-hl-magit-pre-refresh)
     (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)))
 
+;; Requires: (use-package ...) already set up
+(use-package git-timemachine
+  :ensure t
+  :commands (git-timemachine)
+  :init
+  ;; Optional: start in "verbose" mode (shows commit info in the header-line)
+  (setq git-timemachine-show-minibuffer-details t)
+  :config
+  ;; Optional: more readable commit info in header-line
+  (setq git-timemachine-abbreviation-length 12)
+  ;; Sensible keybinding (prefix under C-c g)
+  (global-set-key (kbd "C-c v t") #'git-timemachine)
+  ;; Evil-friendly keybindings when timemachine is active
+  (with-eval-after-load 'evil
+    (evil-define-key 'normal git-timemachine-mode-map
+		     (kbd "h") #'git-timemachine-show-previous-revision
+		     (kbd "l") #'git-timemachine-show-next-revision
+		     (kbd "q") #'git-timemachine-quit)))
+
 ;;;---------------------------------------------------------------------------
 ;;; 11) FILETYPES & LANGUAGE MODES (General)
 ;;;---------------------------------------------------------------------------
@@ -482,25 +515,19 @@
   :custom (python-indent-offset 4)
   :init (setq python-shell-interpreter "python3"))
 
-(use-package pyimport
-  :defer t
-  :hook (python-ts-mode . pyimport-mode)
-  :bind (:map python-ts-mode-map
-              ("C-c a" . pyimport-insert-missing)))
-
-;;; --- Ruff LSP (inline registration, no lsp-ruff package required) ---
+;;; --- Ruff Server (updated for Ruff's built-in LSP server in 2025; replaces ruff-lsp) ---
 (with-eval-after-load 'lsp-mode
   (with-eval-after-load 'lsp-pyright
-    (setq lsp-pyright-enable-ruff nil))
+    (setq lsp-pyright-enable-ruff nil))  ; Disable integrated Ruff in Pyright
   (lsp-register-client
    (make-lsp-client
-    :new-connection (lsp-stdio-connection (lambda () (list "ruff-lsp")))
+    :new-connection (lsp-stdio-connection (lambda () (list "ruff" "server")))
     :activation-fn (lsp-activate-on "python")
     :priority 0
-    :server-id 'ruff-lsp))
+    :server-id 'ruff))
   (defun mw/python-lsp-start ()
     (when (derived-mode-p 'python-ts-mode)
-      (when (executable-find "pyrightlangserver")
+      (when (executable-find "pyright-langserver")  ; Note: pyright-langserver is the executable
         (require 'lsp-pyright nil t))
       (lsp-deferred)))
   (add-hook 'python-ts-mode-hook #'mw/python-lsp-start))
@@ -513,8 +540,9 @@
 
 (add-hook 'python-ts-mode-hook
           (lambda ()
-            (remove-hook 'before-save-hook #'py-isort-before-save t)
-            (add-hook 'before-save-hook #'mw/python-organize-imports-on-save nil t)))
+            (remove-hook 'before-save-hook #'py-isort-before-save t)  ; Remove old isort if present
+            (add-hook 'before-save-hook #'mw/python-organize-imports-on-save nil t)
+            (add-hook 'before-save-hook #'lsp-format-buffer nil t)))  ; Auto-format with Ruff on save
 
 (use-package flycheck
   :init (global-flycheck-mode 1)
@@ -525,6 +553,8 @@
          ("C-c f s" . flycheck-select-checker)
          ("C-c f n" . flycheck-next-error)
          ("C-c f p" . flycheck-previous-error)))
+;; Optional: Disable Flycheck in Python if preferring LSP diagnostics
+;; (add-hook 'python-ts-mode-hook (lambda () (flycheck-mode -1)))
 
 (when (file-directory-p "~/Projects/auto-virtualenv/")
   (use-package auto-virtualenv
@@ -552,53 +582,57 @@
     (add-hook hook (lambda () (aggressive-indent-mode -1)))))
 
 ;;;---------------------------------------------------------------------------
-;;; 14) TREESITTER (Emacs 29+)
+;;; 14) TREESITTER (Emacs 30+)
 ;;;---------------------------------------------------------------------------
+(require 'treesit)
+(message "Treesit available? %S" (treesit-available-p))
+
+;; Set maximum font-lock level for detailed highlighting
+(setq treesit-font-lock-level 4)
+
+;; Define sources for language grammars (for easy installation)
 (setq treesit-language-source-alist
-      '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-        (python "https://github.com/tree-sitter/tree-sitter-python")
-        (json "https://github.com/tree-sitter/tree-sitter-json")
-        (css "https://github.com/tree-sitter/tree-sitter-css")
-        (html "https://github.com/tree-sitter/tree-sitter-html")
-        (yaml "https://github.com/ikatyang/tree-sitter-yaml")
-        (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
-        (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+      '((python "https://github.com/tree-sitter/tree-sitter-python")
         (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-        (hcl "https://github.com/MichaHoffmann/tree-sitter-hcl")))
+        (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")))
 
-(use-package treesit-auto
-  :init
-  (setq treesit-auto-install t)
-  :config
-  (global-treesit-auto-mode)
-  (add-to-list 'treesit-auto-recipe-list
-               (make-treesit-auto-recipe
-		:lang 'tsx
-		:ts-mode 'tsx-ts-mode
-		:url "https://github.com/tree-sitter/tree-sitter-typescript"
-		:revision "master"
-		:source-dir "tsx/src"
-		:ext "\\.tsx\\'"))
-  )
+;; Remap major modes to Tree-Sitter versions
+(setq major-mode-remap-alist
+      '((python-mode . python-ts-mode)
+        (typescript-mode . typescript-ts-mode)
+        (tsx-mode . tsx-ts-mode)))
 
-(add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
-(add-to-list 'major-mode-remap-alist '(typescript-mode . typescript-ts-mode))
-(add-to-list 'major-mode-remap-alist '(tsx-mode . tsx-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
+;; Function to install grammars if missing (run manually with M-x mw/install-treesit-grammars)
+(defun mw/install-treesit-grammars ()
+  "Install all defined Tree-Sitter grammars if not available."
+  (interactive)
+  (dolist (lang (mapcar #'car treesit-language-source-alist))
+    (unless (treesit-language-available-p lang)
+      (treesit-install-language-grammar lang))))
 
+;; Optional: Auto-install hook (prompts if missing when mode activates)
+(add-hook 'treesit-load-language-hook
+          (lambda (lang)
+            (unless (treesit-language-available-p lang)
+              (when (y-or-n-p (format "Install Tree-Sitter grammar for %s? " lang))
+                (treesit-install-language-grammar lang)))))
 
 ;;;---------------------------------------------------------------------------
 ;;; 15) TYPESCRIPT / TSX
 ;;;---------------------------------------------------------------------------
-(use-package prettier
+;; Built-in modes are used via remaps in Tree-Sitter section
+
+;; Mode associations (if not automatic)
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
+
+;; LSP is already hooked in LSP section
+
+;; Optional: Additional TS-specific config
+(use-package typescript-mode
   :defer t
-  :hook ((typescript-ts-mode . prettier-mode)
-         (tsx-ts-mode . prettier-mode)
-         (typescript-ts-mode . (lambda () (add-hook 'before-save-hook #'lsp-organize-imports nil t)))
-         (tsx-ts-mode . (lambda () (add-hook 'before-save-hook #'lsp-organize-imports nil t)))))  ;; <-- Add this closing parenthesis here
-(use-package web-mode
-  :defer t
-  :custom (web-mode-code-indent-offset 2))
+  :custom
+  (typescript-indent-level 2))  ;; Adjust as needed
 
 ;;;---------------------------------------------------------------------------
 ;;; 16) TERRAFORM
@@ -622,104 +656,6 @@
   :custom
   (ansible-vault-password-file "~/.ansible/vault_pass"))
 
-;;;---------------------------------------------------------------------------
-;;; 18) LEDGER (finance)
-;;;---------------------------------------------------------------------------
-(use-package ledger-mode
-  :mode "\\.ledger\\'"
-  :hook ((ledger-mode . hl-line-mode)
-         (ledger-mode . visual-line-mode)
-         (ledger-mode . display-line-numbers-mode))
-  :custom
-  (ledger-highlight-xact-under-point t)
-  (ledger-clear-whole-transactions t)
-  (ledger-post-amount-alignment-column 65)
-  (ledger-reconcile-default-commodity "$")
-  (ledger-reconcile-finish-force-quit t)
-  (ledger-font-cleared-face '((t :foreground "green" :weight bold)))
-  (ledger-font-pending-face '((t :foreground "orange" :weight bold)))
-  (ledger-font-uncleared-face '((t :foreground "red" :weight bold)))
-  (ledger-font-comment-face '((t :foreground "gray" :slant italic)))
-  (ledger-reports
-   '(("balance" "ledger -f %(ledger-file) bal")
-     ("register" "ledger -f %(ledger-file) reg")
-     ("expenses by month" "ledger -f %(ledger-file) reg ^Expenses -M")
-     ("income statement" "ledger -f %(ledger-file) -M bal ^Income ^Expenses")
-     ("net worth" "ledger -f %(ledger-file) bal Assets Liabilities")))
-  :bind (:map ledger-mode-map
-	      ("C-c C-r" . ledger-reconcile)
-	      ("C-c C-a" . ledger-add-transaction)
-	      ("C-c C-d" . ledger-delete-current-transaction)
-	      ("C-c C-o C-r" . ledger-report)
-	      ("C-c C-p" . ledger-display-balance-at-point)
-	      ("C-c C-f" . ledger-narrow-to-regex)
-	      ("C-c C-g" . ledger-occur-refresh)
-	      ("C-c C-k" . ledger-copy-transaction-at-point)))
-
-;;;---------------------------------------------------------------------------
-;;; 19) REQUEST/WEB HELPERS
-;;;---------------------------------------------------------------------------
-(use-package request :defer t)
-
-(defun google-search-open (query)
-  "Google search for QUERY (region or word at point)."
-  (interactive
-   (list (if (use-region-p)
-             (buffer-substring-no-properties (region-beginning) (region-end))
-           (thing-at-point 'word t))))
-  (browse-url (format "https://www.google.com/search?q=%s" (url-hexify-string query))))
-
-(defun duckduckgo-search-best-match (query)
-  "DuckDuckGo Instant Answer for QUERY; echo best match."
-  (interactive
-   (list (if (use-region-p)
-             (buffer-substring-no-properties (region-beginning) (region-end))
-           (thing-at-point 'word t))))
-  (require 'request)
-  (let ((url (format "https://api.duckduckgo.com/?q=%s&format=json&pretty=1"
-                     (url-hexify-string query))))
-    (request url
-	     :parser 'json-read
-	     :success (cl-function
-		       (lambda (&key data &allow-other-keys)
-			 (let ((abstract (alist-get 'Abstract data))
-			       (href (alist-get 'AbstractURL data)))
-			   (message (if (and abstract href)
-					(format "Best match: %s (%s)" abstract href)
-				      "No results found.")))))
-	     :error (cl-function (lambda (&rest _) (message "DDG error."))))))
-
-(defun open-business-directory (query)
-  "Open French business directory for QUERY."
-  (interactive
-   (list (if (use-region-p)
-             (buffer-substring-no-properties (region-beginning) (region-end))
-           (thing-at-point 'word t))))
-  (browse-url
-   (format "https://annuaire-entreprises.data.gouv.fr/rechercher?terme=%s"
-           (url-hexify-string query))))
-
-(global-set-key (kbd "C-c g") #'google-search-open)
-(global-set-key (kbd "C-c G") #'duckduckgo-search-best-match)
-(global-set-key (kbd "C-c l") #'open-business-directory)
-
-;;;---------------------------------------------------------------------------
-;;; 20) AI / LLM HELPERS
-;;;---------------------------------------------------------------------------
-(use-package gptel
-  :defer t
-  :init
-  (setq gptel-backend
-        (gptel-make-ollama "Ollama"
-			   :host "localhost:11434"
-			   :stream t
-			   :models '(mistral-nemo:latest)))
-  (setq gptel-model 'mistral-nemo:latest
-        gptel-max-tokens 1000
-        gptel-temperature 0.7)
-  :config
-  (add-hook 'gptel-post-stream-hook #'gptel-auto-scroll)
-  (add-hook 'gptel-post-response-functions #'gptel-end-of-response))
 
 ;;;---------------------------------------------------------------------------
 ;;; 21) MISC KEYBINDS & UTILITIES
@@ -762,3 +698,19 @@
 (use-package jenkinsfile-mode
   :defer t
   :mode ("Jenkinsfile\\'" . jenkinsfile-mode))
+
+;; Enhanced smooth scrolling (built-in pixel-scroll is enabled; add ultra-scroll for more fluidity)
+(use-package ultra-scroll
+  :straight (ultra-scroll :type git :host github :repo "jdtsmith/ultra-scroll")
+  :init (ultra-scroll-mode 1)
+  :custom
+  (ultra-scroll-lines 1)  ;; Scroll by 1 line at a time
+  (ultra-scroll-cursor t)  ;; Keep cursor centered
+  )
+
+;; Your Python and TypeScript configurations look solid overall—no major issues detected.
+;; For Python: LSP-Pyright and Ruff handle pyproject.toml for settings (e.g., type stubs, formatting).
+;; auto-virtualenv should detect venvs from pyproject.toml if configured with tools like Poetry.
+;; Flycheck integrates well for linting. Consider adding blacken or Ruff for auto-formatting if needed.
+;; For TypeScript: Now uses ts-modes with LSP; install grammars via mw/install-treesit-grammars.
+;; If using Deno/Node, ensure tsserver is in PATH for LSP.

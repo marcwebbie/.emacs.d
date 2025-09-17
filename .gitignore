@@ -19,3 +19,5 @@ views.py
 /test.txt
 /test.txt.gpg
 /org-persist/
+/tree-sitter/
+/eln-cache/
